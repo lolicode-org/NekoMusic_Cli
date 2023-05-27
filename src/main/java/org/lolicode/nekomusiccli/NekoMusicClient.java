@@ -19,7 +19,7 @@ public class NekoMusicClient implements ClientModInitializer {
     public static final String MOD_ID = "nekomusiccli";
     public static final String MOD_NAME = "NekoMusic Client";
     public static final String MOD_CHANNEL = "nekomusic";
-    public static final Identifier MOD_BASE_IDENTIFIER = new Identifier(MOD_CHANNEL);
+    public static final Identifier MOD_BASE_IDENTIFIER = new Identifier(MOD_CHANNEL, MOD_ID);  // if not provide MODID, the namespace will be "minecraft"
     public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
     public static final Gson GSON = new Gson();
     public static MusicManager musicManager;
