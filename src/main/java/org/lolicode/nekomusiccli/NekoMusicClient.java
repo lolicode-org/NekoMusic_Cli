@@ -7,6 +7,7 @@ import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lolicode.nekomusiccli.config.ModConfig;
+import org.lolicode.nekomusiccli.network.NetUtils;
 
 public class NekoMusicClient implements ClientModInitializer {
     public static final String MOD_ID = "nekomusiccli";
@@ -15,6 +16,7 @@ public class NekoMusicClient implements ClientModInitializer {
     public static final Identifier MOD_BASE_IDENTIFIER = new Identifier(MOD_CHANNEL);
     public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
     public static ModConfig config;
+    public static NetUtils netUtils;
     /**
      * Runs the mod initializer.
      */
@@ -22,6 +24,6 @@ public class NekoMusicClient implements ClientModInitializer {
     public void onInitializeClient() {
         AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
         config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
-
+        netUtils = new NetUtils();
     }
 }

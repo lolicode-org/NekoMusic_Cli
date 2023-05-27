@@ -6,7 +6,8 @@
   "mixins": [
   ],
   "client": [
-    "InGameHudMixin"
+    "InGameHudMixin",
+    "SoundSystemMixin"
   ],
   "injectors": {
     "defaultRequire": 1

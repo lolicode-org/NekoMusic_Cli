@@ -17,6 +17,9 @@
     ],
     "modmenu": [
       "org.lolicode.nekomusiccli.config.ModMenuIntegration"
+    ],
+    "sound-categories": [
+      "org.lolicode.nekomusiccli.music.CustomSoundCategory"
     ]
   },
   "mixins": [

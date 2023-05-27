@@ -7,6 +7,7 @@
   "nekomusic.server_disable": "§eNekoMusic disabled for this server",
   "nekomusic.send_packet_fail": "§cFailed to send packet to server",
   "nekomusic.not_multiplayer": "§cThis is not a multiplayer server",
+  "soundcategory.nekomusic": "NekoMusic",
   "text.autoconfig.nekomusic.title": "NekoMusic Config",
   "text.autoconfig.nekomusic.option.enabled": "Enable NekoMusic",
   "text.autoconfig.nekomusic.option.musicCacheSize": "Music Cache Max Size",

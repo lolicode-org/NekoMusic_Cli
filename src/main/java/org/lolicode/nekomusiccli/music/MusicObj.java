@@ -1,11 +1,12 @@
 package org.lolicode.nekomusiccli.music;
 
 import com.google.gson.annotations.SerializedName;
+import org.lolicode.nekomusiccli.NekoMusicClient;
+import org.lolicode.nekomusiccli.network.NetUtils;
 
 import java.util.List;
 
 public class MusicObj {
-
     public static class FreeTrialInfoObj {
         public int start;
         public int end;

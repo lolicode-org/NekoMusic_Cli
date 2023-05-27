@@ -15,6 +15,11 @@ repositories {
     maven { url "https://maven.shedaniel.me/" }
     maven { url "https://maven.terraformersmc.com/releases/" }
     maven { url "https://maven.bai.lol" }
+    maven { url 'https://jitpack.io' }
+    maven {
+        name = "stashymane's repo"
+        url = "https://repo.stashy.dev/releases"
+    }
 }
 
 dependencies {
@@ -28,6 +33,7 @@ dependencies {
 
     include implementation("com.squareup.okhttp3:okhttp:${project.okhttp_version}")
     include implementation("com.squareup.okio:okio-jvm:${project.okio_version}") //okio-jvm, not okio. This cost me like 1hr of debugging
+    include implementation("com.github.goxr3plus:java-stream-player:${project.java_stream_player_version}")
     modLocalRuntime("net.fabricmc:fabric-language-kotlin:${project.fabric_language_kotlin_version}") { // includes kotlin for squareup libs
         exclude module: "fabric-loader"
     }
@@ -36,6 +42,7 @@ dependencies {
     }
     modApi "com.terraformersmc:modmenu:${project.mod_menu_version}"
     modImplementation "lol.bai:badpackets:fabric-${badpackets_version}"
+    include modImplementation("dev.stashy:sound-categories:${project.soundcategories_version}")
 }
 
 processResources {
