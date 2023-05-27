@@ -14,6 +14,8 @@ public class HudUtils {
     private volatile ImgRender imgRender = null;
     private volatile boolean isClosed = false;
 
+    // TODO:Thread
+
     public synchronized void setMusic(MusicObj music) {
         close();
         info = music.name == null || music.name.isBlank() ? Text.translatable("hud.nekomusic.no_title").getString() : music.name;
@@ -27,6 +29,8 @@ public class HudUtils {
                 imgRender = new ImgRender(imageStream, NekoMusicClient.config.enableHudImgRotate);
             } catch (IOException e) {
                 NekoMusicClient.LOGGER.error("Failed to load image: " + music.album.picUrl);
+            } catch (Exception e) {
+                NekoMusicClient.LOGGER.error("Failed to load image: " + e.getMessage());
             }
         }
         if (lyricRender != null) lyricRender.stop();
@@ -45,7 +49,7 @@ public class HudUtils {
     public void frame() {
         var cfg = NekoMusicClient.config;
         if (!cfg.enableHud) return;
-        if (cfg.enableHudImg) {
+        if (cfg.enableHudImg && imgRender != null) {
             imgRender.RenderImg();
         }
         if (cfg.enableHudInfo) {
@@ -54,7 +58,7 @@ public class HudUtils {
         if (cfg.enableHudList) {
             ListRender.render(list);
         }
-        if (cfg.enableHudLyric) {
+        if (cfg.enableHudLyric && lyricRender != null) {
             lyricRender.render();
         }
     }
