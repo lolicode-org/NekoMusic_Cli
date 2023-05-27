@@ -58,6 +58,6 @@ public class LyricRender {
     }
 
     public void stop() {
-        lyricExecutor.shutdown();
+        lyricExecutor.shutdownNow();
     }
 }

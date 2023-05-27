@@ -2,6 +2,9 @@ package org.lolicode.nekomusiccli.mixin;
 
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.client.sound.SoundSystem;
+import net.minecraft.sound.SoundCategory;
+import org.lolicode.nekomusiccli.NekoMusicClient;
+import org.lolicode.nekomusiccli.music.CustomSoundCategory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -18,16 +21,19 @@ public class SoundSystemMixin {
 
     @Inject(method = "reloadSounds", at = @At("RETURN"))
     public void reload(CallbackInfo ci){
-        // TODO
+        if (NekoMusicClient.musicManager != null) NekoMusicClient.musicManager.stop();
     }
 
     @Inject(method = "stopAll", at = @At("RETURN"))
     public void stopAll(CallbackInfo ci){
-        // TODO
+        if (NekoMusicClient.musicManager != null) NekoMusicClient.musicManager.stop();
     }
 
     @Inject(method = "Lnet/minecraft/client/sound/SoundSystem;updateSoundVolume(Lnet/minecraft/sound/SoundCategory;F)V", at = @At("HEAD"), cancellable = true)
-    public void updateSoundVolume(CallbackInfo ci){
-        // TODO
+    public void updateSoundVolume(SoundCategory category, float volume, CallbackInfo ci){
+        if (category == CustomSoundCategory.NEKOMUSIC && NekoMusicClient.musicManager != null) {
+            NekoMusicClient.musicManager.SetVolume(volume);
+            ci.cancel();
+        }
     }
 }

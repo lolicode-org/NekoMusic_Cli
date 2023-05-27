@@ -12,8 +12,9 @@ public class HudUtils {
     private String list = null;
     private volatile LyricRender lyricRender = null;
     private volatile ImgRender imgRender = null;
+    private volatile boolean isClosed = false;
 
-    public void setMusic(MusicObj music) {
+    public synchronized void setMusic(MusicObj music) {
         close();
         info = music.name == null || music.name.isBlank() ? Text.translatable("hud.nekomusic.no_title").getString() : music.name;
         info += "\n";
@@ -34,6 +35,7 @@ public class HudUtils {
         } else {
             lyricRender = null;
         }
+        isClosed = false;
     }
 
     public synchronized void setList(MusicList list) {
@@ -68,5 +70,6 @@ public class HudUtils {
         }
         info = null;
         list = null;
+        isClosed = true;
     }
 }

@@ -29,11 +29,11 @@
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
     "minecraft": "${minecraft_version}",
-    "badpackets": ">={badpackets_version}",
+    "badpackets": ">=0.4.1",
     "fabric-language-kotlin": "*",
-    "cloth-config": ">={cloth_config_version}"
+    "cloth-config": ">=10.0.96"
   },
   "recommends": {
-    "modmenu": ">=${modmenu_version}"
+    "modmenu": ">=6.2.2"
   }
 }

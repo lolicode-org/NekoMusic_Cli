@@ -60,6 +60,7 @@ public class ModConfig implements ConfigData {
             musicCacheSize = -1;
         if (imgRotateSpeed <= 0)
             imgRotateSpeed = 50;
+        while (bannedServers.remove("")) ;
         try {
             CacheUtils.CheckCachePath(cachePath);
         } catch (Exception e) {

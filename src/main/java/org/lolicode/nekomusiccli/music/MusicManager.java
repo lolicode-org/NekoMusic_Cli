@@ -6,7 +6,9 @@ import com.goxr3plus.streamplayer.stream.StreamPlayerEvent;
 import com.goxr3plus.streamplayer.stream.StreamPlayerException;
 import com.goxr3plus.streamplayer.stream.StreamPlayerListener;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.sound.SoundCategory;
 import org.lolicode.nekomusiccli.NekoMusicClient;
+import org.lolicode.nekomusiccli.hud.HudUtils;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -28,6 +30,7 @@ public class MusicManager {
             NekoMusicClient.LOGGER.error("Music is null");
             return;
         }
+        stopVanillaMusic();
         this.isPlaying = true;
         this.currentMusic = music;
         this.future = this.executorService.submit(() -> {
@@ -64,6 +67,12 @@ public class MusicManager {
                 cleanup();
             }
         });
+        if (NekoMusicClient.config.enableHud) {
+            if (NekoMusicClient.hudUtils == null) {
+                NekoMusicClient.hudUtils = new HudUtils();
+            }
+            NekoMusicClient.hudUtils.setMusic(music);
+        }
     }
 
     private void cleanup() {
@@ -90,6 +99,9 @@ public class MusicManager {
         if (this.currentMusic != null) {
             this.currentMusic = null;
         }
+        if (NekoMusicClient.hudUtils != null) {
+            NekoMusicClient.hudUtils.close();
+        }
     }
 
     public void dispose() {
@@ -106,5 +118,10 @@ public class MusicManager {
         if (player != null) {
             player.setGain(volume);
         }
+    }
+
+    public static void stopVanillaMusic() {
+        MinecraftClient.getInstance().getSoundManager().stopSounds(null, SoundCategory.MUSIC);
+        MinecraftClient.getInstance().getSoundManager().stopSounds(null, SoundCategory.RECORDS);
     }
 }
