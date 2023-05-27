@@ -38,8 +38,9 @@ public class DeleteFilesBySizeAndDate {
                     break;
                 }
                 // Delete the file and subtract its size from the total
+                long len = file.length();
                 if (file.delete())
-                    totalSize -= file.length();
+                    totalSize -= len;
             }
         } else {
             throw new IllegalArgumentException("The path is not a directory");
