@@ -58,8 +58,8 @@ public class ModConfig implements ConfigData {
             imgSize = 10;
         if (musicCacheSize < -1)
             musicCacheSize = -1;
-        if (imgRotateSpeed < 0)
-            imgRotateSpeed = 0;
+        if (imgRotateSpeed <= 0)
+            imgRotateSpeed = 50;
         try {
             CacheUtils.CheckCachePath(cachePath);
         } catch (Exception e) {
