@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "nekomusiccli",
+  "version": "${version}",
+  "name": "NekoMusic Client",
+  "description": "NekoMusic Server's client-side mod.",
+  "authors": ["KoishiMoe"],
+  "contact": {
+    "repo": "https://github.com/KoishiMoe/NekoMusic_Cli_Reborn"
+  },
+  "license": "GPL-3.0",
+  "icon": "assets/nekomusiccli/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "org.lolicode.nekomusiccli.NekoMusicClient"
+    ],
+    "modmenu": [
+      "org.lolicode.nekomusiccli.config.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "nekomusiccli.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}",
+    "badpackets": ">={badpackets_version}",
+    "fabric-language-kotlin": "*",
+    "cloth-config": ">={cloth_config_version}"
+  },
+  "recommends": {
+    "modmenu": ">=${modmenu_version}"
+  }
+}

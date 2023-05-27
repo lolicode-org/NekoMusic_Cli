@@ -1,0 +1,1 @@
+Copy-Paste from https://github.com/authorfu/LrcParser which is licensed under Apache License 2.0
