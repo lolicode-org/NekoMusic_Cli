@@ -143,7 +143,7 @@ public class CacheUtils {
     }
 
     public static String getDefaultCachePath() {
-        String path = MinecraftClient.getInstance().runDirectory.toPath().resolve("cache").toString();
+        String path = MinecraftClient.getInstance().runDirectory.toPath().resolve("cache").resolve(NekoMusicClient.MOD_ID).toString();
         CheckCachePath(path);
         return path;
     }

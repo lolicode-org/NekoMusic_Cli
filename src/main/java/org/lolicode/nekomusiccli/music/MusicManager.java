@@ -110,7 +110,7 @@ public class MusicManager {
     }
 
     private static float getVolume() {
-        return MinecraftClient.getInstance().options.getSoundVolume(CustomSoundCategory.NEKOMUSIC);
+        return MinecraftClient.getInstance().options.getSoundVolume(SoundCategory.RECORDS);
     }
 
     public void SetVolume(float volume) {
