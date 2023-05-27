@@ -22,11 +22,10 @@ public class CacheUtils {
         new Thread(this::checkLimit).start();
     }
 
-    public BufferedInputStream getFromCache(String hash, int type) {
-        return switch (type) {
-            case CacheType.MUSIC -> getMusicFromCache(hash);
-            case CacheType.IMG -> getImgFromCache(hash);
-            default -> null;
+    public BufferedInputStream getFromCache(String hash, CacheType cacheType) {
+        return switch (cacheType) {
+            case MUSIC -> getMusicFromCache(hash);
+            case IMG -> getImgFromCache(hash);
         };
     }
 
@@ -54,10 +53,10 @@ public class CacheUtils {
         return null;
     }
 
-    public void saveToCache(String hash, byte[] data, int type) {
-        switch (type) {
-            case CacheType.MUSIC -> saveMusicToCache(hash, data);
-            case CacheType.IMG -> saveImgToCache(hash, data);
+    public void saveToCache(String hash, byte[] data, CacheType cacheType) {
+        switch (cacheType) {
+            case MUSIC -> saveMusicToCache(hash, data);
+            case IMG -> saveImgToCache(hash, data);
         }
     }
 
