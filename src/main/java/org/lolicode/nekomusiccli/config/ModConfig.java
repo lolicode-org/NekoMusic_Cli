@@ -17,6 +17,8 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip(count = 2)
     public int imgCacheSize = 100;
     public String cachePath = CacheUtils.getDefaultCachePath();
+    @ConfigEntry.Gui.Tooltip(count = 2)
+    public boolean allmusicCompatible = false;
     public boolean enableHud = true;
     public boolean enableHudInfo = true;
     public boolean enableHudList = true;
