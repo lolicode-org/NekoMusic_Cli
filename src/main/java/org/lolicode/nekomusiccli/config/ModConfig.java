@@ -4,13 +4,17 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import org.apache.logging.log4j.core.lookup.StrSubstitutor;
 import org.lolicode.nekomusiccli.cache.CacheUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Config(name = "nekomusic")
 public class ModConfig implements ConfigData {
+    @ConfigEntry.Gui.Excluded
+    private static final Map<String, String> env = System.getenv();
     public boolean enabled = true;
     public boolean enableHud = true;
     public boolean enableHudInfo = true;
@@ -52,6 +56,7 @@ public class ModConfig implements ConfigData {
     public int imgCacheSize = 100;
 
     @ConfigEntry.Category("advanced")
+    @ConfigEntry.Gui.Tooltip(count = 3)
     @ConfigEntry.Gui.RequiresRestart
     public String cachePath = CacheUtils.getDefaultCachePath();
 
@@ -82,7 +87,7 @@ public class ModConfig implements ConfigData {
             responseSizeLimit = 10;
         while (bannedServers.remove("")) ;
         try {
-            CacheUtils.CheckCachePath(cachePath);
+            CacheUtils.CheckCachePath(getCachePath());
         } catch (Exception e) {
             throw new ValidationException("Invalid cache path: " + e.getMessage());
         }
@@ -90,5 +95,10 @@ public class ModConfig implements ConfigData {
 
     public void save() {
         AutoConfig.getConfigHolder(this.getClass()).save();
+    }
+
+    public String getCachePath() {
+        StrSubstitutor strSubstitutor = new StrSubstitutor(env);
+        return strSubstitutor.replace(cachePath);
     }
 }

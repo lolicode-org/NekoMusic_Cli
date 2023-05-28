@@ -16,8 +16,8 @@ public class CacheUtils {
     private final Path imgPath;
 
     public CacheUtils(ModConfig config) {
-        CheckCachePath(config.cachePath);
-        cachePath = Path.of(config.cachePath);
+        CheckCachePath(config.getCachePath());
+        cachePath = Path.of(config.getCachePath());
         musicPath = cachePath.resolve("music");
         imgPath = cachePath.resolve("img");
         new Thread(this::checkLimit).start();
