@@ -3,6 +3,7 @@ package org.lolicode.nekomusiccli.cache;
 import net.minecraft.client.MinecraftClient;
 import org.apache.commons.io.FileUtils;
 import org.lolicode.nekomusiccli.NekoMusicClient;
+import org.lolicode.nekomusiccli.config.ModConfig;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
@@ -14,9 +15,9 @@ public class CacheUtils {
     private final Path musicPath;
     private final Path imgPath;
 
-    public CacheUtils() {
-        CheckCachePath(NekoMusicClient.config.cachePath);
-        cachePath = Path.of(NekoMusicClient.config.cachePath);
+    public CacheUtils(ModConfig config) {
+        CheckCachePath(config.cachePath);
+        cachePath = Path.of(config.cachePath);
         musicPath = cachePath.resolve("music");
         imgPath = cachePath.resolve("img");
         new Thread(this::checkLimit).start();

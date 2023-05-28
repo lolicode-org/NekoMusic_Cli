@@ -9,9 +9,11 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.sound.SoundCategory;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.hud.HudUtils;
+import org.lwjgl.openal.AL10;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -47,6 +49,8 @@ public class MusicManager {
 
                             @Override
                             public void progress(int nEncodedBytes, long microsecondPosition, byte[] pcmData, java.util.Map<String, Object> properties) {
+                                ByteBuffer buffer = ByteBuffer.wrap(pcmData);
+                                AL10.alBufferData(AL10.AL_BUFFER, AL10.AL_FORMAT_STEREO16, buffer, (int) properties.get("sampleRate"));
                             }
 
                             @Override

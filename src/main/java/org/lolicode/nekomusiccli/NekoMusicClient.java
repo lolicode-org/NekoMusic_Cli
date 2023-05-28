@@ -33,7 +33,7 @@ public class NekoMusicClient implements ClientModInitializer {
     public void onInitializeClient() {
         AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
         config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
-        netUtils = new NetUtils();
+        netUtils = new NetUtils(config);
         musicManager = new MusicManager();
 
         Events.register();

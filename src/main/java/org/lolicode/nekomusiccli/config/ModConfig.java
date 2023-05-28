@@ -12,13 +12,6 @@ import java.util.List;
 @Config(name = "nekomusic")
 public class ModConfig implements ConfigData {
     public boolean enabled = true;
-    @ConfigEntry.Gui.Tooltip(count = 2)
-    public int musicCacheSize = 1024;
-    @ConfigEntry.Gui.Tooltip(count = 2)
-    public int imgCacheSize = 100;
-    public String cachePath = CacheUtils.getDefaultCachePath();
-    @ConfigEntry.Gui.Tooltip(count = 2)
-    public boolean allmusicCompatible = false;
     public boolean enableHud = true;
     public boolean enableHudInfo = true;
     public boolean enableHudList = true;
@@ -38,6 +31,29 @@ public class ModConfig implements ConfigData {
     public int imgRotateSpeed = 50;
 
     public List<String> bannedServers = new ArrayList<>();
+    @ConfigEntry.Category("advanced")
+    @ConfigEntry.Gui.Tooltip(count = 2)
+    @ConfigEntry.Gui.RequiresRestart
+    public boolean allmusicCompatible = false;
+
+    @ConfigEntry.Category("advanced")
+    @ConfigEntry.Gui.Tooltip(count = 3)
+    @ConfigEntry.Gui.RequiresRestart
+    public long responseSizeLimit = 200;
+
+    @ConfigEntry.Category("advanced")
+    @ConfigEntry.Gui.Tooltip(count = 2)
+    @ConfigEntry.Gui.RequiresRestart
+    public int musicCacheSize = 1024;
+
+    @ConfigEntry.Category("advanced")
+    @ConfigEntry.Gui.Tooltip(count = 2)
+    @ConfigEntry.Gui.RequiresRestart
+    public int imgCacheSize = 100;
+
+    @ConfigEntry.Category("advanced")
+    @ConfigEntry.Gui.RequiresRestart
+    public String cachePath = CacheUtils.getDefaultCachePath();
 
     public void validatePostLoad() throws ValidationException {
         if (infoX < 0)
@@ -62,6 +78,8 @@ public class ModConfig implements ConfigData {
             musicCacheSize = -1;
         if (imgRotateSpeed <= 0)
             imgRotateSpeed = 50;
+        if (responseSizeLimit != -1 && responseSizeLimit < 10)
+            responseSizeLimit = 10;
         while (bannedServers.remove("")) ;
         try {
             CacheUtils.CheckCachePath(cachePath);

@@ -4,6 +4,7 @@ import okhttp3.OkHttpClient;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.cache.CacheType;
 import org.lolicode.nekomusiccli.cache.CacheUtils;
+import org.lolicode.nekomusiccli.config.ModConfig;
 import org.lolicode.nekomusiccli.music.AlbumObj;
 import org.lolicode.nekomusiccli.music.MusicObj;
 
@@ -13,12 +14,18 @@ import java.util.concurrent.TimeUnit;
 
 public class NetUtils {
 
-    private static final OkHttpClient client = new OkHttpClient.Builder()
-            .connectTimeout(5, TimeUnit.SECONDS)
-            .readTimeout(15, TimeUnit.SECONDS)
-            .build();
+    private final OkHttpClient client;
 
-    private final CacheUtils cacheUtils = new CacheUtils();
+    private final CacheUtils cacheUtils;
+
+    public NetUtils(ModConfig config) {
+        client = new OkHttpClient.Builder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(15, TimeUnit.SECONDS)
+                .addInterceptor(new ResponseInterceptor(config.responseSizeLimit * 1024 * 1024))
+                .build();
+        cacheUtils = new CacheUtils(config);
+    }
 
     public BufferedInputStream getMusicStream(MusicObj musicObj) {
         return fetchDataAutoCache(musicObj.url, musicObj.Hash(), CacheType.MUSIC);
