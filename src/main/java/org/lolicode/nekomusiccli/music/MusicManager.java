@@ -1,30 +1,29 @@
 package org.lolicode.nekomusiccli.music;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.goxr3plus.streamplayer.stream.StreamPlayer;
-import com.goxr3plus.streamplayer.stream.StreamPlayerEvent;
-import com.goxr3plus.streamplayer.stream.StreamPlayerException;
-import com.goxr3plus.streamplayer.stream.StreamPlayerListener;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.sound.SoundCategory;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.hud.HudUtils;
-import org.lwjgl.openal.AL10;
+import org.lolicode.nekomusiccli.music.player.AudioPlayer;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.nio.ByteBuffer;
+import java.io.ByteArrayInputStream;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MusicManager {
-    private final ExecutorService executorService = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat(NekoMusicClient.MOD_NAME + "-Worker-%d").build());
-    private volatile Future<?> future = null;
-    private final AtomicReference<StreamPlayer> playerRef = new AtomicReference<>();
+    private final AtomicReference<AudioPlayer> playerRef = new AtomicReference<>();
     private volatile boolean isPlaying = false;
     public volatile MusicObj currentMusic = null;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat(NekoMusicClient.MOD_NAME + " Music-Manager").build());
+    private final BlockingDeque<Future<?>> futures = new LinkedBlockingDeque<>();
+    private volatile boolean isDisposed = false;
 
-    public void play(MusicObj music) {
+    public synchronized void play(MusicObj music) {
+        if (this.isDisposed) {
+            NekoMusicClient.LOGGER.error("MusicManager is disposed");
+            return;
+        }
         if (this.isPlaying) {
             this.stop();
         }
@@ -35,42 +34,23 @@ public class MusicManager {
         stopVanillaMusic();
         this.isPlaying = true;
         this.currentMusic = music;
-        this.future = this.executorService.submit(() -> {
-            try (BufferedInputStream musicStream = NekoMusicClient.netUtils.getMusicStream(music)) {
-                StreamPlayer player = new StreamPlayer();
-                player.setMixerName(MinecraftClient.getInstance().options.getSoundDevice().getValue());
-                player.open(musicStream);
+
+        this.futures.add(this.executor.submit(() -> {
+            try (ByteArrayInputStream stream = NekoMusicClient.netUtils.getMusicStream(music)) {
+                if (stream == null) {
+                    NekoMusicClient.LOGGER.error("Failed to get music stream");
+                    return;
+                }
+                AudioPlayer player = new AudioPlayer(stream);
                 playerRef.set(player);
-                player.addStreamPlayerListener(
-                        new StreamPlayerListener() {
-                            @Override
-                            public void opened(Object dataSource, java.util.Map<String, Object> properties) {
-                            }
-
-                            @Override
-                            public void progress(int nEncodedBytes, long microsecondPosition, byte[] pcmData, java.util.Map<String, Object> properties) {
-                                ByteBuffer buffer = ByteBuffer.wrap(pcmData);
-                                AL10.alBufferData(AL10.AL_BUFFER, AL10.AL_FORMAT_STEREO16, buffer, (int) properties.get("sampleRate"));
-                            }
-
-                            @Override
-                            public void statusUpdated(StreamPlayerEvent event) {
-                                switch (event.getPlayerStatus()) {
-                                    case PLAYING -> {
-                                        player.setGain(getVolume());
-                                    }
-                                    case STOPPED, EOM -> {
-                                        cleanup();
-                                    }
-                                }
-                            }
-                        });
                 player.play();
-            } catch (IOException | StreamPlayerException e) {
-                NekoMusicClient.LOGGER.error("Play music failed", e);
-                cleanup();
+                player.setGain(getVolume());
+            } catch (Exception e) {
+                NekoMusicClient.LOGGER.error("Failed to play music", e);
+                stop();
             }
-        });
+        }));
+
         if (NekoMusicClient.config.enableHud) {
             if (NekoMusicClient.hudUtils == null) {
                 NekoMusicClient.hudUtils = new HudUtils();
@@ -79,25 +59,15 @@ public class MusicManager {
         }
     }
 
-    private void cleanup() {
-        StreamPlayer player = this.playerRef.getAndSet(null);
+    public synchronized void stop() {
+        AudioPlayer player = this.playerRef.getAndSet(null);
+        this.futures.forEach(f -> {
+            if (!f.isDone()) {
+                f.cancel(true);
+            }
+        });
         if (player != null) {
             player.stop();
-        }
-        this.isPlaying = false;
-        if (this.currentMusic != null) {
-            this.currentMusic = null;
-        }
-    }
-
-    public void stop() {
-        StreamPlayer player = this.playerRef.getAndSet(null);
-        if (player != null) {
-            player.stop();
-        }
-        if (this.future != null) {
-            this.future.cancel(true);
-            this.future = null;
         }
         this.isPlaying = false;
         if (this.currentMusic != null) {
@@ -110,17 +80,22 @@ public class MusicManager {
 
     public void dispose() {
         this.stop();
-        this.executorService.shutdownNow();
+        this.executor.shutdownNow();
+        this.isDisposed = true;
     }
 
     private static float getVolume() {
         return MinecraftClient.getInstance().options.getSoundVolume(SoundCategory.RECORDS);
     }
 
-    public void SetVolume(float volume) {
-        StreamPlayer player = this.playerRef.get();
+    public void setVolume(float volume) {
+        AudioPlayer player = this.playerRef.get();
         if (player != null) {
-            player.setGain(volume);
+            try {
+                player.setGain(volume);
+            } catch (Exception e) {
+                NekoMusicClient.LOGGER.error("Failed to set volume", e);
+            }
         }
     }
 

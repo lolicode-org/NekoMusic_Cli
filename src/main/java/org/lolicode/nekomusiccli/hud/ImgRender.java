@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -19,13 +20,13 @@ public class ImgRender implements AutoCloseable {
     private int angle = 0;
     private final long startTime = System.currentTimeMillis();
     private final boolean shouldRotate;
-    public ImgRender(BufferedInputStream stream, boolean shouldRotate) throws IOException {
+    public ImgRender(ByteArrayInputStream stream, boolean shouldRotate) throws IOException {
         this.textureId = InitImg(stream);
         this.shouldRotate = shouldRotate;
     }
-    // A function that reads a bufferedinputstream, cuts the image into a circle,
+    // A function that reads a ByteArrayInputStream, cuts the image into a circle,
     // draws a filled black circle outside the circle, and returns a textureId
-    public int InitImg(BufferedInputStream stream) throws IOException {
+    public int InitImg(ByteArrayInputStream stream) throws IOException {
         // Use ImageIO.read to create a bufferedimage from the bufferedinputstream
         BufferedImage bufferedImage = ImageIO.read(stream);
 

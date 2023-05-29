@@ -27,18 +27,22 @@ public class NetUtils {
         cacheUtils = new CacheUtils(config);
     }
 
-    public BufferedInputStream getMusicStream(MusicObj musicObj) {
+    public ByteArrayInputStream getMusicStream(MusicObj musicObj) {
         return fetchDataAutoCache(musicObj.url, musicObj.Hash(), CacheType.MUSIC);
     }
 
-    public BufferedInputStream getImageStream(AlbumObj albumObj) {
+    public ByteArrayInputStream getImageStream(AlbumObj albumObj) {
         return fetchDataAutoCache(albumObj.picUrl, albumObj.Hash(), CacheType.IMG);
     }
 
-    private BufferedInputStream fetchData(String url, String hash, CacheType cacheType, boolean cache) {
+    private ByteArrayInputStream fetchData(String url, String hash, CacheType cacheType, boolean cache) {
         BufferedInputStream inputStream = cacheUtils.getFromCache(hash, cacheType);
         if (inputStream != null) {
-            return inputStream;
+            try (inputStream) {
+                return new ByteArrayInputStream(inputStream.readAllBytes());
+            } catch (Exception e) {
+                NekoMusicClient.LOGGER.error("Failed to read cache: " + e.getMessage());
+            }
         }
         try (var resp = client.newCall(NetRequest.getRequest(url)).execute()) {
             if (resp.code() != 200) {
@@ -52,14 +56,14 @@ public class NetUtils {
             if (cache) {
                 cacheUtils.saveToCache(hash, bytes, cacheType);
             }
-            return new BufferedInputStream(new ByteArrayInputStream(bytes));
+            return new ByteArrayInputStream(bytes);
         } catch (Exception e) {
             NekoMusicClient.LOGGER.error("Failed to get data: " + e.getMessage());
             return null;
         }
     }
 
-    private BufferedInputStream fetchDataAutoCache(String url, String hash, CacheType cacheType) {
+    private ByteArrayInputStream fetchDataAutoCache(String url, String hash, CacheType cacheType) {
         switch (cacheType) {
             case MUSIC -> {
                 return fetchData(url, hash, cacheType, NekoMusicClient.config.musicCacheSize != 0);

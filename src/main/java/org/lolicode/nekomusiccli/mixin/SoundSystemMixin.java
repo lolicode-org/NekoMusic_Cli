@@ -31,7 +31,7 @@ public class SoundSystemMixin {
     @Inject(method = "Lnet/minecraft/client/sound/SoundSystem;updateSoundVolume(Lnet/minecraft/sound/SoundCategory;F)V", at = @At("HEAD"), cancellable = true)
     public void updateSoundVolume(SoundCategory category, float volume, CallbackInfo ci){
         if (category == SoundCategory.RECORDS && NekoMusicClient.musicManager != null) {
-            NekoMusicClient.musicManager.SetVolume(volume);
+            NekoMusicClient.musicManager.setVolume(volume);
             ci.cancel();
         }
     }
