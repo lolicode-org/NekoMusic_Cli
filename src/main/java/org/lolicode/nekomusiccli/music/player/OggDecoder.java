@@ -1,43 +1,64 @@
 package org.lolicode.nekomusiccli.music.player;
 
-import org.lolicode.nekomusiccli.libs.ogg.oggdecoder.OggData;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.stb.STBVorbis;
+import org.lwjgl.stb.STBVorbisInfo;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
-public class OggDecoder extends org.lolicode.nekomusiccli.libs.ogg.oggdecoder.OggDecoder implements Decoder {
-    private final ByteArrayInputStream inputStream;
-    private final OggData data;
-    private volatile boolean consumed = false;
+public class OggDecoder implements Decoder {
+    private final long decoder;
+    private volatile boolean closed = false;
     public OggDecoder(ByteArrayInputStream inputStream) throws IOException {
-        super();
-        this.inputStream = inputStream;
-        this.data = super.getData(inputStream);
+        // Have to use buffer created by BufferUtils, or it will kill your JVM...
+        ByteBuffer byteBuffer = BufferUtils.createByteBuffer(inputStream.available());
+        byteBuffer.put(inputStream.readAllBytes());
+        byteBuffer.flip();
+        IntBuffer errorBuffer = BufferUtils.createIntBuffer(1);
+        decoder = STBVorbis.stb_vorbis_open_memory(byteBuffer, errorBuffer, null);
+        if (decoder == 0 || errorBuffer.get(0) != 0) {
+            throw new IOException("Failed to open Ogg file: " + errorBuffer.get(0));
+        }
     }
 
     @Override
     public int getOutputFrequency() {
-        return data.rate;
+        try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
+            STBVorbis.stb_vorbis_get_info(decoder, info);
+            return info.sample_rate();
+        }
     }
 
     @Override
     public int getOutputChannels() {
-        return data.channels;
-    }
-
-    @Override
-    public void close() throws Exception {
-        inputStream.close();
-    }
-
-    @Override
-    public synchronized ByteBuffer decodeFrame() throws Exception {
-        if (consumed) {
-            return null;
+        try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
+            STBVorbis.stb_vorbis_get_info(decoder, info);
+            return info.channels();
         }
-        consumed = true;
-        byte[] bytes = super.getConvbuffer();
-        return Decoder.getByteBuffer(bytes);
+    }
+
+    @Override
+    public synchronized void close() {
+        if (closed) return;
+        closed = true;
+        STBVorbis.stb_vorbis_close(decoder);
+    }
+
+    @Override
+    public synchronized ByteBuffer decodeFrame() {
+        try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
+            STBVorbis.stb_vorbis_get_info(decoder, info);
+            int channels = info.channels();
+            int length = STBVorbis.stb_vorbis_stream_length_in_samples(decoder);
+            short[] shorts = new short[length * channels];
+            int samples = STBVorbis.stb_vorbis_get_samples_short_interleaved(decoder, channels, shorts);
+            if (samples == 0) {
+                return null;
+            }
+            return Decoder.getByteBuffer(shorts);
+        }
     }
 }
