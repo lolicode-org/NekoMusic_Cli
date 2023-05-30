@@ -1,11 +1,14 @@
 package org.lolicode.nekomusiccli.music.player;
 
 import org.lolicode.nekomusiccli.NekoMusicClient;
+import org.lolicode.nekomusiccli.music.MusicManager;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL10;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -13,7 +16,9 @@ public class AudioPlayer implements AutoCloseable {
     private final int source;
     private final Decoder decoder;
     private final ByteArrayInputStream stream;
-    private final BlockingQueue<Integer> queue = new LinkedBlockingQueue<>();
+    private final BlockingQueue<IntBuffer> queue = new LinkedBlockingQueue<>();
+    private Thread decodeThread = null;
+    private Thread playbackThread = null;
     private volatile boolean playbackRunning = false;
     private volatile boolean cleanupDone = false;
 
@@ -35,17 +40,26 @@ public class AudioPlayer implements AutoCloseable {
             return;  // Prevent multiple playbacks
         }
         playbackRunning = true;
-        new Thread(this::decodeLoop, NekoMusicClient.MOD_NAME + " Audio-Decode-Loop").start();
-        new Thread(this::playBackLoop, NekoMusicClient.MOD_NAME + " Audio-Playback-Loop").start();
+        this.decodeThread = new Thread(this::decodeLoop, NekoMusicClient.MOD_NAME + " Audio-Decode-Loop");
+        this.decodeThread.start();
+        this.playbackThread = new Thread(this::playBackLoop, NekoMusicClient.MOD_NAME + " Audio-Playback-Loop");
+        this.playbackThread.start();
     }
 
     public synchronized void stop() {
         try {
-            this.decoder.close();
+            if (this.decoder != null)
+                this.decoder.close();
         } catch (Exception e) {
             NekoMusicClient.LOGGER.error("Failed to close the decoder", e);
         }
         playbackRunning = false;  // Stop the playback thread
+        if (this.decodeThread != null) {
+            this.decodeThread.interrupt();
+        }
+        if (this.playbackThread != null) {
+            this.playbackThread.interrupt();
+        }
     }
 
     public synchronized void cleanup() {
@@ -75,9 +89,11 @@ public class AudioPlayer implements AutoCloseable {
                 if (buffer == null) {
                     break;
                 }
-                int alBuffer = AL10.alGenBuffers();
-                AL10.alBufferData(alBuffer, decoder.getOutputChannels() == 1 ? AL10.AL_FORMAT_MONO16 : AL10.AL_FORMAT_STEREO16, buffer, decoder.getOutputFrequency());
-                queue.put(alBuffer);
+                IntBuffer intBuffer = BufferUtils.createIntBuffer(1);
+                AL10.alGenBuffers(intBuffer);
+                AL10.alBufferData(intBuffer.get(0), decoder.getOutputChannels() == 1 ? AL10.AL_FORMAT_MONO16 : AL10.AL_FORMAT_STEREO16, buffer, decoder.getOutputFrequency());
+                AL10.alSourcef(source, AL10.AL_GAIN, MusicManager.getVolume());
+                queue.put(intBuffer);
             }
         } catch (InterruptedException ignored) {
         } catch (Exception e) {
@@ -94,7 +110,7 @@ public class AudioPlayer implements AutoCloseable {
     private void playBackLoop() {
         try {
             while (playbackRunning) {
-                int buffer = queue.take();  // This blocks if the queue is empty
+                IntBuffer buffer = queue.take();  // This blocks if the queue is empty
                 AL10.alSourceQueueBuffers(source, buffer);
                 if (AL10.alGetSourcei(source, AL10.AL_SOURCE_STATE) != AL10.AL_PLAYING) {
                     AL10.alSourcePlay(source);

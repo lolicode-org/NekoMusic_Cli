@@ -49,7 +49,7 @@ public class FlacDecoder extends org.lolicode.nekomusiccli.libs.flac.decode.Flac
     @Override
     public synchronized ByteBuffer decodeFrame() throws Exception {
         if (!metadataRead) handleMetadata();
-        int[][] samples = new int[super.streamInfo.numChannels][];
+        int[][] samples = new int[super.streamInfo.numChannels][super.streamInfo.maxBlockSize];
         byte[] sampleBytes = new byte[super.streamInfo.maxBlockSize * super.streamInfo.numChannels * super.streamInfo.sampleDepth / 8];
 
         int blockSamples = readAudioBlock(samples, 0);

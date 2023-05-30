@@ -1,13 +1,14 @@
 package org.lolicode.nekomusiccli.music.player;
 
 import javazoom.jl.decoder.*;
-import javazoom.jl.decoder.Decoder;
 import org.lolicode.nekomusiccli.libs.flac.decode.DataFormatException;
+import org.lwjgl.BufferUtils;
 
 import java.io.ByteArrayInputStream;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 
-public class Mp3Decoder extends Decoder implements org.lolicode.nekomusiccli.music.player.Decoder {
+public class Mp3Decoder extends javazoom.jl.decoder.Decoder implements Decoder {
     private final Bitstream bitstream;
     public Mp3Decoder(ByteArrayInputStream inputStream) throws BitstreamException, DataFormatException {
         super();
@@ -16,6 +17,7 @@ public class Mp3Decoder extends Decoder implements org.lolicode.nekomusiccli.mus
         if (header == null) {
             throw new DataFormatException("Failed to read header");
         }
+        bitstream.closeFrame();
     }
 
     @Override
@@ -30,10 +32,11 @@ public class Mp3Decoder extends Decoder implements org.lolicode.nekomusiccli.mus
             return null;
         }
         SampleBuffer buffer = (SampleBuffer) super.decodeFrame(frame, bitstream);
-        ByteBuffer byteBuffer = ByteBuffer.allocate(2 * buffer.getBufferLength());
+        ByteBuffer byteBuffer = BufferUtils.createByteBuffer(buffer.getBufferLength() * 2);
         for (short s : buffer.getBuffer()) {
             byteBuffer.putShort(s);
         }
+        ((Buffer) byteBuffer).flip();
         bitstream.closeFrame();
         return byteBuffer;
     }

@@ -84,7 +84,7 @@ public class MusicManager {
         this.isDisposed = true;
     }
 
-    private static float getVolume() {
+    public static float getVolume() {
         return MinecraftClient.getInstance().options.getSoundVolume(SoundCategory.RECORDS);
     }
 
