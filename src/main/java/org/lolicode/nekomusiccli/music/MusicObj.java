@@ -28,6 +28,9 @@ public class MusicObj {
     public AlbumObj album;
 
     public String Hash() {
-        return this.id + "_" + this.br;
+        if (this.id != 0)
+            return this.id + "_" + this.br;
+        else
+            return this.url;  // AllMusic and custom packets
     }
 }
