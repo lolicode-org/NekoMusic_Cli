@@ -68,6 +68,6 @@ public class FlacDecoder extends org.lolicode.nekomusiccli.libs.flac.decode.Flac
                     sampleBytes[sampleBytesLen] = (byte) (val >>> (j << 3));
             }
         }
-        return ByteBuffer.wrap(sampleBytes, 0, sampleBytesLen);
+        return Decoder.getByteBuffer(sampleBytes, 0, sampleBytesLen);
     }
 }

@@ -2,6 +2,7 @@ package org.lolicode.nekomusiccli.music.player;
 
 import javazoom.jl.decoder.BitstreamException;
 import org.lolicode.nekomusiccli.libs.flac.decode.DataFormatException;
+import org.lwjgl.BufferUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -23,6 +24,29 @@ public interface Decoder extends AutoCloseable {
                 return new OggDecoder(inputStream);
             }
         }
+    }
+
+    static ByteBuffer getByteBuffer(byte[] bytes) {
+        ByteBuffer byteBuffer = BufferUtils.createByteBuffer(bytes.length);
+        byteBuffer.put(bytes, 0, bytes.length);
+        byteBuffer.flip();
+        return byteBuffer;
+    }
+
+    static ByteBuffer getByteBuffer(byte[] bytes, int offset, int length) {
+        ByteBuffer byteBuffer = BufferUtils.createByteBuffer(length);
+        byteBuffer.put(bytes, offset, length);
+        byteBuffer.flip();
+        return byteBuffer;
+    }
+
+    static ByteBuffer getByteBuffer(short[] shorts) {
+        ByteBuffer byteBuffer = BufferUtils.createByteBuffer(shorts.length * 2);
+        for (short s : shorts) {
+            byteBuffer.putShort(s);
+        }
+        byteBuffer.flip();
+        return byteBuffer;
     }
 
     int getOutputFrequency() throws IOException;

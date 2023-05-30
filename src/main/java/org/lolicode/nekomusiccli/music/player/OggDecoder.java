@@ -9,6 +9,7 @@ import java.nio.ByteBuffer;
 public class OggDecoder extends org.lolicode.nekomusiccli.libs.ogg.oggdecoder.OggDecoder implements Decoder {
     private final ByteArrayInputStream inputStream;
     private final OggData data;
+    private volatile boolean consumed = false;
     public OggDecoder(ByteArrayInputStream inputStream) throws IOException {
         super();
         this.inputStream = inputStream;
@@ -31,7 +32,12 @@ public class OggDecoder extends org.lolicode.nekomusiccli.libs.ogg.oggdecoder.Og
     }
 
     @Override
-    public ByteBuffer decodeFrame() throws Exception {
-        return ByteBuffer.wrap(super.getConvbuffer());
+    public synchronized ByteBuffer decodeFrame() throws Exception {
+        if (consumed) {
+            return null;
+        }
+        consumed = true;
+        byte[] bytes = super.getConvbuffer();
+        return Decoder.getByteBuffer(bytes);
     }
 }
