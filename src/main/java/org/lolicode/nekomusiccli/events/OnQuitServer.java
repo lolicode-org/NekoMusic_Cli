@@ -9,8 +9,9 @@ public class OnQuitServer {
         if (NekoMusicClient.musicManager != null) {
             NekoMusicClient.musicManager.stop();
         }
-        if (NekoMusicClient.hudUtilsRef.get() != null) {
-            NekoMusicClient.hudUtilsRef.getAndSet(null).close();
+        if (NekoMusicClient.hudUtils != null) {
+            NekoMusicClient.hudUtils.close();
+            NekoMusicClient.hudUtils = null;
         }
         AllMusicPacketReceiver.isNekoServer = false;
     }

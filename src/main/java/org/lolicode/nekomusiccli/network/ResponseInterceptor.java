@@ -6,7 +6,6 @@ import okhttp3.ResponseBody;
 import okio.Buffer;
 import okio.GzipSource;
 import org.jetbrains.annotations.NotNull;
-import org.lolicode.nekomusiccli.NekoMusicClient;
 
 import java.io.IOException;
 

@@ -1,7 +1,6 @@
 package org.lolicode.nekomusiccli.hud;
 
 import org.lolicode.nekomusiccli.NekoMusicClient;
-import org.lolicode.nekomusiccli.config.ModConfig;
 
 public class InfoRender {
     public static void render(String info) {

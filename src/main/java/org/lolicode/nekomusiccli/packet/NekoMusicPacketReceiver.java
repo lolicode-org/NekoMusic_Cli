@@ -29,14 +29,14 @@ public class NekoMusicPacketReceiver {
     private static void onReceivePlaylist(PacketByteBuf buf, ClientPlayNetworkHandler handler) {
         if (buf == null || !NekoMusicClient.config.enabled
                 || NekoMusicClient.config.bannedServers.contains(handler.getServerInfo() == null ? "" : handler.getServerInfo().address)
-                || NekoMusicClient.hudUtilsRef.get() == null) {
+                || NekoMusicClient.hudUtils == null) {
             return;
         }
         MusicList musicList = NekoMusicClient.GSON.fromJson(buf.readString(), MusicList.class);
         if (musicList == null || musicList.isEmpty()) {
             return;
         }
-        NekoMusicClient.hudUtilsRef.get().setList(musicList);
+        NekoMusicClient.hudUtils.setList(musicList);
     }
 
     public static void register() {

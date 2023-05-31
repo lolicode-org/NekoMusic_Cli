@@ -13,9 +13,11 @@ public class HudUtils {
     private volatile LyricRender lyricRender = null;
     private volatile ImgRender imgRender = null;
     private volatile boolean isClosed = false;
+    private volatile boolean isStopped = false;
 
     public synchronized void setMusic(MusicObj music) {
-        close();
+        if (isClosed) throw new IllegalStateException("Hud is closed");
+        stopCurrentMusic();
         info = music.name == null || music.name.isBlank() ? Text.translatable("hud.nekomusic.no_title").getString() : music.name;
         info += "\n";
         info += music.ar == null || music.ar.isEmpty() ? Text.translatable("hud.nekomusic.no_artist").getString() : music.ar.get(0).name;
@@ -34,19 +36,19 @@ public class HudUtils {
         if (lyricRender != null) lyricRender.stop();
         if (music.lyric != null) {
             lyricRender = new LyricRender(music.lyric);
-            lyricRender.start();
         } else {
             lyricRender = null;
         }
-        isClosed = false;
+        isStopped = false;
     }
 
     public synchronized void setList(MusicList list) {
+        if (isClosed) throw new IllegalStateException("Hud is closed");
         this.list = list.toString();
     }
 
     public void frame() {
-        if (isClosed) return;
+        if (isClosed || isStopped) return;
         var cfg = NekoMusicClient.config;
         if (!cfg.enableHud) return;
         if (cfg.enableHudImg && imgRender != null) {
@@ -63,7 +65,11 @@ public class HudUtils {
         }
     }
 
-    public synchronized void close() {
+    public synchronized void startLyric() {
+        if (lyricRender != null) lyricRender.start();
+    }
+
+    public synchronized void stopCurrentMusic() {
         if (lyricRender != null) {
             lyricRender.stop();
             lyricRender = null;
@@ -74,6 +80,11 @@ public class HudUtils {
         }
         info = null;
         list = null;
+        isStopped = true;
+    }
+
+    public synchronized void close() {
+        stopCurrentMusic();
         isClosed = true;
     }
 }

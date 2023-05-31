@@ -8,8 +8,9 @@ public class OnClientStop {
         if (NekoMusicClient.musicManager != null) {
             NekoMusicClient.musicManager.dispose();
         }
-        if (NekoMusicClient.hudUtilsRef.get() != null) {
-            NekoMusicClient.hudUtilsRef.getAndSet(null).close();
+        if (NekoMusicClient.hudUtils != null) {
+            NekoMusicClient.hudUtils.close();
+            NekoMusicClient.hudUtils = null;
         }
     }
 

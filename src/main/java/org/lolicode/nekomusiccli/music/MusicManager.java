@@ -36,6 +36,12 @@ public class MusicManager {
         this.currentMusic = music;
 
         this.futures.add(this.executor.submit(() -> {
+            try {
+                if (NekoMusicClient.hudUtils == null) NekoMusicClient.hudUtils = new HudUtils();
+                NekoMusicClient.hudUtils.setMusic(music);
+            } catch (Exception e) {
+                NekoMusicClient.LOGGER.error("Failed to update hud", e);
+            }
             try (ByteArrayInputStream stream = NekoMusicClient.netUtils.getMusicStream(music)) {
                 if (stream == null) {
                     NekoMusicClient.LOGGER.error("Failed to get music stream");
@@ -43,15 +49,7 @@ public class MusicManager {
                 }
                 AudioPlayer player = new AudioPlayer(stream);
                 playerRef.set(player);
-                // Start hud right before play to sync lyric and music
-                if (NekoMusicClient.config.enableHud) {
-                    HudUtils hudUtils = NekoMusicClient.hudUtilsRef.get();
-                    if (hudUtils == null) {
-                        hudUtils = new HudUtils();
-                        NekoMusicClient.hudUtilsRef.set(hudUtils);
-                    }
-                    hudUtils.setMusic(music);
-                }
+                if (NekoMusicClient.hudUtils != null) NekoMusicClient.hudUtils.startLyric();  // sync lyric with music
                 player.play();
                 player.setGain(getVolume());
             } catch (Exception e) {
@@ -76,8 +74,8 @@ public class MusicManager {
         if (this.currentMusic != null) {
             this.currentMusic = null;
         }
-        if (NekoMusicClient.hudUtilsRef.get() != null) {
-            NekoMusicClient.hudUtilsRef.get().close();
+        if (NekoMusicClient.hudUtils != null) {
+            NekoMusicClient.hudUtils.stopCurrentMusic();
         }
     }
 

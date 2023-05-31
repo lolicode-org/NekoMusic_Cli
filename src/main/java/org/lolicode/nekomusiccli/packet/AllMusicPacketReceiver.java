@@ -1,6 +1,5 @@
 package org.lolicode.nekomusiccli.packet;
 
-import kotlin.NotImplementedError;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
