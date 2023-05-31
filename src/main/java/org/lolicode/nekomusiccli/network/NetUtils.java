@@ -14,15 +14,21 @@ import java.util.concurrent.TimeUnit;
 
 public class NetUtils {
 
-    private final OkHttpClient client;
+    private final OkHttpClient musicClient;
+    private final OkHttpClient imageClient;
 
     private final CacheUtils cacheUtils;
 
     public NetUtils(ModConfig config) {
-        client = new OkHttpClient.Builder()
+        musicClient = new OkHttpClient.Builder()
                 .connectTimeout(5, TimeUnit.SECONDS)
-                .readTimeout(15, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
                 .addInterceptor(new ResponseInterceptor(config.responseSizeLimit * 1024 * 1024))
+                .build();
+        imageClient = new OkHttpClient.Builder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.SECONDS)
+                .addInterceptor(new ResponseInterceptor(5 * 1024 * 1024))
                 .build();
         cacheUtils = new CacheUtils(config);
     }
@@ -35,7 +41,7 @@ public class NetUtils {
         return fetchDataAutoCache(albumObj.picUrl, albumObj.Hash(), CacheType.IMG);
     }
 
-    private ByteArrayInputStream fetchData(String url, String hash, CacheType cacheType, boolean cache) {
+    private ByteArrayInputStream fetchData(String url, String hash, OkHttpClient client, CacheType cacheType, boolean cache) {
         BufferedInputStream inputStream = cacheUtils.getFromCache(hash, cacheType);
         if (inputStream != null) {
             try (inputStream) {
@@ -66,10 +72,10 @@ public class NetUtils {
     private ByteArrayInputStream fetchDataAutoCache(String url, String hash, CacheType cacheType) {
         switch (cacheType) {
             case MUSIC -> {
-                return fetchData(url, hash, cacheType, NekoMusicClient.config.musicCacheSize != 0);
+                return fetchData(url, hash, musicClient, cacheType, NekoMusicClient.config.musicCacheSize != 0);
             }
             case IMG -> {
-                return fetchData(url, hash, cacheType, NekoMusicClient.config.imgCacheSize != 0);
+                return fetchData(url, hash, imageClient, cacheType, NekoMusicClient.config.imgCacheSize != 0);
             }
             default -> {
                 throw new IllegalArgumentException("Invalid cache type");

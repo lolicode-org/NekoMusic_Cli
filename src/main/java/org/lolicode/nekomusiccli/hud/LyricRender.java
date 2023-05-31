@@ -36,7 +36,12 @@ public class LyricRender {
     }
 
     public void render() {
-        RenderMain.drawText(currentSentence, NekoMusicClient.config.lyricX, NekoMusicClient.config.lyricY);
+        if (currentSentence == null || currentSentence.isBlank()) return;
+        int offset = 0;
+        for (var sentence: currentSentence.split("\n")) {
+            RenderMain.drawText(sentence, NekoMusicClient.config.lyricX, NekoMusicClient.config.lyricY + offset);
+            offset += 10;
+        }
     }
 
     public synchronized boolean hasLyric() {

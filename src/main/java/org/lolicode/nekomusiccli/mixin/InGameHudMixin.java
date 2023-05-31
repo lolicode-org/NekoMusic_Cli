@@ -12,6 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class InGameHudMixin {
     @Inject(method = {"render"}, at = {@At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderStatusEffectOverlay(Lnet/minecraft/client/util/math/MatrixStack;)V")})
     public void Gui(MatrixStack matrices, float tickDelta, CallbackInfo ci) {
-        if (NekoMusicClient.hudUtils != null) NekoMusicClient.hudUtils.frame();
+        if (NekoMusicClient.hudUtilsRef.get() != null) NekoMusicClient.hudUtilsRef.get().frame();
     }
 }

@@ -43,6 +43,15 @@ public class MusicManager {
                 }
                 AudioPlayer player = new AudioPlayer(stream);
                 playerRef.set(player);
+                // Start hud right before play to sync lyric and music
+                if (NekoMusicClient.config.enableHud) {
+                    HudUtils hudUtils = NekoMusicClient.hudUtilsRef.get();
+                    if (hudUtils == null) {
+                        hudUtils = new HudUtils();
+                        NekoMusicClient.hudUtilsRef.set(hudUtils);
+                    }
+                    hudUtils.setMusic(music);
+                }
                 player.play();
                 player.setGain(getVolume());
             } catch (Exception e) {
@@ -50,13 +59,6 @@ public class MusicManager {
                 stop();
             }
         }));
-
-        if (NekoMusicClient.config.enableHud) {
-            if (NekoMusicClient.hudUtils == null) {
-                NekoMusicClient.hudUtils = new HudUtils();
-            }
-            NekoMusicClient.hudUtils.setMusic(music);
-        }
     }
 
     public synchronized void stop() {
@@ -66,6 +68,7 @@ public class MusicManager {
                 f.cancel(true);
             }
         });
+        this.futures.clear();
         if (player != null) {
             player.stop();
         }
@@ -73,12 +76,12 @@ public class MusicManager {
         if (this.currentMusic != null) {
             this.currentMusic = null;
         }
-        if (NekoMusicClient.hudUtils != null) {
-            NekoMusicClient.hudUtils.close();
+        if (NekoMusicClient.hudUtilsRef.get() != null) {
+            NekoMusicClient.hudUtilsRef.get().close();
         }
     }
 
-    public void dispose() {
+    public synchronized void dispose() {
         this.stop();
         this.executor.shutdownNow();
         this.isDisposed = true;

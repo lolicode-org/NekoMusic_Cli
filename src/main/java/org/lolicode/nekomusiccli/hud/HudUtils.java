@@ -8,13 +8,11 @@ import org.lolicode.nekomusiccli.music.MusicObj;
 import java.io.IOException;
 
 public class HudUtils {
-    private String info = null;
-    private String list = null;
+    private volatile String info = null;
+    private volatile String list = null;
     private volatile LyricRender lyricRender = null;
     private volatile ImgRender imgRender = null;
     private volatile boolean isClosed = false;
-
-    // TODO:Thread
 
     public synchronized void setMusic(MusicObj music) {
         close();
@@ -36,6 +34,7 @@ public class HudUtils {
         if (lyricRender != null) lyricRender.stop();
         if (music.lyric != null) {
             lyricRender = new LyricRender(music.lyric);
+            lyricRender.start();
         } else {
             lyricRender = null;
         }
@@ -47,6 +46,7 @@ public class HudUtils {
     }
 
     public void frame() {
+        if (isClosed) return;
         var cfg = NekoMusicClient.config;
         if (!cfg.enableHud) return;
         if (cfg.enableHudImg && imgRender != null) {

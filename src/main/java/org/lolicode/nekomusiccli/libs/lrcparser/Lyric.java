@@ -174,7 +174,7 @@ public class Lyric{
 		for (Sentence sentence : translation.sentences) {
 			Sentence target = this.findSentence(sentence.getFromTime());
 			if (target != null) {
-				target.setContent(target.getContent() + " / " + sentence.getContent());
+				target.setContent(target.getContent() + "\n" + sentence.getContent());
 			}
 		}
 		this.updateDuration();

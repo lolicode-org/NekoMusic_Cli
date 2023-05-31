@@ -15,6 +15,8 @@ import org.lolicode.nekomusiccli.events.Events;
 import org.lolicode.nekomusiccli.packet.AllMusicPacketReceiver;
 import org.lolicode.nekomusiccli.packet.NekoMusicPacketReceiver;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 public class NekoMusicClient implements ClientModInitializer {
     public static final String MOD_ID = "nekomusiccli";
     public static final String MOD_NAME = "NekoMusic Client";
@@ -23,7 +25,7 @@ public class NekoMusicClient implements ClientModInitializer {
     public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
     public static final Gson GSON = new Gson();
     public static MusicManager musicManager;
-    public static HudUtils hudUtils = null;
+    public static final AtomicReference<HudUtils> hudUtilsRef = new AtomicReference<>();
     public static ModConfig config;
     public static NetUtils netUtils;
     /**
