@@ -45,5 +45,17 @@
   "text.autoconfig.nekomusic.option.responseSizeLimit.@Tooltip[1]": "§eThis might help you mitigate some wrongly configured servers (e.g. accidentally send a 1GB music) that send too much data, but not guaranteed to work in all cases.",
   "text.autoconfig.nekomusic.option.responseSizeLimit.@Tooltip[2]": "§eThis should not be considered as a security feature. If your server send large data on purpose to break the client, personally I would recommend you to find a better server.",
   "text.autoconfig.nekomusic.category.default": "Basic",
-  "text.autoconfig.nekomusic.category.advanced": "Advanced"
+  "text.autoconfig.nekomusic.category.advanced": "Advanced",
+  "hud.nekomusic.no_title": "No Title",
+  "hud.nekomusic.no_artist": "No Artist",
+  "hud.nekomusic.no_album": "No Album",
+  "hud.nekomusic.failed_to_load_image": "Failed to load cover image, please check your network connection.",
+  "hud.nekomusic.lyric.parse.failed": "Failed to parse lyric",
+  "hud.nekomusic.update.failed": "Failed to update HUD, this should not happen, please report this to the developer with full log.",
+  "player.nekomusic.manager.disposed": "MusicManager called after being disposed, this should not happen, please report this to the developer with full log.",
+  "player.nekomusic.music.null": "Music is null, this should not happen, please report this to the developer with full log.",
+  "player.nekomusic.stream.failed": "Failed to get music stream, please check your network connection.",
+  "player.nekomusic.play.failed": "Failed to play music: Unknown error. If you believe this is a bug, please report this to the developer with full log.",
+  "player.nekomusic.decode.failed": "Failed to decode music, perhaps the music is corrupted or unsupported.",
+  "volume.nekomusic.set.failed": "Failed to set volume. This should not happen, please report this to the developer with full log."
 }

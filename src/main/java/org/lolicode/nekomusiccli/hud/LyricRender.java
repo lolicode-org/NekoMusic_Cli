@@ -5,6 +5,7 @@ import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.libs.lrcparser.Lyric;
 import org.lolicode.nekomusiccli.libs.lrcparser.parser.LyricParser;
 import org.lolicode.nekomusiccli.music.LyricObj;
+import org.lolicode.nekomusiccli.utils.Alert;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
@@ -32,6 +33,7 @@ public class LyricRender {
         } catch (Exception e) {
             this.lyric = null;
             NekoMusicClient.LOGGER.error("Failed to parse lyric: " + e.getMessage());
+            Alert.warn("hud.nekomusic.lyric.parse.failed");
         }
     }
 

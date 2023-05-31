@@ -6,8 +6,10 @@ import net.minecraft.sound.SoundCategory;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.hud.HudUtils;
 import org.lolicode.nekomusiccli.music.player.AudioPlayer;
+import org.lolicode.nekomusiccli.utils.Alert;
 
 import java.io.ByteArrayInputStream;
+import java.io.InterruptedIOException;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -22,6 +24,7 @@ public class MusicManager {
     public synchronized void play(MusicObj music) {
         if (this.isDisposed) {
             NekoMusicClient.LOGGER.error("MusicManager is disposed");
+            Alert.error("player.nekomusic.manager.disposed");
             return;
         }
         if (this.isPlaying) {
@@ -29,6 +32,7 @@ public class MusicManager {
         }
         if (music == null) {
             NekoMusicClient.LOGGER.error("Music is null");
+            Alert.error("player.nekomusic.music.null");
             return;
         }
         stopVanillaMusic();
@@ -41,10 +45,12 @@ public class MusicManager {
                 NekoMusicClient.hudUtils.setMusic(music);
             } catch (Exception e) {
                 NekoMusicClient.LOGGER.error("Failed to update hud", e);
+                Alert.error("hud.nekomusic.update.failed");
             }
             try (ByteArrayInputStream stream = NekoMusicClient.netUtils.getMusicStream(music)) {
                 if (stream == null) {
                     NekoMusicClient.LOGGER.error("Failed to get music stream");
+                    Alert.error("player.nekomusic.stream.failed");
                     return;
                 }
                 AudioPlayer player = new AudioPlayer(stream);
@@ -52,8 +58,11 @@ public class MusicManager {
                 if (NekoMusicClient.hudUtils != null) NekoMusicClient.hudUtils.startLyric();  // sync lyric with music
                 player.play();
                 player.setGain(getVolume());
+            } catch (InterruptedIOException e) {
+                stop();
             } catch (Exception e) {
                 NekoMusicClient.LOGGER.error("Failed to play music", e);
+                Alert.error("player.nekomusic.play.failed");
                 stop();
             }
         }));
@@ -96,6 +105,7 @@ public class MusicManager {
                 player.setGain(volume);
             } catch (Exception e) {
                 NekoMusicClient.LOGGER.error("Failed to set volume", e);
+                Alert.error("volume.nekomusic.set.failed");
             }
         }
     }

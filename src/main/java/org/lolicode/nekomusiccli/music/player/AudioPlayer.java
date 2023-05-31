@@ -2,6 +2,7 @@ package org.lolicode.nekomusiccli.music.player;
 
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.music.MusicManager;
+import org.lolicode.nekomusiccli.utils.Alert;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL10;
 
@@ -98,6 +99,7 @@ public class AudioPlayer implements AutoCloseable {
         } catch (InterruptedException ignored) {
         } catch (Exception e) {
             NekoMusicClient.LOGGER.error("Failed to decode the audio stream", e);
+            Alert.error("player.nekomusic.decode.failed");
         } finally {
             try {
                 decoder.close();
@@ -108,6 +110,7 @@ public class AudioPlayer implements AutoCloseable {
     }
 
     private void playBackLoop() {
+        // TODO: FIX HUD SHOWING AFTER ALL SONGS PLAYED
         try {
             while (playbackRunning) {
                 IntBuffer buffer = queue.take();  // This blocks if the queue is empty
@@ -137,4 +140,3 @@ public class AudioPlayer implements AutoCloseable {
         cleanup();
     }
 }
-

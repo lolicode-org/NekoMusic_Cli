@@ -45,5 +45,17 @@
   "text.autoconfig.nekomusic.option.responseSizeLimit.@Tooltip[1]": "§e这可能能在一定程度上避免错误配置的服务器（如播放了长度过长的音乐）导致客户端崩溃，但并不保证在所有情况下都能生效。",
   "text.autoconfig.nekomusic.option.responseSizeLimit.@Tooltip[2]": "§e这不应当被视为一个可靠的安全措施。如果你所在的服务器故意这样做，个人认为离开这个服务器可能更合适。",
   "text.autoconfig.nekomusic.category.default": "基本",
-  "text.autoconfig.nekomusic.category.advanced": "高级"
+  "text.autoconfig.nekomusic.category.advanced": "高级",
+  "hud.nekomusic.no_title": "无标题",
+  "hud.nekomusic.no_artist": "未知艺术家",
+  "hud.nekomusic.no_album": "未知专辑",
+  "hud.nekomusic.failed_to_load_image": "加载封面失败，请检查网络连接",
+  "hud.nekomusic.lyric.parse.failed": "解析歌词失败",
+  "hud.nekomusic.update.failed": "更新Hud失败，这通常不应该发生，如果你认为这是一个bug，请收集完整的日志并向开发者报告。",
+  "player.nekomusic.manager.disposed": "音乐管理器在被释放后仍然被调用，这通常不应该发生，如果你认为这是一个bug，请收集完整的日志并向开发者报告。",
+  "player.nekomusic.music.null": "音乐管理器收到了一个空音乐，这通常不应该发生，如果你认为这是一个bug，请收集完整的日志并向开发者报告。",
+  "player.nekomusic.stream.failed": "加载音乐失败，请检查网络连接",
+  "player.nekomusic.decode.failed": "解码音乐失败，可能是音乐文件损坏或者不支持的格式",
+  "player.nekomusic.play.failed": "未知的播放错误，如果你认为这是一个bug，请收集完整的日志并向开发者报告。",
+  "volume.nekomusic.set.failed": "设置音量失败，这通常不应该发生。如果你认为这是一个bug，请收集完整的日志并向开发者报告。"
 }

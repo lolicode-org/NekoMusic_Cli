@@ -4,8 +4,10 @@ import net.minecraft.text.Text;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.music.MusicList;
 import org.lolicode.nekomusiccli.music.MusicObj;
+import org.lolicode.nekomusiccli.utils.Alert;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
 
 public class HudUtils {
     private volatile String info = null;
@@ -27,10 +29,13 @@ public class HudUtils {
         if (music.album != null && music.album.picUrl != null && !music.album.picUrl.isBlank()) {
             try (var imageStream = NekoMusicClient.netUtils.getImageStream(music.album)) {
                 imgRender = new ImgRender(imageStream, NekoMusicClient.config.enableHudImgRotate);
+            } catch (InterruptedIOException ignored) {
             } catch (IOException e) {
                 NekoMusicClient.LOGGER.error("Failed to load image: " + music.album.picUrl);
+                Alert.warn("hud.nekomusic.failed_to_load_image");
             } catch (Exception e) {
                 NekoMusicClient.LOGGER.error("Failed to load image: " + e.getMessage());
+                Alert.warn("hud.nekomusic.failed_to_load_image");
             }
         }
         if (lyricRender != null) lyricRender.stop();
