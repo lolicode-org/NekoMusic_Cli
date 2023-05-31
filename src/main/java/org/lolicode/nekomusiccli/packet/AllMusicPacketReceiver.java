@@ -1,6 +1,7 @@
 package org.lolicode.nekomusiccli.packet;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
@@ -41,8 +42,10 @@ public class AllMusicPacketReceiver {
     }
 
     public static void register() {
-        ClientPlayNetworking.registerGlobalReceiver(AllMusicPacketId, (client, handler, buf, responseSender) -> {
-            onReceive(buf, handler);
-        });
+        if (NekoMusicClient.config.allmusicCompatible)
+            ClientPlayNetworking.registerGlobalReceiver(AllMusicPacketId, (client, handler, buf, responseSender) -> onReceive(buf, handler));
+        else
+            if (!FabricLoader.getInstance().isModLoaded("allmusic_client"))
+                ClientPlayNetworking.registerGlobalReceiver(AllMusicPacketId, (client, handler, buf, responseSender) -> {});  // throttle allmusic packets to avoid annoying log
     }
 }
