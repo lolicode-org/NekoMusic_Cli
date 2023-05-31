@@ -16,8 +16,6 @@ public class OnQuitServer {
     }
 
     public static void register() {
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-            onQuitServer();
-        });
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> onQuitServer());
     }
 }

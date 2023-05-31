@@ -87,7 +87,7 @@ public class ModConfig implements ConfigData {
             responseSizeLimit = 10;
         while (bannedServers.remove("")) ;
         try {
-            CacheUtils.CheckCachePath(getCachePath());
+            CacheUtils.checkCachePath(getCachePath());
         } catch (Exception e) {
             throw new ValidationException("Invalid cache path: " + e.getMessage());
         }

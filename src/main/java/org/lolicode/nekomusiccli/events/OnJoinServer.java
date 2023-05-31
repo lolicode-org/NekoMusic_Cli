@@ -15,8 +15,6 @@ public class OnJoinServer {
     }
 
     public static void register() {
-        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-            OnPlayerJoin(client);
-        });
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> OnPlayerJoin(client));
     }
 }

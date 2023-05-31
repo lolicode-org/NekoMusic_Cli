@@ -77,9 +77,7 @@ public class NetUtils {
             case IMG -> {
                 return fetchData(url, hash, imageClient, cacheType, NekoMusicClient.config.imgCacheSize != 0);
             }
-            default -> {
-                throw new IllegalArgumentException("Invalid cache type");
-            }
+            default -> throw new IllegalArgumentException("Invalid cache type");
         }
     }
 }

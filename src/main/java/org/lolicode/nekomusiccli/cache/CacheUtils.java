@@ -16,7 +16,7 @@ public class CacheUtils {
     private final Path imgPath;
 
     public CacheUtils(ModConfig config) {
-        CheckCachePath(config.getCachePath());
+        checkCachePath(config.getCachePath());
         cachePath = Path.of(config.getCachePath());
         musicPath = cachePath.resolve("music");
         imgPath = cachePath.resolve("img");
@@ -106,15 +106,15 @@ public class CacheUtils {
         }
     }
 
-    public static boolean CheckCachePath(String path) {
+    public static boolean checkCachePath(String path) {
         Path p = Path.of(path);
-        CheckPath(p);
-        CheckPath(p.resolve("music"));
-        CheckPath(p.resolve("img"));
+        checkPath(p);
+        checkPath(p.resolve("music"));
+        checkPath(p.resolve("img"));
         return true;
     }
 
-    private static boolean CheckPath(Path path) throws RuntimeException {
+    private static boolean checkPath(Path path) throws RuntimeException {
         File file = path.toFile();
         if (!file.exists()) {
             if (!file.mkdirs()) {
@@ -144,7 +144,7 @@ public class CacheUtils {
 
     public static String getDefaultCachePath() {
         String path = MinecraftClient.getInstance().runDirectory.toPath().resolve("cache").resolve(NekoMusicClient.MOD_ID).toString();
-        CheckCachePath(path);
+        checkCachePath(path);
         return path;
     }
 }

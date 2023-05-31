@@ -1,13 +1,11 @@
 package org.lolicode.nekomusiccli.packet;
 
-import kotlin.NotImplementedError;
 import lol.bai.badpackets.api.S2CPacketReceiver;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.music.MusicList;
-import org.lolicode.nekomusiccli.music.MusicManager;
 import org.lolicode.nekomusiccli.music.MusicObj;
 
 public class NekoMusicPacketReceiver {
@@ -42,11 +40,7 @@ public class NekoMusicPacketReceiver {
     }
 
     public static void register() {
-        S2CPacketReceiver.register(METADATA_PACKET_ID, (client, handler, buf, responseSender) -> {
-            onReceiveMetadata(buf, handler);
-        });
-        S2CPacketReceiver.register(PLAYLIST_PACKET_ID, (client, handler, buf, responseSender) -> {
-            onReceivePlaylist(buf, handler);
-        });
+        S2CPacketReceiver.register(METADATA_PACKET_ID, (client, handler, buf, responseSender) -> onReceiveMetadata(buf, handler));
+        S2CPacketReceiver.register(PLAYLIST_PACKET_ID, (client, handler, buf, responseSender) -> onReceivePlaylist(buf, handler));
     }
 }
