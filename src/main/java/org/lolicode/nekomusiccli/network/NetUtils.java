@@ -23,13 +23,13 @@ public class NetUtils {
     public NetUtils(ModConfig config) {
         musicClient = new OkHttpClient.Builder()
                 .connectTimeout(5, TimeUnit.SECONDS)
-                .readTimeout(20, TimeUnit.SECONDS)
-                .addInterceptor(new ResponseInterceptor(config.responseSizeLimit * 1024 * 1024))
+                .readTimeout(10, TimeUnit.SECONDS)
+                .addInterceptor(new ResponseInterceptor(config.musicResponseSizeLimit * 1024 * 1024))
                 .build();
         imageClient = new OkHttpClient.Builder()
-                .connectTimeout(5, TimeUnit.SECONDS)
-                .readTimeout(5, TimeUnit.SECONDS)
-                .addInterceptor(new ResponseInterceptor(5 * 1024 * 1024))
+                .connectTimeout(3, TimeUnit.SECONDS)
+                .readTimeout(3, TimeUnit.SECONDS)
+                .addInterceptor(new ResponseInterceptor(config.imgResponseSizeLimit * 1024 * 1024))
                 .build();
         cacheUtils = new CacheUtils(config);
     }

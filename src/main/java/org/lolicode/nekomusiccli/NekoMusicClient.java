@@ -38,6 +38,6 @@ public class NekoMusicClient implements ClientModInitializer {
 
         Events.register();
         NekoMusicPacketReceiver.register();
-        if (config.allmusicCompatible) AllMusicPacketReceiver.register();
+        AllMusicPacketReceiver.register();
     }
 }

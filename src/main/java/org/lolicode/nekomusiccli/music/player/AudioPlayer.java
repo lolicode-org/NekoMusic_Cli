@@ -110,7 +110,6 @@ public class AudioPlayer implements AutoCloseable {
     }
 
     private void playBackLoop() {
-        // TODO: FIX HUD SHOWING AFTER ALL SONGS PLAYED
         try {
             while (playbackRunning) {
                 IntBuffer buffer = queue.take();  // This blocks if the queue is empty

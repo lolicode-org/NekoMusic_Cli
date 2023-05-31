@@ -44,7 +44,12 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Category("advanced")
     @ConfigEntry.Gui.Tooltip(count = 3)
     @ConfigEntry.Gui.RequiresRestart
-    public long responseSizeLimit = 200;
+    public long musicResponseSizeLimit = 200;
+
+    @ConfigEntry.Category("advanced")
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.Gui.RequiresRestart
+    public long imgResponseSizeLimit = 10;
 
     @ConfigEntry.Category("advanced")
     @ConfigEntry.Gui.Tooltip(count = 2)
@@ -84,8 +89,8 @@ public class ModConfig implements ConfigData {
             musicCacheSize = -1;
         if (imgRotateSpeed <= 0)
             imgRotateSpeed = 50;
-        if (responseSizeLimit != -1 && responseSizeLimit < 10)
-            responseSizeLimit = 10;
+        if (musicResponseSizeLimit != -1 && musicResponseSizeLimit < 10)
+            musicResponseSizeLimit = 10;
         while (bannedServers.remove("")) ;
         try {
             CacheUtils.checkCachePath(getCachePath());

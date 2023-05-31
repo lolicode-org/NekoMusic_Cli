@@ -18,6 +18,7 @@ public class MusicManager {
     private volatile boolean isPlaying = false;
     public volatile MusicObj currentMusic = null;
     private final ExecutorService executor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat(NekoMusicClient.MOD_NAME + " Music-Manager").build());
+    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(NekoMusicClient.MOD_NAME + " Music-Manager-Scheduler").build());
     private final BlockingDeque<Future<?>> futures = new LinkedBlockingDeque<>();
     private volatile boolean isDisposed = false;
 
@@ -43,6 +44,8 @@ public class MusicManager {
             try {
                 if (NekoMusicClient.hudUtils == null) NekoMusicClient.hudUtils = new HudUtils();
                 NekoMusicClient.hudUtils.setMusic(music);
+            } catch (InterruptedIOException e) {
+                return;
             } catch (Exception e) {
                 NekoMusicClient.LOGGER.error("Failed to update hud", e);
                 Alert.error("hud.nekomusic.update.failed");
@@ -58,14 +61,20 @@ public class MusicManager {
                 if (NekoMusicClient.hudUtils != null) NekoMusicClient.hudUtils.startLyric();  // sync lyric with music
                 player.play();
                 player.setGain(getVolume());
-            } catch (InterruptedIOException e) {
-                stop();
+            } catch (InterruptedIOException ignored) {
+                // it'll be interrupted when stop, dont call stop again
             } catch (Exception e) {
                 NekoMusicClient.LOGGER.error("Failed to play music", e);
                 Alert.error("player.nekomusic.play.failed");
                 stop();
             }
         }));
+
+        this.futures.add(this.scheduler.schedule(() -> {
+            if (this.isPlaying) {
+                this.stop();
+            }
+        }, music.dt, TimeUnit.MILLISECONDS));
     }
 
     public synchronized void stop() {
@@ -91,6 +100,7 @@ public class MusicManager {
     public synchronized void dispose() {
         this.stop();
         this.executor.shutdownNow();
+        this.scheduler.shutdownNow();
         this.isDisposed = true;
     }
 

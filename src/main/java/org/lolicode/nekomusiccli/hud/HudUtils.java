@@ -17,7 +17,7 @@ public class HudUtils {
     private volatile boolean isClosed = false;
     private volatile boolean isStopped = false;
 
-    public synchronized void setMusic(MusicObj music) {
+    public synchronized void setMusic(MusicObj music) throws InterruptedIOException {
         if (isClosed) throw new IllegalStateException("Hud is closed");
         stopCurrentMusic();
         info = music.name == null || music.name.isBlank() ? Text.translatable("hud.nekomusic.no_title").getString() : music.name;
@@ -29,7 +29,8 @@ public class HudUtils {
         if (music.album != null && music.album.picUrl != null && !music.album.picUrl.isBlank()) {
             try (var imageStream = NekoMusicClient.netUtils.getImageStream(music.album)) {
                 imgRender = new ImgRender(imageStream, NekoMusicClient.config.enableHudImgRotate);
-            } catch (InterruptedIOException ignored) {
+            } catch (InterruptedIOException e) {
+                throw e;
             } catch (IOException e) {
                 NekoMusicClient.LOGGER.error("Failed to load image: " + music.album.picUrl);
                 Alert.warn("hud.nekomusic.failed_to_load_image");
