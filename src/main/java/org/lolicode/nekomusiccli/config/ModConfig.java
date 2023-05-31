@@ -21,6 +21,7 @@ public class ModConfig implements ConfigData {
     public boolean enableHudList = true;
     public boolean enableHudLyric = true;
     public boolean enableHudImg = true;
+    @ConfigEntry.Gui.Tooltip
     public boolean enableHudImgRotate = true;
 
     public int infoX = 74;
