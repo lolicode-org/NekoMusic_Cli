@@ -1,6 +1,6 @@
 package org.lolicode.nekomusiccli.network;
 
-import okhttp3.OkHttpClient;
+import okhttp3.*;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.cache.CacheType;
 import org.lolicode.nekomusiccli.cache.CacheUtils;
@@ -10,8 +10,12 @@ import org.lolicode.nekomusiccli.music.MusicObj;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.util.concurrent.TimeUnit;
+
+import static org.lolicode.nekomusiccli.cache.CacheType.IMG;
+import static org.lolicode.nekomusiccli.cache.CacheType.MUSIC;
 
 public class NetUtils {
 
@@ -34,15 +38,19 @@ public class NetUtils {
         cacheUtils = new CacheUtils(config);
     }
 
-    public ByteArrayInputStream getMusicStream(MusicObj musicObj) throws InterruptedIOException {
-        return fetchDataAutoCache(musicObj.url, musicObj.Hash(), CacheType.MUSIC);
+    public ByteArrayInputStream getMusicStream(MusicObj musicObj, boolean onlyCache) throws InterruptedIOException {
+        return fetchDataAutoCache(musicObj.url, musicObj.Hash(), MUSIC, onlyCache);
+    }
+
+    public Response getMusicResponse(MusicObj musicObj) throws InterruptedIOException {
+        return fetchData(musicObj.url, musicObj.Hash(), musicClient, MUSIC);
     }
 
     public ByteArrayInputStream getImageStream(AlbumObj albumObj) throws InterruptedIOException {
-        return fetchDataAutoCache(albumObj.picUrl, albumObj.Hash(), CacheType.IMG);
+        return fetchDataAutoCache(albumObj.picUrl, albumObj.Hash(), IMG, false);
     }
 
-    private ByteArrayInputStream fetchData(String url, String hash, OkHttpClient client, CacheType cacheType, boolean cache) throws InterruptedIOException {
+    private ByteArrayInputStream fetchData(String url, String hash, OkHttpClient client, CacheType cacheType, boolean saveToCache, boolean onlyCache) throws InterruptedIOException {
         BufferedInputStream inputStream = cacheUtils.getFromCache(hash, cacheType);
         if (inputStream != null) {
             try (inputStream) {
@@ -51,6 +59,7 @@ public class NetUtils {
                 NekoMusicClient.LOGGER.error("Failed to read cache: " + e.getMessage());
             }
         }
+        if (onlyCache) return null;
         try (var resp = client.newCall(NetRequest.getRequest(url)).execute()) {
             if (resp.code() != 200) {
                 return null;
@@ -60,7 +69,7 @@ public class NetUtils {
                 return null;
             }
             byte[] bytes = body.bytes();
-            if (cache) {
+            if (saveToCache) {
                 cacheUtils.saveToCache(hash, bytes, cacheType);
             }
             return new ByteArrayInputStream(bytes);
@@ -73,13 +82,34 @@ public class NetUtils {
         }
     }
 
-    private ByteArrayInputStream fetchDataAutoCache(String url, String hash, CacheType cacheType) throws InterruptedIOException {
+    private Response fetchData(String url, String hash, OkHttpClient client, CacheType cacheType) throws InterruptedIOException {
+        Response resp;
+        try {
+            resp = client.newCall(NetRequest.getRequest(url)).execute();
+        } catch (InterruptedIOException e) {
+            NekoMusicClient.LOGGER.info("Request interrupted");
+            throw e;
+        } catch (Exception e) {
+            NekoMusicClient.LOGGER.error("Failed to get data: " + e.getMessage());
+            return null;
+        }
+        if (resp.code() != 200) {
+            return null;
+        }
+        var body = resp.body();
+        if (body == null || body.contentLength() <= 0) {
+            return null;
+        }
+        return resp;
+    }
+
+    private ByteArrayInputStream fetchDataAutoCache(String url, String hash, CacheType cacheType, boolean onlyCache) throws InterruptedIOException {
         switch (cacheType) {
             case MUSIC -> {
-                return fetchData(url, hash, musicClient, cacheType, NekoMusicClient.config.musicCacheSize != 0);
+                return fetchData(url, hash, musicClient, cacheType, NekoMusicClient.config.musicCacheSize != 0, onlyCache);
             }
             case IMG -> {
-                return fetchData(url, hash, imageClient, cacheType, NekoMusicClient.config.imgCacheSize != 0);
+                return fetchData(url, hash, imageClient, cacheType, NekoMusicClient.config.imgCacheSize != 0, onlyCache);
             }
             default -> throw new IllegalArgumentException("Invalid cache type");
         }

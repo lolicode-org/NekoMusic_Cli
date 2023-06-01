@@ -6,8 +6,10 @@ import net.minecraft.sound.SoundCategory;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.hud.HudUtils;
 import org.lolicode.nekomusiccli.music.player.AudioPlayer;
+import org.lolicode.nekomusiccli.music.player.ByteArrayInputStreamAudioPlayer;
 import org.lolicode.nekomusiccli.utils.Alert;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.InterruptedIOException;
 import java.util.concurrent.*;
@@ -31,7 +33,7 @@ public class MusicManager {
         if (this.isPlaying) {
             this.stop();
         }
-        if (music == null) {
+        if (music == null || music.url == null || music.url.isBlank()) {
             NekoMusicClient.LOGGER.error("Music is null");
             Alert.error("player.nekomusic.music.null");
             return;
@@ -50,19 +52,22 @@ public class MusicManager {
                 NekoMusicClient.LOGGER.error("Failed to update hud", e);
                 Alert.error("hud.nekomusic.update.failed");
             }
-            try (ByteArrayInputStream stream = NekoMusicClient.netUtils.getMusicStream(music)) {
-                if (stream == null) {
-                    NekoMusicClient.LOGGER.error("Failed to get music stream");
-                    Alert.error("player.nekomusic.stream.failed");
-                    return;
+            try {
+                AudioPlayer player;
+                ByteArrayInputStream cacheMusic = NekoMusicClient.netUtils.getMusicStream(music, true);
+                if (cacheMusic != null) {
+                    player = new ByteArrayInputStreamAudioPlayer(cacheMusic);
+                } else {
+                    player = AudioPlayer.getAudioPlayerStream(music);
+                    if (player == null) player = AudioPlayer.getAudioPlayerNoStream(music);
+                    if (player == null) throw new RuntimeException("Failed to get audio player");
                 }
-                AudioPlayer player = new AudioPlayer(stream);
                 playerRef.set(player);
                 if (NekoMusicClient.hudUtils != null) NekoMusicClient.hudUtils.startLyric();  // sync lyric with music
                 player.play();
                 player.setGain(getVolume());
             } catch (InterruptedIOException ignored) {
-                // it'll be interrupted when stop, dont call stop again
+                // it'll be interrupted only when stop, dont call stop again
             } catch (Exception e) {
                 NekoMusicClient.LOGGER.error("Failed to play music", e);
                 Alert.error("player.nekomusic.play.failed");

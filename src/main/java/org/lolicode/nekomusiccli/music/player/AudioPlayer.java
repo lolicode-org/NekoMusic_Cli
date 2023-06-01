@@ -1,39 +1,70 @@
 package org.lolicode.nekomusiccli.music.player;
 
+import okhttp3.Response;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.music.MusicManager;
+import org.lolicode.nekomusiccli.music.MusicObj;
 import org.lolicode.nekomusiccli.utils.Alert;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL10;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class AudioPlayer implements AutoCloseable {
-    private final int source;
-    private final Decoder decoder;
-    private final ByteArrayInputStream stream;
+public abstract class AudioPlayer implements AutoCloseable {
+    protected final int source;
+    protected Decoder decoder = null;
     private final BlockingQueue<IntBuffer> queue = new LinkedBlockingQueue<>();
     private Thread decodeThread = null;
     private Thread playbackThread = null;
     private volatile boolean playbackRunning = false;
-    private volatile boolean cleanupDone = false;
+    protected volatile boolean cleanupDone = false;
 
-    public AudioPlayer(ByteArrayInputStream stream) throws RuntimeException, IOException {
-        this.source = AL10.alGenSources();
-        this.stream = stream;
-
+    public static AudioPlayer getAudioPlayerStream(MusicObj music) throws InterruptedIOException {
+        if (music == null || music.url == null || music.url.isBlank()) throw new IllegalArgumentException("MusicObj is null or url is null or blank");
+        String url = music.url.toLowerCase();
+        if (!url.endsWith(".mp3") && !url.endsWith(".flac")) return null;
         try {
-            this.decoder = Decoder.getDecoder(stream);
-        } catch (RuntimeException | IOException e) {
-            NekoMusicClient.LOGGER.error("Failed to open the audio stream", e);
-            cleanup();
+            // if use try-with-resource, the response will be closed when the try block is exited, before it's actually consumed
+            Response response = NekoMusicClient.netUtils.getMusicResponse(music);
+            if (response == null) {
+                return null;
+            }
+            assert response.body() != null;
+            return ResponseAudioPlayer.getMp3OrFlacAudioPlayer(response, url.endsWith(".mp3"));
+        } catch (InterruptedIOException e) {
             throw e;
+        } catch (Exception e) {
+            NekoMusicClient.LOGGER.error("Failed to get music stream", e);
+            Alert.error("player.nekomusic.stream.failed");
         }
+        return null;
+    }
+
+    public static AudioPlayer getAudioPlayerNoStream(MusicObj music) throws InterruptedIOException {
+        if (music == null || music.url == null || music.url.isBlank()) throw new IllegalArgumentException("MusicObj is null or url is null or blank");
+        try (ByteArrayInputStream stream = NekoMusicClient.netUtils.getMusicStream(music, false)) {
+            if (stream == null) {
+                NekoMusicClient.LOGGER.error("Failed to get byte array input stream");
+                Alert.error("player.nekomusic.stream.failed");
+                return null;
+            }
+            return new ByteArrayInputStreamAudioPlayer(stream);
+        } catch (InterruptedIOException e) {
+            throw e;
+        } catch (Exception e) {
+            NekoMusicClient.LOGGER.error("Failed to get music stream", e);
+            Alert.error("player.nekomusic.stream.failed");
+        }
+        return null;
+    }
+
+    public AudioPlayer() {
+        this.source = AL10.alGenSources();
     }
 
     public synchronized void play() {
@@ -74,11 +105,6 @@ public class AudioPlayer implements AutoCloseable {
         AL10.alSourceUnqueueBuffers(this.source);
         AL10.alDeleteSources(this.source);
         queue.forEach(AL10::alDeleteBuffers);
-        try {
-            this.stream.close();  // Close the stream
-        } catch (IOException e) {
-            NekoMusicClient.LOGGER.error("Failed to close the audio stream", e);
-        }
 
         cleanupDone = true;  // Mark the cleanup as done
     }

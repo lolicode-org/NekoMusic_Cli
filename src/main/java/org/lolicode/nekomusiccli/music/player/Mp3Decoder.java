@@ -3,12 +3,12 @@ package org.lolicode.nekomusiccli.music.player;
 import javazoom.jl.decoder.*;
 import org.lolicode.nekomusiccli.libs.flac.decode.DataFormatException;
 
-import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 public class Mp3Decoder extends javazoom.jl.decoder.Decoder implements Decoder {
     private final Bitstream bitstream;
-    public Mp3Decoder(ByteArrayInputStream inputStream) throws BitstreamException, DataFormatException {
+    public Mp3Decoder(InputStream inputStream) throws BitstreamException, DataFormatException {
         super();
         this.bitstream = new Bitstream(inputStream);
         var header = bitstream.readFrame();

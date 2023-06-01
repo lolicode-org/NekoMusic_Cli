@@ -2,9 +2,12 @@ package org.lolicode.nekomusiccli.music.player;
 
 import org.lolicode.nekomusiccli.libs.flac.decode.ByteArrayFlacInput;
 import org.lolicode.nekomusiccli.libs.flac.decode.DataFormatException;
+import org.lolicode.nekomusiccli.music.player.flac.BufferedInputStreamFlacInput;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.Objects;
 
@@ -15,10 +18,14 @@ public class FlacDecoder extends org.lolicode.nekomusiccli.libs.flac.decode.Flac
      * @param in the input stream to read from
      * @throws IOException if an I/O exception occurred
      */
-    public FlacDecoder(ByteArrayInputStream in) throws IOException, DataFormatException {
+    public FlacDecoder(InputStream in) throws IOException, DataFormatException {
         super();
         Objects.requireNonNull(in);
-        super.input = new ByteArrayFlacInput(in.readAllBytes());
+        if (in instanceof BufferedInputStream) {
+            super.input = new BufferedInputStreamFlacInput((BufferedInputStream) in);
+        } else {
+            super.input = new ByteArrayFlacInput(in.readAllBytes());
+        }
         if (input.readUint(32) != 0x664C6143)  // Magic string "fLaC"
             throw new DataFormatException("Invalid magic string");
         super.metadataEndPos = -1;

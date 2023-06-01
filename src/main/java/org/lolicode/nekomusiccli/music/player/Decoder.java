@@ -6,6 +6,7 @@ import org.lwjgl.BufferUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 public interface Decoder extends AutoCloseable {
@@ -14,16 +15,37 @@ public interface Decoder extends AutoCloseable {
             throw new NullPointerException("inputStream is null");
         }
         try {
-            return new FlacDecoder(inputStream);
+            return getFlacDecoder(inputStream);
         } catch (DataFormatException e) {
             try {
                 inputStream.reset();
-                return new Mp3Decoder(inputStream);
+                return getMp3Decoder(inputStream);
             } catch (DataFormatException | BitstreamException ex) {
                 inputStream.reset();
-                return new OggDecoder(inputStream);
+                return getOggDecoder(inputStream);
             }
         }
+    }
+
+    static Decoder getMp3Decoder(InputStream inputStream) throws DataFormatException, BitstreamException {
+        if (inputStream == null) {
+            throw new NullPointerException("inputStream is null");
+        }
+        return new Mp3Decoder(inputStream);
+    }
+
+    static Decoder getFlacDecoder(InputStream inputStream) throws DataFormatException, IOException {
+        if (inputStream == null) {
+            throw new NullPointerException("inputStream is null");
+        }
+        return new FlacDecoder(inputStream);
+    }
+
+    static Decoder getOggDecoder(ByteArrayInputStream inputStream) throws DataFormatException, IOException {
+        if (inputStream == null) {
+            throw new NullPointerException("inputStream is null");
+        }
+        return new OggDecoder(inputStream);
     }
 
     static ByteBuffer getByteBuffer(byte[] bytes) {
