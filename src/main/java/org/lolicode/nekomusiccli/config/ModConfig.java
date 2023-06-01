@@ -35,6 +35,7 @@ public class ModConfig implements ConfigData {
     public int imgSize = 70;
     public int imgRotateSpeed = 50;
 
+    @ConfigEntry.Gui.Tooltip(count = 2)
     public List<String> bannedServers = new ArrayList<>();
     @ConfigEntry.Category("advanced")
     @ConfigEntry.Gui.Tooltip(count = 2)
@@ -52,12 +53,12 @@ public class ModConfig implements ConfigData {
     public long imgResponseSizeLimit = 10;
 
     @ConfigEntry.Category("advanced")
-    @ConfigEntry.Gui.Tooltip(count = 2)
+    @ConfigEntry.Gui.Tooltip
     @ConfigEntry.Gui.RequiresRestart
     public int musicCacheSize = 1024;
 
     @ConfigEntry.Category("advanced")
-    @ConfigEntry.Gui.Tooltip(count = 2)
+    @ConfigEntry.Gui.Tooltip
     @ConfigEntry.Gui.RequiresRestart
     public int imgCacheSize = 100;
 
