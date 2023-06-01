@@ -15,6 +15,7 @@ public class RenderMain {
     }
 
     public static void drawImg(int textureId, boolean shouldRotate, int angle) {
+        if (textureId <= 0) return;
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, textureId);
