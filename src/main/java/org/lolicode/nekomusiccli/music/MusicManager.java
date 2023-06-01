@@ -61,6 +61,15 @@ public class MusicManager {
                 if (NekoMusicClient.hudUtils != null) NekoMusicClient.hudUtils.startLyric();  // sync lyric with music
                 player.play();
                 player.setGain(getVolume());
+
+                if (music.dt > 0) {
+                    // stop music after playing finished. If interrupted, it'll be canceled in stop()
+                    this.futures.add(this.scheduler.schedule(() -> {
+                        if (this.isPlaying) {
+                            this.stop();
+                        }
+                    }, music.dt, TimeUnit.MILLISECONDS));
+                }
             } catch (InterruptedIOException ignored) {
                 // it'll be interrupted only when stop, dont call stop again
             } catch (Exception e) {
@@ -69,15 +78,6 @@ public class MusicManager {
                 stop();
             }
         }));
-
-        if (music.dt > 0) {
-            // stop music after playing finished. If interrupted, it'll be canceled in stop()
-            this.futures.add(this.scheduler.schedule(() -> {
-                if (this.isPlaying) {
-                    this.stop();
-                }
-            }, music.dt, TimeUnit.MILLISECONDS));
-        }
     }
 
     public synchronized void stop() {
