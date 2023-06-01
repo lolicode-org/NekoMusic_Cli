@@ -35,7 +35,7 @@ public class CacheUtils {
         try {
             lock();
         } catch (Exception e) {
-            NekoMusicClient.LOGGER.error("Failed to lock cache directory: " + e.getMessage());
+            NekoMusicClient.LOGGER.error("Failed to lock cache directory: ", e);
             NekoMusicClient.LOGGER.error("Force disabling cache");
             forceDisableCache = true;
             imgCacheMap = null;
@@ -187,9 +187,10 @@ public class CacheUtils {
         }
         try {
             lockfile = new FileOutputStream(cachePath.resolve(LOCK_FILE).toFile()).getChannel();
-            lock = lockfile.lock();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to lock cache directory: " + e.getMessage());
+            lock = lockfile.tryLock();
+            if (lock == null) throw new RuntimeException("Failed to lock cache directory.");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
