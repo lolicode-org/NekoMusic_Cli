@@ -5,7 +5,6 @@ import org.lolicode.nekomusiccli.libs.flac.decode.DataFormatException;
 import org.lolicode.nekomusiccli.music.player.flac.BufferedInputStreamFlacInput;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -13,6 +12,9 @@ import java.util.Objects;
 
 public class FlacDecoder extends org.lolicode.nekomusiccli.libs.flac.decode.FlacDecoder implements Decoder {
     private volatile boolean metadataRead = false;
+    private volatile boolean closed = false;
+    private int sampleRate = 0;
+    private int channels = 0;
     /**
      * Constructs a new FLAC decoder from the given input stream.
      * @param in the input stream to read from
@@ -39,22 +41,25 @@ public class FlacDecoder extends org.lolicode.nekomusiccli.libs.flac.decode.Flac
             // Do nothing
         }
         metadataRead = true;
+        sampleRate = super.streamInfo.sampleRate;
+        channels = super.streamInfo.numChannels;
     }
 
     @Override
     public int getOutputFrequency() throws IOException {
         if (!metadataRead) handleMetadata();
-        return super.streamInfo.sampleRate;
+        return sampleRate;
     }
 
     @Override
     public int getOutputChannels() throws IOException {
         if (!metadataRead) handleMetadata();
-        return super.streamInfo.numChannels;
+        return channels;
     }
 
     @Override
     public synchronized ByteBuffer decodeFrame() throws Exception {
+        if (closed) return null;
         if (!metadataRead) handleMetadata();
         int[][] samples = new int[super.streamInfo.numChannels][super.streamInfo.maxBlockSize];
         byte[] sampleBytes = new byte[super.streamInfo.maxBlockSize * super.streamInfo.numChannels * super.streamInfo.sampleDepth / 8];
@@ -76,5 +81,12 @@ public class FlacDecoder extends org.lolicode.nekomusiccli.libs.flac.decode.Flac
             }
         }
         return Decoder.getByteBuffer(sampleBytes, 0, sampleBytesLen);
+    }
+
+    @Override
+    public synchronized void close() throws IOException {
+        if (this.closed) return;
+        super.close();
+        this.closed = true;
     }
 }
