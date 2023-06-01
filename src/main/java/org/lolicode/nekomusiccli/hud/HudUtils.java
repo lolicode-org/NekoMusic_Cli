@@ -6,6 +6,7 @@ import org.lolicode.nekomusiccli.music.MusicList;
 import org.lolicode.nekomusiccli.music.MusicObj;
 import org.lolicode.nekomusiccli.utils.Alert;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 
@@ -27,12 +28,14 @@ public class HudUtils {
         info += music.album == null || music.album.name == null || music.album.name.isBlank() ? Text.translatable("hud.nekomusic.no_album").getString() : music.album.name;
         if (music.player != null && !music.player.isBlank()) info += "\nby: " + music.player;
         if (music.album != null && music.album.picUrl != null && !music.album.picUrl.isBlank()) {
-            try (var imageStream = NekoMusicClient.netUtils.getImageStream(music.album)) {
-                imgRender = new ImgRender(imageStream, NekoMusicClient.config.enableHudImgRotate);
+            try (var imageResponse = NekoMusicClient.netUtils.getImageResponse(music.album)) {
+                if (imageResponse == null || imageResponse.body() == null) throw new IOException("Failed to load image");
+                var imgStream = new ByteArrayInputStream(imageResponse.body().bytes());
+                imgRender = new ImgRender(imgStream, NekoMusicClient.config.enableHudImgRotate);
             } catch (InterruptedIOException e) {
                 throw e;
             } catch (IOException e) {
-                NekoMusicClient.LOGGER.error("Failed to load image: " + music.album.picUrl);
+                NekoMusicClient.LOGGER.error("Failed to load image: " + music.album.picUrl, e);
                 Alert.warn("hud.nekomusic.failed_to_load_image");
             } catch (Exception e) {
                 NekoMusicClient.LOGGER.error("Failed to load image: " + e.getMessage());

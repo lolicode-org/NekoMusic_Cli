@@ -6,11 +6,8 @@ import net.minecraft.sound.SoundCategory;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.hud.HudUtils;
 import org.lolicode.nekomusiccli.music.player.AudioPlayer;
-import org.lolicode.nekomusiccli.music.player.ByteArrayInputStreamAudioPlayer;
 import org.lolicode.nekomusiccli.utils.Alert;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.InterruptedIOException;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -53,15 +50,13 @@ public class MusicManager {
                 Alert.error("hud.nekomusic.update.failed");
             }
             try {
-                AudioPlayer player;
-                ByteArrayInputStream cacheMusic = NekoMusicClient.netUtils.getMusicStream(music, true);
-                if (cacheMusic != null) {
-                    player = new ByteArrayInputStreamAudioPlayer(cacheMusic);
-                } else {
-                    player = AudioPlayer.getAudioPlayerStream(music);
-                    if (player == null) player = AudioPlayer.getAudioPlayerNoStream(music);
-                    if (player == null) throw new RuntimeException("Failed to get audio player");
+                AudioPlayer player = AudioPlayer.getAudioPlayerStream(music);
+                if (player == null) {
+                    NekoMusicClient.LOGGER.info("Failed to stream audio, perhaps the server doesn't support it, or the format is not supported");
+                    Alert.info("player.nekomusic.downloading");
+                    player = AudioPlayer.getAudioPlayerNoStream(music);
                 }
+                if (player == null) throw new RuntimeException("Failed to get audio player");
                 playerRef.set(player);
                 if (NekoMusicClient.hudUtils != null) NekoMusicClient.hudUtils.startLyric();  // sync lyric with music
                 player.play();

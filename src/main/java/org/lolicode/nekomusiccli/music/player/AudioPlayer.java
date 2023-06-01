@@ -28,17 +28,20 @@ public abstract class AudioPlayer implements AutoCloseable {
         if (music == null || music.url == null || music.url.isBlank()) throw new IllegalArgumentException("MusicObj is null or url is null or blank");
         String url = music.url.toLowerCase();
         if (!url.endsWith(".mp3") && !url.endsWith(".flac")) return null;
+        Response response = null;
         try {
             // if use try-with-resource, the response will be closed when the try block is exited, before it's actually consumed
-            Response response = NekoMusicClient.netUtils.getMusicResponse(music);
+            response = NekoMusicClient.netUtils.getMusicResponse(music);
             if (response == null) {
                 return null;
             }
             assert response.body() != null;
             return ResponseAudioPlayer.getMp3OrFlacAudioPlayer(response, url.endsWith(".mp3"));
         } catch (InterruptedIOException e) {
+            if (response != null) response.close();
             throw e;
         } catch (Exception e) {
+            if (response != null) response.close();
             NekoMusicClient.LOGGER.error("Failed to get music stream", e);
             Alert.error("player.nekomusic.stream.failed");
         }
@@ -47,17 +50,17 @@ public abstract class AudioPlayer implements AutoCloseable {
 
     public static AudioPlayer getAudioPlayerNoStream(MusicObj music) throws InterruptedIOException {
         if (music == null || music.url == null || music.url.isBlank()) throw new IllegalArgumentException("MusicObj is null or url is null or blank");
-        try (ByteArrayInputStream stream = NekoMusicClient.netUtils.getMusicStream(music, false)) {
-            if (stream == null) {
-                NekoMusicClient.LOGGER.error("Failed to get byte array input stream");
-                Alert.error("player.nekomusic.stream.failed");
+        try (Response resp = NekoMusicClient.netUtils.getMusicResponse(music)) {
+            // response consumed here, so can use try-with-resource
+            if (resp == null || resp.body() == null) {
                 return null;
             }
+            var stream = new ByteArrayInputStream(resp.body().bytes());
             return new ByteArrayInputStreamAudioPlayer(stream);
         } catch (InterruptedIOException e) {
             throw e;
         } catch (Exception e) {
-            NekoMusicClient.LOGGER.error("Failed to get music stream", e);
+            NekoMusicClient.LOGGER.error("Failed to get music bytes", e);
             Alert.error("player.nekomusic.stream.failed");
         }
         return null;
