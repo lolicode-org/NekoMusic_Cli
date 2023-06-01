@@ -89,14 +89,22 @@ public class CacheUtils {
         if (forceDisableCache) {
             return;
         }
-        imgCacheMap.replace(hash, url);
+        addOrReplace(imgCacheMap, hash, url);
     }
 
     public void updateMusicCache(String hash, String url) {
         if (forceDisableCache) {
             return;
         }
-        musicCacheMap.replace(hash, url);
+        addOrReplace(musicCacheMap, hash, url);
+    }
+
+    private void addOrReplace(Map<String, String> map, String key, String value) {
+        if (map.containsKey(key)) {
+            map.replace(key, value);
+        } else {
+            map.put(key, value);
+        }
     }
 
     public static boolean checkCachePath(String path) {
@@ -164,6 +172,7 @@ public class CacheUtils {
 
 
     private void writeCacheMap(Map<String, String> cacheMap, String cacheFile) {
+        if (forceDisableCache) return;
         File file = cachePath.resolve(cacheFile).toFile();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             NekoMusicClient.GSON.toJson(cacheMap, writer);
@@ -185,7 +194,7 @@ public class CacheUtils {
     }
 
     private synchronized void unlock() {
-        if (lockfile == null || !lock.isValid()) {
+        if (lockfile == null || lock == null || !lock.isValid()) {
             throw new RuntimeException("Cache directory not locked.");
         }
         try {
