@@ -1,5 +1,6 @@
 package org.lolicode.nekomusiccli.music.player;
 
+import javazoom.jl.decoder.BitstreamException;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 
 import java.io.ByteArrayInputStream;
@@ -8,13 +9,13 @@ import java.io.IOException;
 public class ByteArrayInputStreamAudioPlayer extends AudioPlayer {
     private final ByteArrayInputStream stream;
 
-    public ByteArrayInputStreamAudioPlayer(ByteArrayInputStream stream) throws RuntimeException, IOException {
+    public ByteArrayInputStreamAudioPlayer(ByteArrayInputStream stream) throws RuntimeException, IOException, BitstreamException {
         super();
         this.stream = stream;
 
         try {
             this.decoder = Decoder.getDecoder(stream);
-        } catch (RuntimeException | IOException e) {
+        } catch (RuntimeException | IOException | BitstreamException e) {
             NekoMusicClient.LOGGER.error("Failed to open the audio stream", e);
             cleanup();
             throw e;

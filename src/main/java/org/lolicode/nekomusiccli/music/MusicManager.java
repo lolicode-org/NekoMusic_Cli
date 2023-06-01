@@ -53,7 +53,7 @@ public class MusicManager {
                 AudioPlayer player = AudioPlayer.getAudioPlayerStream(music);
                 if (player == null) {
                     NekoMusicClient.LOGGER.info("Failed to stream audio, perhaps the server doesn't support it, or the format is not supported");
-                    Alert.info("player.nekomusic.downloading");
+                    Alert.info("player.nekomusic.streaming.unavailable");
                     player = AudioPlayer.getAudioPlayerNoStream(music);
                 }
                 if (player == null) throw new RuntimeException("Failed to get audio player");

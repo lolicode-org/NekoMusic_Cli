@@ -9,10 +9,16 @@ import java.nio.ByteBuffer;
 public class Mp3Decoder extends javazoom.jl.decoder.Decoder implements Decoder {
     private final Bitstream bitstream;
     private volatile boolean closed = false;
-    public Mp3Decoder(InputStream inputStream) throws BitstreamException, DataFormatException {
+    public Mp3Decoder(InputStream inputStream) throws DataFormatException, BitstreamException {
         super();
         this.bitstream = new Bitstream(inputStream);
-        var header = bitstream.readFrame();
+        Header header = null;
+        try {
+            header = bitstream.readFrame();
+        } catch (BitstreamException e) {
+            bitstream.closeFrame();
+            bitstream.close();
+        }
         if (header == null) {
             throw new DataFormatException("Failed to read header");
         }

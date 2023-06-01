@@ -1,7 +1,9 @@
 package org.lolicode.nekomusiccli.music.player;
 
 import javazoom.jl.decoder.BitstreamException;
+import org.apache.tika.Tika;
 import org.jetbrains.annotations.Nullable;
+import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.libs.flac.decode.DataFormatException;
 import org.lwjgl.BufferUtils;
 
@@ -11,19 +13,37 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 public interface Decoder extends AutoCloseable {
-    static Decoder getDecoder(ByteArrayInputStream inputStream) throws DataFormatException, IOException {
+    Tika tika = new Tika();
+    static Decoder getDecoder(ByteArrayInputStream inputStream) throws DataFormatException, IOException, BitstreamException {
         if (inputStream == null) {
             throw new NullPointerException("inputStream is null");
         }
-        try {
-            return getFlacDecoder(inputStream);
-        } catch (DataFormatException e) {
-            try {
-                inputStream.reset();
+        var mimeType = tika.detect(inputStream);
+        inputStream.reset();
+        switch (mimeType) {
+            // in fact tika returns standard mime types
+            case "audio/mpeg" -> {
                 return getMp3Decoder(inputStream);
-            } catch (DataFormatException | BitstreamException ex) {
-                inputStream.reset();
+            }
+            case "audio/flac" -> {
+                return getFlacDecoder(inputStream);
+            }
+            case "audio/ogg", "audio/vorbis" -> {
                 return getOggDecoder(inputStream);
+            }
+            default -> {
+                NekoMusicClient.LOGGER.warn("Unknown mime type: " + mimeType + ", decoder may not work properly");
+                try {
+                    return getFlacDecoder(inputStream);
+                } catch (DataFormatException e) {
+                    try {
+                        inputStream.reset();
+                        return getOggDecoder(inputStream);
+                    } catch (DataFormatException | IOException ex) {
+                        inputStream.reset();
+                        return getMp3Decoder(inputStream);
+                    }
+                }
             }
         }
     }

@@ -60,6 +60,6 @@
   "player.nekomusic.stream.failed": "加载音乐失败，请检查网络连接",
   "player.nekomusic.decode.failed": "解码音乐失败，可能是音乐文件损坏或者不支持的格式",
   "player.nekomusic.play.failed": "未知的播放错误，如果你认为这是一个bug，请收集完整的日志并向开发者报告。",
-  "player.nekomusic.downloading": "无法在线播放，正在下载音乐...",
+  "player.nekomusic.streaming.unavailable": "无法在线播放，正在下载完整音乐，可能需要一段时间...",
   "volume.nekomusic.set.failed": "设置音量失败，这通常不应该发生。如果你认为这是一个bug，请收集完整的日志并向开发者报告。"
 }
