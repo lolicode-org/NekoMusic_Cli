@@ -3,10 +3,12 @@
   "id": "nekomusiccli",
   "version": "${version}",
   "name": "NekoMusic Client",
-  "description": "NekoMusic Server's client-side mod.",
+  "description": "NekoMusic's client-side mod.",
   "authors": ["KoishiMoe"],
   "contact": {
-    "repo": "https://github.com/KoishiMoe/NekoMusic_Cli_Reborn"
+    "repo": "https://github.com/KoishiMoe/NekoMusic_Cli",
+    "homepage": "https://github.com/KoishiMoe/NekoMusic_Cli",
+    "issues": "https://github.com/KoishiMoe/NekoMusic_Cli/issues"
   },
   "license": "GPL-3.0",
   "icon": "assets/nekomusiccli/icon.png",
