@@ -70,11 +70,14 @@ public class MusicManager {
             }
         }));
 
-        this.futures.add(this.scheduler.schedule(() -> {
-            if (this.isPlaying) {
-                this.stop();
-            }
-        }, music.dt, TimeUnit.MILLISECONDS));
+        if (music.dt > 0) {
+            // stop music after playing finished. If interrupted, it'll be canceled in stop()
+            this.futures.add(this.scheduler.schedule(() -> {
+                if (this.isPlaying) {
+                    this.stop();
+                }
+            }, music.dt, TimeUnit.MILLISECONDS));
+        }
     }
 
     public synchronized void stop() {
