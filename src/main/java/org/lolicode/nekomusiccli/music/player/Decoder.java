@@ -1,6 +1,7 @@
 package org.lolicode.nekomusiccli.music.player;
 
 import javazoom.jl.decoder.BitstreamException;
+import org.jetbrains.annotations.Nullable;
 import org.lolicode.nekomusiccli.libs.flac.decode.DataFormatException;
 import org.lwjgl.BufferUtils;
 
@@ -74,5 +75,5 @@ public interface Decoder extends AutoCloseable {
     int getOutputFrequency() throws IOException;
     int getOutputChannels() throws IOException;
     void close() throws Exception;
-    ByteBuffer decodeFrame() throws Exception;
+    @Nullable ByteBuffer decodeFrame() throws Exception;
 }

@@ -12,6 +12,7 @@ import java.nio.IntBuffer;
 public class OggDecoder implements Decoder {
     private final long decoder;
     private volatile boolean closed = false;
+    private final STBVorbisInfo info;
     public OggDecoder(ByteArrayInputStream inputStream) throws IOException {
         // Have to use buffer created by BufferUtils, or it will kill your JVM...
         ByteBuffer byteBuffer = BufferUtils.createByteBuffer(inputStream.available());
@@ -22,22 +23,20 @@ public class OggDecoder implements Decoder {
         if (decoder == 0 || errorBuffer.get(0) != 0) {
             throw new IOException("Failed to open Ogg file: " + errorBuffer.get(0));
         }
+        try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
+            STBVorbis.stb_vorbis_get_info(decoder, info);
+            this.info = info;
+        }
     }
 
     @Override
     public int getOutputFrequency() {
-        try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
-            STBVorbis.stb_vorbis_get_info(decoder, info);
-            return info.sample_rate();
-        }
+        return info.sample_rate();
     }
 
     @Override
     public int getOutputChannels() {
-        try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
-            STBVorbis.stb_vorbis_get_info(decoder, info);
-            return info.channels();
-        }
+        return info.channels();
     }
 
     @Override
@@ -49,6 +48,7 @@ public class OggDecoder implements Decoder {
 
     @Override
     public synchronized ByteBuffer decodeFrame() {
+        if (closed) return null;
         try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
             STBVorbis.stb_vorbis_get_info(decoder, info);
             int channels = info.channels();
