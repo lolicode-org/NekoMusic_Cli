@@ -2,7 +2,6 @@ package org.lolicode.nekomusiccli.network;
 
 import okhttp3.CacheControl;
 import okhttp3.Request;
-import org.apache.http.client.methods.RequestBuilder;
 
 import java.util.concurrent.TimeUnit;
 
