@@ -9,10 +9,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lolicode.nekomusiccli.cache.CacheUtils;
 import org.lolicode.nekomusiccli.config.ModConfig;
+import org.lolicode.nekomusiccli.events.Events;
 import org.lolicode.nekomusiccli.hud.HudUtils;
 import org.lolicode.nekomusiccli.music.MusicManager;
 import org.lolicode.nekomusiccli.network.NetUtils;
-import org.lolicode.nekomusiccli.events.Events;
 import org.lolicode.nekomusiccli.packet.AllMusicPacketReceiver;
 import org.lolicode.nekomusiccli.packet.NekoMusicPacketReceiver;
 

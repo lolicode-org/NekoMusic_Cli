@@ -27,12 +27,12 @@
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
-    "minecraft": "${minecraft_version}",
+    "minecraft": ">1.19",
     "badpackets": ">=0.4.1",
     "fabric-language-kotlin": "*",
-    "cloth-config": ">=10.0.96"
+    "cloth-config": ">=11.0.98"
   },
   "recommends": {
-    "modmenu": ">=6.2.2"
+    "modmenu": ">=7.0.0-beta.2"
   }
 }

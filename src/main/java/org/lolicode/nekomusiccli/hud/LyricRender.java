@@ -1,6 +1,7 @@
 package org.lolicode.nekomusiccli.hud;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import net.minecraft.client.gui.DrawContext;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.libs.lrcparser.Lyric;
 import org.lolicode.nekomusiccli.libs.lrcparser.parser.LyricParser;
@@ -37,11 +38,11 @@ public class LyricRender {
         }
     }
 
-    public void render() {
+    public void render(DrawContext context) {
         if (currentSentence == null || currentSentence.isBlank()) return;
         int offset = 0;
         for (var sentence: currentSentence.split("\n")) {
-            RenderMain.drawText(sentence, NekoMusicClient.config.lyricX, NekoMusicClient.config.lyricY + offset);
+            RenderMain.drawText(context, sentence, NekoMusicClient.config.lyricX, NekoMusicClient.config.lyricY + offset);
             offset += 10;
         }
     }

@@ -28,12 +28,11 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-        // Fabric API. This is technically optional, but you probably want it anyway.
+    // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     include implementation("com.squareup.okhttp3:okhttp:${project.okhttp_version}")
     include implementation("com.squareup.okio:okio-jvm:${project.okio_version}") //okio-jvm, not okio. This cost me like 1hr of debugging
-//    include implementation("com.github.goxr3plus:java-stream-player:${project.java_stream_player_version}")
     include implementation ("com.github.umjammer:jlayer:${project.jlayer_version}")
     include implementation("org.apache.tika:tika-core:${project.tika_version}")
     modLocalRuntime("net.fabricmc:fabric-language-kotlin:${project.fabric_language_kotlin_version}") { // includes kotlin for squareup libs

@@ -1,5 +1,6 @@
 package org.lolicode.nekomusiccli.hud;
 
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.music.MusicList;
@@ -57,7 +58,7 @@ public class HudUtils {
         this.list = list.toString();
     }
 
-    public void frame() {
+    public void frame(DrawContext context) {
         if (isClosed || isStopped || !AllMusicPacketReceiver.isNekoServer) return;
         var cfg = NekoMusicClient.config;
         if (!cfg.enableHud) return;
@@ -65,13 +66,13 @@ public class HudUtils {
             imgRender.RenderImg();
         }
         if (cfg.enableHudInfo) {
-            InfoRender.render(info);
+            InfoRender.render(context, info);
         }
         if (cfg.enableHudList) {
-            ListRender.render(list);
+            ListRender.render(context, list);
         }
         if (cfg.enableHudLyric && lyricRender != null) {
-            lyricRender.render();
+            lyricRender.render(context);
         }
     }
 

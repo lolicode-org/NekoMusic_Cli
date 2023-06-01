@@ -6,5 +6,6 @@ public class Events {
         OnQuitServer.register();
         OnClientStop.register();
         KeyboardEvent.register();
+        HudRender.register();
     }
 }

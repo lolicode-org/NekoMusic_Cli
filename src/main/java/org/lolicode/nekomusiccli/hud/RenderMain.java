@@ -1,7 +1,9 @@
 package org.lolicode.nekomusiccli.hud;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import org.joml.Matrix4f;
@@ -9,9 +11,8 @@ import org.joml.Quaternionf;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 
 public class RenderMain {
-    private static final MatrixStack stack = new MatrixStack();
-    public static void drawText(String text, float x, float y) {
-        MinecraftClient.getInstance().textRenderer.draw(stack, text, x, y, 0xffffff);
+    public static void drawText(DrawContext context, String text, float x, float y) {
+        context.drawText(MinecraftClient.getInstance().textRenderer, text, (int) x, (int) y, 0xffffff, false);
     }
 
     public static void drawImg(int textureId, boolean shouldRotate, int angle) {
