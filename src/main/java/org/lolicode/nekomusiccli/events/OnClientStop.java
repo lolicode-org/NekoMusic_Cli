@@ -12,6 +12,10 @@ public class OnClientStop {
             NekoMusicClient.hudUtils.close();
             NekoMusicClient.hudUtils = null;
         }
+        if (NekoMusicClient.cacheUtils != null) {
+            NekoMusicClient.cacheUtils.close();
+            NekoMusicClient.cacheUtils = null;
+        }
     }
 
     public static void register() {

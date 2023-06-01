@@ -13,6 +13,9 @@ public class OnQuitServer {
             NekoMusicClient.hudUtils.close();
             NekoMusicClient.hudUtils = null;
         }
+        if (NekoMusicClient.cacheUtils != null) {
+            NekoMusicClient.cacheUtils.save();
+        }
         AllMusicPacketReceiver.isNekoServer = false;
     }
 

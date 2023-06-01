@@ -60,5 +60,6 @@
   "player.nekomusic.stream.failed": "Failed to get music stream, please check your network connection.",
   "player.nekomusic.play.failed": "Failed to play music: Unknown error. If you believe this is a bug, please report this to the developer with full log.",
   "player.nekomusic.decode.failed": "Failed to decode music, perhaps the music is corrupted or unsupported.",
+  "player.nekomusic.downloading": "Streaming unavailable, downloading full music...",
   "volume.nekomusic.set.failed": "Failed to set volume. This should not happen, please report this to the developer with full log."
 }
