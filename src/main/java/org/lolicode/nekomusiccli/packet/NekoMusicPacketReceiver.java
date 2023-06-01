@@ -33,8 +33,9 @@ public class NekoMusicPacketReceiver {
             return;
         }
         MusicList musicList = NekoMusicClient.GSON.fromJson(buf.readString(), MusicList.class);
-        if (musicList == null || musicList.isEmpty()) {
-            return;
+        // playlist can be empty
+        if (musicList == null) {
+            musicList = new MusicList();
         }
         NekoMusicClient.hudUtils.setList(musicList);
     }
