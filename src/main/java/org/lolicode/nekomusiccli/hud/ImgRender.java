@@ -91,29 +91,7 @@ public class ImgRender {
             }
             byteBuffer.flip();
 
-            runMain(() -> {
-                // Use GL11.glGenTextures to generate a new textureId
-                textureId = GL11.glGenTextures();
-
-                // Check if the textureId is valid
-                if (textureId == 0) {
-                    textureId = -1;
-                    return; // Failed to generate texture
-                }
-
-                // Use GL11.glBindTexture to bind the textureId to the GL_TEXTURE_2D target
-                GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId);
-
-                // Use GL11.glTexParameteri to set the texture parameters for minification and magnification filters
-                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-
-                // Use GL11.glTexImage2D to load the bytebuffer into the texture
-                GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, byteBuffer);
-
-                GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
-                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_NEAREST);
-            });
+            runMain(() -> createTexture(width, height, byteBuffer));
         }
     }
 
@@ -151,5 +129,41 @@ public class ImgRender {
         g2d.dispose();
 
         return image;
+    }
+
+    private void createTexture(int width, int height, ByteBuffer byteBuffer) {
+        // Use GL11.glGenTextures to generate a new textureId
+        textureId = GL11.glGenTextures();
+
+        // Check if the textureId is valid
+        if (textureId == 0 || !GL11.glIsTexture(textureId)) {
+            textureId = -1;
+            NekoMusicClient.LOGGER.error("Failed to generate texture id");
+            return; // Failed to generate texture
+        }
+
+        // Use GL11.glBindTexture to bind the textureId to the GL_TEXTURE_2D target
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId);
+
+        // Use GL11.glTexParameteri to set the texture parameters for minification and magnification filters
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+
+        // Use GL11.glTexImage2D to load the bytebuffer into the texture
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, byteBuffer);
+
+        // Check if the buffer is successfully loaded into the texture
+        ByteBuffer temp = BufferUtils.createByteBuffer(width * height * 4);
+        GL11.glGetTexImage(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, temp);
+
+        if (!temp.equals(byteBuffer)) {
+            GL11.glDeleteTextures(textureId);
+            textureId = -1;
+            NekoMusicClient.LOGGER.error("Texture data mismatch! Deleting texture...");
+            return;
+        }
+
+        GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_NEAREST);
     }
 }
