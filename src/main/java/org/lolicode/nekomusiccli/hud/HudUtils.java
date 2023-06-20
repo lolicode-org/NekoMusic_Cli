@@ -40,7 +40,7 @@ public class HudUtils {
                 NekoMusicClient.LOGGER.error("Failed to load image: " + music.album.picUrl, e);
                 Alert.warn("hud.nekomusic.failed_to_load_image");
             } catch (Exception e) {
-                NekoMusicClient.LOGGER.error("Failed to load image: " + e.getMessage());
+                NekoMusicClient.LOGGER.error("Failed to load image: ", e);
                 Alert.warn("hud.nekomusic.failed_to_load_image");
             }
         }

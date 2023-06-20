@@ -96,7 +96,7 @@ public class ModConfig implements ConfigData {
         try {
             CacheUtils.checkCachePath(getCachePath());
         } catch (Exception e) {
-            throw new ValidationException("Invalid cache path: " + e.getMessage());
+            throw new ValidationException("Invalid cache path: ", e);
         }
     }
 

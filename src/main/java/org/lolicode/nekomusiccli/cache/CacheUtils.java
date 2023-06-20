@@ -137,7 +137,7 @@ public class CacheUtils {
             writer.write("这是 {} 的缓存目录，请不要手动保存任何文件到这里，因为它们可能会被程序删除。".replace("{}", NekoMusicClient.MOD_NAME));
             writer.flush();
         } catch (Exception e) {
-            NekoMusicClient.LOGGER.error("Failed to write test file to cache path: " + e.getMessage());
+            NekoMusicClient.LOGGER.error("Failed to write test file to cache path: ", e);
             throw new RuntimeException(CacheCheckError.CANT_WRITE_TEST);
         }
         return true;
@@ -202,7 +202,7 @@ public class CacheUtils {
             lock.release();
             lockfile.close();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to unlock cache directory: " + e.getMessage());
+            throw new RuntimeException("Failed to unlock cache directory: ", e);
         }
         lock = null;
         lockfile = null;
