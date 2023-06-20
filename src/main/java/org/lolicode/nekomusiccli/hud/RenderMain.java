@@ -3,6 +3,7 @@ package org.lolicode.nekomusiccli.hud;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
+import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -14,7 +15,9 @@ public class RenderMain {
         MinecraftClient.getInstance().textRenderer.draw(stack, text, x, y, 0xffffff);
     }
 
-    public static void drawImg(int textureId, boolean shouldRotate, int angle) {
+    public static void drawImg(NativeImageBackedTexture texture, boolean shouldRotate, int angle) {
+        if (texture == null) return;
+        int textureId = texture.getGlId();
         if (textureId <= 0) return;
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
