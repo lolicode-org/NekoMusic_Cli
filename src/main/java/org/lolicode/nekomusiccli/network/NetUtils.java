@@ -33,11 +33,11 @@ public class NetUtils {
         Response response = null;
         var cachedUrl = NekoMusicClient.cacheUtils.queryMusicCache(musicObj.Hash());
         if (cachedUrl != null && !cachedUrl.isBlank()) {
-            response = fetchData(cachedUrl, musicObj.Hash(), musicClient, true);
+            response = fetchData(cachedUrl, musicClient, true);
         }
         if (response == null) {
             NekoMusicClient.LOGGER.debug("Cache miss for " + musicObj.Hash());
-            response = fetchData(musicObj.url, musicObj.Hash(), musicClient, false);
+            response = fetchData(musicObj.url, musicClient, false);
             NekoMusicClient.cacheUtils.updateMusicCache(musicObj.Hash(), musicObj.url);
         }
         return response;
@@ -47,17 +47,17 @@ public class NetUtils {
         Response response = null;
         var cachedUrl = NekoMusicClient.cacheUtils.queryImgCache(albumObj.Hash());
         if (cachedUrl != null && !cachedUrl.isBlank()) {
-            response = fetchData(cachedUrl, albumObj.Hash(), imageClient, true);
+            response = fetchData(cachedUrl, imageClient, true);
         }
         if (response == null) {
             NekoMusicClient.LOGGER.debug("Cache miss for " + albumObj.Hash());
-            response = fetchData(albumObj.picUrl, albumObj.Hash(), imageClient, false);
+            response = fetchData(albumObj.picUrl, imageClient, false);
             NekoMusicClient.cacheUtils.updateImgCache(albumObj.Hash(), albumObj.picUrl);
         }
         return response;
     }
 
-    private Response fetchData(String url, String hash, OkHttpClient client, boolean forceCache) throws InterruptedIOException {
+    private Response fetchData(String url, OkHttpClient client, boolean forceCache) throws InterruptedIOException {
         Response resp;
         try {
             resp = client.newCall(NetRequest.getRequest(url, forceCache)).execute();
