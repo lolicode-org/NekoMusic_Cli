@@ -65,7 +65,7 @@ public class NetUtils {
             NekoMusicClient.LOGGER.info("Request interrupted");
             throw e;
         } catch (Exception e) {
-            NekoMusicClient.LOGGER.error("Failed to get data: " + e.getMessage());
+            NekoMusicClient.LOGGER.error("Failed to get data: ", e);
             return null;
         }
         if (resp.code() != 200) {

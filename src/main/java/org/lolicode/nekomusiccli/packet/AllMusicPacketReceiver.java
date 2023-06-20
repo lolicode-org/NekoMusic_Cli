@@ -37,7 +37,7 @@ public class AllMusicPacketReceiver {
                 }
             }
         } catch (Exception e) {
-            NekoMusicClient.LOGGER.error("Error while receiving allmusic packet: " + e.getMessage());
+            NekoMusicClient.LOGGER.error("Error while receiving allmusic packet: ", e);
         }
     }
 

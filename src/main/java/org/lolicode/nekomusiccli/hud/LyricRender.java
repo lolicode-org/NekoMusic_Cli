@@ -32,7 +32,7 @@ public class LyricRender {
             this.lyric.merge(translation);
         } catch (Exception e) {
             this.lyric = null;
-            NekoMusicClient.LOGGER.error("Failed to parse lyric: " + e.getMessage());
+            NekoMusicClient.LOGGER.error("Failed to parse lyric: ", e);
             Alert.warn("hud.nekomusic.lyric.parse.failed");
         }
     }
