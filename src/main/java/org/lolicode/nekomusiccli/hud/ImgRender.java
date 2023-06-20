@@ -1,10 +1,12 @@
 package org.lolicode.nekomusiccli.hud;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.texture.NativeImage;
+import net.minecraft.client.texture.NativeImageBackedTexture;
+import net.minecraft.client.texture.TextureManager;
+import net.minecraft.util.Identifier;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL30;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -16,7 +18,9 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class ImgRender {
-    private volatile int textureId = -1;
+    private static final TextureManager textureManager = MinecraftClient.getInstance().getTextureManager();
+    private volatile NativeImageBackedTexture texture = null;
+    private Identifier textureId = null;
     private int angle = 0;
     private final long startTime = System.currentTimeMillis();
     private final boolean shouldRotate;
@@ -33,7 +37,6 @@ public class ImgRender {
 
             // Check if the bufferedimage is null or empty
             if (bufferedImage == null || bufferedImage.getWidth() == 0 || bufferedImage.getHeight() == 0) {
-                textureId = -1;
                 return; // Invalid input
             }
 
@@ -91,28 +94,27 @@ public class ImgRender {
             }
             byteBuffer.flip();
 
-            runMain(() -> createTexture(width, height, byteBuffer));
+            createTexture(width, height, byteBuffer);
         }
     }
 
 
     public synchronized void RenderImg() {
-        RenderMain.drawImg(this.textureId, this.shouldRotate, angle);
+        if (texture == null || textureId == null) return;
+        RenderMain.drawImg(this.texture, this.shouldRotate, angle);
         angle = (int) ((System.currentTimeMillis() - startTime) / NekoMusicClient.config.imgRotateSpeed) % 360;
     }
 
     private synchronized void DisposeImg() {
-        var tempTextureId = this.textureId;
-        this.textureId = -1;
-        runMain(() -> GL11.glDeleteTextures(tempTextureId));
+        if (textureId != null) {
+            textureManager.destroyTexture(textureId);
+            textureId = null;
+        }
+        texture = null;
     }
 
     public void close() {
         DisposeImg();
-    }
-
-    private void runMain(Runnable runnable) {
-        MinecraftClient.getInstance().execute(runnable);
     }
 
     // https://stackoverflow.com/a/70391836
@@ -131,39 +133,19 @@ public class ImgRender {
         return image;
     }
 
-    private void createTexture(int width, int height, ByteBuffer byteBuffer) {
-        // Use GL11.glGenTextures to generate a new textureId
-        textureId = GL11.glGenTextures();
-
-        // Check if the textureId is valid
-        if (textureId == 0 || !GL11.glIsTexture(textureId)) {
-            textureId = -1;
-            NekoMusicClient.LOGGER.error("Failed to generate texture id");
-            return; // Failed to generate texture
-        }
-
-        // Use GL11.glBindTexture to bind the textureId to the GL_TEXTURE_2D target
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId);
-
-        // Use GL11.glTexParameteri to set the texture parameters for minification and magnification filters
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-
-        // Use GL11.glTexImage2D to load the bytebuffer into the texture
-        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, byteBuffer);
-
-        // Check if the buffer is successfully loaded into the texture
-        ByteBuffer temp = BufferUtils.createByteBuffer(width * height * 4);
-        GL11.glGetTexImage(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, temp);
-
-        if (!temp.equals(byteBuffer)) {
-            GL11.glDeleteTextures(textureId);
-            textureId = -1;
-            NekoMusicClient.LOGGER.error("Texture data mismatch! Deleting texture...");
-            return;
-        }
-
-        GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_NEAREST);
+    private synchronized void createTexture(int width, int height, ByteBuffer byteBuffer) {
+        MinecraftClient.getInstance().execute(() -> {
+            try (var img = new NativeImage(NativeImage.Format.RGBA, width, height, true)) {
+                for (int y = 0; y < height; y++) {
+                    for (int x = 0; x < width; x++) {
+                        int color = byteBuffer.getInt((y * width + x) * 4);
+                        img.setColor(x, y, color);
+                    }
+                }
+                texture = new NativeImageBackedTexture(img);
+                texture.setFilter(true, true);
+                textureId = textureManager.registerDynamicTexture("hud_img", texture);
+            }
+        });
     }
 }
