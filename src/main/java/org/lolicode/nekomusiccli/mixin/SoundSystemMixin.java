@@ -23,11 +23,6 @@ public class SoundSystemMixin {
         if (NekoMusicClient.musicManager != null) NekoMusicClient.musicManager.stop();
     }
 
-    @Inject(method = "stopAll", at = @At("RETURN"))
-    public void stopAll(CallbackInfo ci){
-        if (NekoMusicClient.musicManager != null) NekoMusicClient.musicManager.stop();
-    }
-
     @Inject(method = "updateSoundVolume(Lnet/minecraft/sound/SoundCategory;F)V", at = @At("HEAD"), cancellable = true)
     public void updateSoundVolume(SoundCategory category, float volume, CallbackInfo ci){
         if (category == SoundCategory.RECORDS && NekoMusicClient.musicManager != null) {
