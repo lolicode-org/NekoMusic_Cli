@@ -49,6 +49,7 @@
 * [jlayer](http://www.javazoom.net/javalayer/javalayer.html) ([Github分支](https://github.com/umjammer/jlayer)) mp3解码
 * [Flac-library-java](https://github.com/nayuki/FLAC-library-Java) Flac解码
 * [Tika](https://tika.apache.org/) 强大的内容检测和分析框架
+* [sound-categories](https://github.com/lonefelidae16/sound-categories/) 自定义音量类别支持
 
 ## 许可证
 ```text
