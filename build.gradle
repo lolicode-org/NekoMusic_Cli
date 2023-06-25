@@ -44,6 +44,7 @@ dependencies {
     modApi "com.terraformersmc:modmenu:${project.modmenu_version}"
     modImplementation "lol.bai:badpackets:fabric-${badpackets_version}"
 //    include modImplementation("dev.stashy:sound-categories:${project.soundcategories_version}")
+    include modImplementation(files("libs/soundcategories-1.2.4+1.20.jar"))  // sound-categories, 1.20 port is not on maven
 }
 
 processResources {

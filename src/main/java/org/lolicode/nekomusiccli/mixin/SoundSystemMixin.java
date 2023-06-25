@@ -4,6 +4,7 @@ import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.client.sound.SoundSystem;
 import net.minecraft.sound.SoundCategory;
 import org.lolicode.nekomusiccli.NekoMusicClient;
+import org.lolicode.nekomusiccli.config.CustomSoundCategory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -25,7 +26,7 @@ public class SoundSystemMixin {
 
     @Inject(method = "updateSoundVolume(Lnet/minecraft/sound/SoundCategory;F)V", at = @At("HEAD"), cancellable = true)
     public void updateSoundVolume(SoundCategory category, float volume, CallbackInfo ci){
-        if (category == SoundCategory.RECORDS && NekoMusicClient.musicManager != null) {
+        if (category == CustomSoundCategory.NEKOMUSIC && NekoMusicClient.musicManager != null) {
             NekoMusicClient.musicManager.setVolume(volume);
             ci.cancel();
         }

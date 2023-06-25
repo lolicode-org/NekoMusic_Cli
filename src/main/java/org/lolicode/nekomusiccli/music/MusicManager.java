@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.sound.SoundCategory;
 import org.lolicode.nekomusiccli.NekoMusicClient;
+import org.lolicode.nekomusiccli.config.CustomSoundCategory;
 import org.lolicode.nekomusiccli.hud.HudUtils;
 import org.lolicode.nekomusiccli.music.player.AudioPlayer;
 import org.lolicode.nekomusiccli.utils.Alert;
@@ -108,7 +109,7 @@ public class MusicManager {
     }
 
     public static float getVolume() {
-        return MinecraftClient.getInstance().options.getSoundVolume(SoundCategory.RECORDS);
+        return MinecraftClient.getInstance().options.getSoundVolume(CustomSoundCategory.NEKOMUSIC);
     }
 
     public void setVolume(float volume) {
