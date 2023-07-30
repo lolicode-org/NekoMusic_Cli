@@ -36,6 +36,7 @@ dependencies {
 //    include implementation("com.github.goxr3plus:java-stream-player:${project.java_stream_player_version}")
     include implementation ("com.github.umjammer:jlayer:${project.jlayer_version}")
     include implementation("org.apache.tika:tika-core:${project.tika_version}")
+    include implementation("org.apache.commons:commons-text:${project.commons_text_version}")
     modLocalRuntime("net.fabricmc:fabric-language-kotlin:${project.fabric_language_kotlin_version}") { // includes kotlin for squareup libs
         exclude module: "fabric-loader"
     }
