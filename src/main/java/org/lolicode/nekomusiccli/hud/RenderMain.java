@@ -11,8 +11,20 @@ import org.joml.Quaternionf;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 
 public class RenderMain {
+    private static final int fontHeight = MinecraftClient.getInstance().textRenderer.fontHeight;
     public static void drawText(DrawContext context, String text, float x, float y) {
         context.drawText(MinecraftClient.getInstance().textRenderer, text, (int) x, (int) y, 0xffffff, false);
+    }
+
+    public static void drawMultiLineText(DrawContext context, String text, float x, float y) {
+        if (text == null || text.isBlank()) {
+            return;
+        }
+        int offset = 0;
+        for (var line : text.split("\n")) {
+            drawText(context, line, x, y + offset);
+            offset += fontHeight + 2;
+        }
     }
 
     public static void drawImg(NativeImageBackedTexture texture, boolean shouldRotate, int angle) {
