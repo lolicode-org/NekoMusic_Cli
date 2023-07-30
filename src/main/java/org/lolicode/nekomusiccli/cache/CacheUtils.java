@@ -1,6 +1,8 @@
 package org.lolicode.nekomusiccli.cache;
 
 import com.google.common.reflect.TypeToken;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
 import net.minecraft.client.MinecraftClient;
 import okhttp3.Cache;
 import org.lolicode.nekomusiccli.NekoMusicClient;
@@ -154,8 +156,13 @@ public class CacheUtils {
         if (file.exists()) {
             try {
                 return new ConcurrentHashMap<>(readCacheMap(file));
-            } catch (IOException e) {
-                NekoMusicClient.LOGGER.error("Failed to read cache file: " + fileName, e);
+            } catch (IOException | JsonIOException | JsonSyntaxException | IllegalArgumentException e) {
+                NekoMusicClient.LOGGER.error("Failed to read cache file: " + fileName +
+                        ", you can try to delete the cache directory ( {} ) and restart the game to fix it."
+                                .replace("{}", cachePath.toString())
+                        + "\n"
+                        + "Please note that the mod will not delete it automatically, as it might contain important data.");
+                throw new RuntimeException(e);
             }
         } else {
             NekoMusicClient.LOGGER.info("Cache file {} not found, creating new one.".replace("{}", fileName));
@@ -163,10 +170,15 @@ public class CacheUtils {
         return new ConcurrentHashMap<>();
     }
 
-    private static Map<String, String > readCacheMap(File file) throws IOException {
+    private static Map<String, String > readCacheMap(File file) throws IOException, JsonIOException, JsonSyntaxException, IllegalArgumentException {
         Type type = new TypeToken<Map<String, String>>() {}.getType();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            return NekoMusicClient.GSON.fromJson(reader, type);
+            Map<String, String> map = NekoMusicClient.GSON.fromJson(reader, type);
+            if (map != null) {
+                return map;
+            } else {
+                throw new IllegalArgumentException("Failed to read cache file: " + file.getName() + ", the file seems to be empty or corrupted.");
+            }
         }
     }
 
