@@ -158,10 +158,13 @@ public class CacheUtils {
                 return new ConcurrentHashMap<>(readCacheMap(file));
             } catch (IOException | JsonIOException | JsonSyntaxException | IllegalArgumentException e) {
                 NekoMusicClient.LOGGER.error("Failed to read cache file: " + fileName +
-                        ", you can try to delete the cache directory ( {} ) and restart the game to fix it."
+                        ", you can try to delete the cache directory ( {} ) and restart the game to fix it.\n"
                                 .replace("{}", cachePath.toString())
-                        + "\n"
-                        + "Please note that the mod will not delete it automatically, as it might contain important data.");
+                        + "Please note that the mod will not delete it automatically, as it might contain important data. Please check its content before deleting it."
+                        + "读取缓存文件失败: " + fileName +
+                        ", 你可以尝试删除缓存目录 ( {} ) 并重启游戏来修复它。\n"
+                                .replace("{}", cachePath.toString())
+                        + "请注意，该模组不会自动删除缓存目录，以防误删你的个人数据。请务必在删除前检查其内容。");
                 throw new RuntimeException(e);
             }
         } else {
