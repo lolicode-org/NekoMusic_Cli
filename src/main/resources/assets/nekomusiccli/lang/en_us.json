@@ -15,7 +15,7 @@
   "text.autoconfig.nekomusic.option.imgCacheSize": "Cover Cache Max Size",
   "text.autoconfig.nekomusic.option.imgCacheSize.@Tooltip": "Cover Cache Max Size (MB), -1 = Unlimited, 0 = Disable. Requires restart. ",
   "text.autoconfig.nekomusic.option.cachePath": "Cache Path",
-  "text.autoconfig.nekomusic.option.cachePath.@Tooltip[0]": "Cache Path. Requires restart. ",
+  "text.autoconfig.nekomusic.option.cachePath.@Tooltip[0]": "Cache Path. Requires restart. If empty, the default path (\".minecraft/cache/nekomusiccli\") will be used.",
   "text.autoconfig.nekomusic.option.cachePath.@Tooltip[1]": "§cPlease make sure that the path is valid and writable. Don't use any directory that may contain any other files, as they might be deleted by the mod.",
   "text.autoconfig.nekomusic.option.cachePath.@Tooltip[2]": "§eTip: If you are using multi platforms or your game is installed in a removable disk, you may want to use a relative path or environment variables.",
   "text.autoconfig.nekomusic.option.allmusicCompatible": "AllMusic Compatibility",
