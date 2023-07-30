@@ -7,6 +7,8 @@
   "nekomusic.server_disable": "§eNekoMusic disabled for this server",
   "nekomusic.send_packet_fail": "§cFailed to send packet to server",
   "nekomusic.not_multiplayer": "§cThis is not a multiplayer server",
+  "nekomusiccli.screen.warning.title": "NekoMusic §cWarning",
+  "nekomusiccli.screen.warning.ok": "§eI know",
   "soundCategory.nekomusiccli$nekomusic": "NekoMusic",
   "text.autoconfig.nekomusiccli.title": "NekoMusic Config",
   "text.autoconfig.nekomusiccli.option.enabled": "Enable NekoMusic",
@@ -61,5 +63,6 @@
   "player.nekomusic.play.failed": "Failed to play music: Unknown error. If you believe this is a bug, please report this to the developer with full log.",
   "player.nekomusic.decode.failed": "Failed to decode music, perhaps the music is corrupted or unsupported.",
   "player.nekomusic.streaming.unavailable": "Streaming unavailable for this format, downloading the whole music, this may take a while...",
-  "volume.nekomusic.set.failed": "Failed to set volume. This should not happen, please report this to the developer with full log."
+  "volume.nekomusic.set.failed": "Failed to set volume. This should not happen, please report this to the developer with full log.",
+  "cache.nekomusic.read_failed": "Failed to read cache record: %d , a new record will be created. This might be caused by a corrupted record, please check if your cache directory is valid in \"Mods -> NekoMusic Client -> Config -> Advanced -> Cache Path\"."
 }
