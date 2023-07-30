@@ -4,17 +4,14 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
-import org.apache.logging.log4j.core.lookup.StrSubstitutor;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.cache.CacheUtils;
+import org.lolicode.nekomusiccli.utils.StrEnvSubstitutor;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 @Config(name = NekoMusicClient.MOD_ID)
 public class ModConfig implements ConfigData {
-    @ConfigEntry.Gui.Excluded
-    private static final Map<String, String> env = System.getenv();
     public boolean enabled = true;
     public boolean enableHud = true;
     public boolean enableHudInfo = true;
@@ -107,7 +104,6 @@ public class ModConfig implements ConfigData {
     public String getCachePath() {
         if (cachePath.isBlank())
             return CacheUtils.getDefaultCachePath();
-        StrSubstitutor strSubstitutor = new StrSubstitutor(env);
-        return strSubstitutor.replace(cachePath);
+        return StrEnvSubstitutor.replace(cachePath);
     }
 }
