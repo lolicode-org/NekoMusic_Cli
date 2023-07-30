@@ -5,13 +5,13 @@ import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import org.apache.logging.log4j.core.lookup.StrSubstitutor;
+import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.cache.CacheUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-@Config(name = "nekomusic")
+@Config(name = NekoMusicClient.MOD_ID)
 public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.Excluded
     private static final Map<String, String> env = System.getenv();
@@ -36,7 +36,7 @@ public class ModConfig implements ConfigData {
     public int imgRotateSpeed = 50;
 
     @ConfigEntry.Gui.Tooltip(count = 2)
-    public List<String> bannedServers = new ArrayList<>();
+    public ArrayList<String> bannedServers = new ArrayList<>();
     @ConfigEntry.Category("advanced")
     @ConfigEntry.Gui.Tooltip(count = 2)
     @ConfigEntry.Gui.RequiresRestart
@@ -65,7 +65,7 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Category("advanced")
     @ConfigEntry.Gui.Tooltip(count = 3)
     @ConfigEntry.Gui.RequiresRestart
-    public String cachePath = CacheUtils.getDefaultCachePath();
+    public String cachePath = "";
 
     public void validatePostLoad() throws ValidationException {
         if (infoX < 0)
@@ -92,7 +92,7 @@ public class ModConfig implements ConfigData {
             imgRotateSpeed = 50;
         if (musicResponseSizeLimit != -1 && musicResponseSizeLimit < 10)
             musicResponseSizeLimit = 10;
-        while (bannedServers.remove("")) ;
+        bannedServers.removeIf(String::isBlank);
         try {
             CacheUtils.checkCachePath(getCachePath());
         } catch (Exception e) {
@@ -105,6 +105,8 @@ public class ModConfig implements ConfigData {
     }
 
     public String getCachePath() {
+        if (cachePath.isBlank())
+            return CacheUtils.getDefaultCachePath();
         StrSubstitutor strSubstitutor = new StrSubstitutor(env);
         return strSubstitutor.replace(cachePath);
     }
