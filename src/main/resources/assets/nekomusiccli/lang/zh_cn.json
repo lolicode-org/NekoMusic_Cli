@@ -7,6 +7,8 @@
   "nekomusic.server_disable": "§eNekoMusic 已对此服务器禁用",
   "nekomusic.send_packet_fail": "§cNekoMusic 向服务器发送数据包失败",
   "nekomusic.not_multiplayer": "§cNekoMusic 仅支持多人游戏",
+  "nekomusiccli.screen.warning.title": "NekoMusic §c警告",
+  "nekomusiccli.screen.warning.ok": "§e我知道了",
   "soundCategory.nekomusiccli$nekomusic": "NekoMusic 音乐播放",
   "text.autoconfig.nekomusiccli.title": "NekoMusic 配置",
   "text.autoconfig.nekomusiccli.option.enabled": "启用 NekoMusic",
@@ -61,5 +63,6 @@
   "player.nekomusic.decode.failed": "解码音乐失败，可能是音乐文件损坏或者不支持的格式",
   "player.nekomusic.play.failed": "未知的播放错误，如果你认为这是一个bug，请收集完整的日志并向开发者报告。",
   "player.nekomusic.streaming.unavailable": "无法在线播放，正在下载完整音乐，可能需要一段时间...",
-  "volume.nekomusic.set.failed": "设置音量失败，这通常不应该发生。如果你认为这是一个bug，请收集完整的日志并向开发者报告。"
+  "volume.nekomusic.set.failed": "设置音量失败，这通常不应该发生。如果你认为这是一个bug，请收集完整的日志并向开发者报告。",
+  "cache.nekomusic.read_failed": "读取缓存记录 %d 失败，将重建记录。这可能是记录文件损坏导致的，请检查 \"模组 -> NekoMusic Client -> 高级 -> 缓存路径\" 是否正确。"
 }

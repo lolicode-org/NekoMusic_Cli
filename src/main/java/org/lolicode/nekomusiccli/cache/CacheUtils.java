@@ -3,10 +3,13 @@ package org.lolicode.nekomusiccli.cache;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.text.Text;
 import okhttp3.Cache;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.config.ModConfig;
+import org.lolicode.nekomusiccli.screens.MyWarningScreen;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -157,15 +160,8 @@ public class CacheUtils {
             try {
                 return new ConcurrentHashMap<>(readCacheMap(file));
             } catch (IOException | JsonIOException | JsonSyntaxException | IllegalArgumentException e) {
-                NekoMusicClient.LOGGER.error("Failed to read cache file: " + fileName +
-                        ", you can try to delete the cache directory ( {} ) and restart the game to fix it.\n"
-                                .replace("{}", cachePath.toString())
-                        + "Please note that the mod will not delete it automatically, as it might contain important data. Please check its content before deleting it."
-                        + "读取缓存文件失败: " + fileName +
-                        ", 你可以尝试删除缓存目录 ( {} ) 并重启游戏来修复它。\n"
-                                .replace("{}", cachePath.toString())
-                        + "请注意，该模组不会自动删除缓存目录，以防误删你的个人数据。请务必在删除前检查其内容。");
-                throw new RuntimeException(e);
+                NekoMusicClient.LOGGER.error("Failed to read cache record: " + file.getAbsolutePath(), e);
+                ClientLifecycleEvents.CLIENT_STARTED.register(client -> client.setScreen(new MyWarningScreen(Text.translatable("cache.nekomusic.read_failed", file.getAbsolutePath()), null)));
             }
         } else {
             NekoMusicClient.LOGGER.info("Cache file {} not found, creating new one.".replace("{}", fileName));
