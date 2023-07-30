@@ -10,9 +10,21 @@ import org.joml.Quaternionf;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 
 public class RenderMain {
+    private static final int fontHeight = MinecraftClient.getInstance().textRenderer.fontHeight;
     private static final MatrixStack stack = new MatrixStack();
     public static void drawText(String text, float x, float y) {
         MinecraftClient.getInstance().textRenderer.draw(stack, text, x, y, 0xffffff);
+    }
+
+    public static void drawMultiLineText(String text, float x, float y) {
+        if (text == null || text.isBlank()) {
+            return;
+        }
+        int offset = 0;
+        for (var line : text.split("\n")) {
+            drawText(line, x, y + offset);
+            offset += fontHeight + 2;
+        }
     }
 
     public static void drawImg(NativeImageBackedTexture texture, boolean shouldRotate, int angle) {
