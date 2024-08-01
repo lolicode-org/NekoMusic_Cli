@@ -1,6 +1,6 @@
 package org.lolicode.nekomusiccli.packet;
 
-import lol.bai.badpackets.api.S2CPacketReceiver;
+import lol.bai.badpackets.api.play.PlayPackets;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
@@ -40,7 +40,10 @@ public class NekoMusicPacketReceiver {
     }
 
     public static void register() {
-        S2CPacketReceiver.register(METADATA_PACKET_ID, (client, handler, buf, responseSender) -> onReceiveMetadata(buf, handler));
-        S2CPacketReceiver.register(PLAYLIST_PACKET_ID, (client, handler, buf, responseSender) -> onReceivePlaylist(buf, handler));
+        PlayPackets.registerClientChannel(METADATA_PACKET_ID);
+        PlayPackets.registerClientReceiver(METADATA_PACKET_ID, (context, buf) -> onReceiveMetadata(buf, context.handler()));
+
+        PlayPackets.registerClientChannel(PLAYLIST_PACKET_ID);
+        PlayPackets.registerClientReceiver(PLAYLIST_PACKET_ID, (context, buf) -> onReceivePlaylist(buf, context.handler()));
     }
 }
