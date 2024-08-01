@@ -6,8 +6,7 @@
   "mixins": [
   ],
   "client": [
-    "SoundSystemMixin",
-    "WarningScreenAccessor"
+    "SoundSystemMixin"
   ],
   "injectors": {
     "defaultRequire": 1

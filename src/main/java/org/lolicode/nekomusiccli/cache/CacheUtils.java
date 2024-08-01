@@ -3,13 +3,10 @@ package org.lolicode.nekomusiccli.cache;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Text;
 import okhttp3.Cache;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.config.ModConfig;
-import org.lolicode.nekomusiccli.screens.MyWarningScreen;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -161,7 +158,6 @@ public class CacheUtils {
                 return new ConcurrentHashMap<>(readCacheMap(file));
             } catch (IOException | JsonIOException | JsonSyntaxException | IllegalArgumentException e) {
                 NekoMusicClient.LOGGER.error("Failed to read cache record: " + file.getAbsolutePath(), e);
-                ClientLifecycleEvents.CLIENT_STARTED.register(client -> client.setScreen(new MyWarningScreen(Text.translatable("cache.nekomusic.read_failed", file.getAbsolutePath()), null)));
             }
         } else {
             NekoMusicClient.LOGGER.info("Cache file {} not found, creating new one.".replace("{}", fileName));
