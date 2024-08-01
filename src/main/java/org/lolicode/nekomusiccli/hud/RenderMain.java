@@ -54,12 +54,12 @@ public class RenderMain {
         float v1 = 1;
 
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
-        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
-        bufferBuilder.vertex(matrix, (float) -offset, (float) offset, (float) z).texture(u0, v1).next();
-        bufferBuilder.vertex(matrix, (float) offset, (float) offset, (float) z).texture(u1, v1).next();
-        bufferBuilder.vertex(matrix, (float) offset, (float) -offset, (float) z).texture(u1, v0).next();
-        bufferBuilder.vertex(matrix, (float) -offset, (float) -offset, (float) z).texture(u0, v0).next();
+        BufferBuilder bufferBuilder = Tessellator.getInstance()
+                .begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
+        bufferBuilder.vertex(matrix, (float) -offset, (float) offset, (float) z).texture(u0, v1);
+        bufferBuilder.vertex(matrix, (float) offset, (float) offset, (float) z).texture(u1, v1);
+        bufferBuilder.vertex(matrix, (float) offset, (float) -offset, (float) z).texture(u1, v0);
+        bufferBuilder.vertex(matrix, (float) -offset, (float) -offset, (float) z).texture(u0, v0);
 
         BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
     }
