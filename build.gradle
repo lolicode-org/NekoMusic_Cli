@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.2-SNAPSHOT'
+    id 'fabric-loom' version '1.7-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -12,13 +12,31 @@ repositories {
     // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html
     // for more information about repositories.
-    maven { url "https://maven.shedaniel.me/" }
-    maven { url "https://maven.terraformersmc.com/releases/" }
-    maven { url "https://maven.bai.lol" }
+    maven {
+        url "https://maven.shedaniel.me/"
+        content {
+            includeGroupByRegex "me\\.shedaniel.*"
+        }
+    }
+    maven {
+        url "https://maven.terraformersmc.com/releases/"
+        content {
+            includeGroupByRegex "com\\.terraformersmc.*"
+        }
+    }
+    maven {
+        url "https://maven.bai.lol"
+        content {
+            includeGroupByRegex "lol\\.bai.*"
+        }
+    }
     maven { url 'https://jitpack.io' }
 //    maven {
 //        name = "stashymane's repo"
 //        url = "https://repo.stashy.dev/releases"
+//        content {
+//            includeGroupByRegex "dev\\.stashy.*"
+//        }
 //    }
     flatDir {
         dirs 'libs'
@@ -48,7 +66,7 @@ dependencies {
     modApi "com.terraformersmc:modmenu:${project.modmenu_version}"
     modImplementation "lol.bai:badpackets:fabric-${badpackets_version}"
 //    include modImplementation("dev.stashy:sound-categories:${project.soundcategories_version}")
-    include modImplementation(name: 'soundcategories-1.2.4+1.20')  // sound-categories, 1.20 port is not on maven
+    include modImplementation(name: "soundcategories-${project.soundcategories_version}")  // sound-categories, 1.21 port's maven seems to be configured wrongly...
 }
 
 processResources {
