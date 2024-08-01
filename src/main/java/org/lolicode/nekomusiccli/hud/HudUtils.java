@@ -59,7 +59,7 @@ public class HudUtils {
     }
 
     public void frame(DrawContext context) {
-        if (isClosed || isStopped || !AllMusicPacketReceiver.isNekoServer) return;
+        if (isClosed || isStopped) return;
         var cfg = NekoMusicClient.config;
         if (!cfg.enableHud) return;
         if (cfg.enableHudImg && imgRender != null) {

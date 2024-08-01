@@ -16,7 +16,6 @@ public class OnQuitServer {
         if (NekoMusicClient.cacheUtils != null) {
             NekoMusicClient.cacheUtils.save();
         }
-        AllMusicPacketReceiver.isNekoServer = false;
     }
 
     public static void register() {

@@ -34,10 +34,6 @@ public class ModConfig implements ConfigData {
 
     @ConfigEntry.Gui.Tooltip(count = 2)
     public ArrayList<String> bannedServers = new ArrayList<>();
-    @ConfigEntry.Category("advanced")
-    @ConfigEntry.Gui.Tooltip(count = 2)
-    @ConfigEntry.Gui.RequiresRestart
-    public boolean allmusicCompatible = false;
 
     @ConfigEntry.Category("advanced")
     @ConfigEntry.Gui.Tooltip(count = 3)

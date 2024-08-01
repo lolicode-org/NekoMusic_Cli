@@ -13,7 +13,6 @@ public class NekoMusicPacketReceiver {
     private static final Identifier PLAYLIST_PACKET_ID = NekoMusicClient.MOD_BASE_IDENTIFIER.withPath("list");
 
     private static void onReceiveMetadata(PacketByteBuf buf, ClientPlayNetworkHandler handler) {
-        AllMusicPacketReceiver.isNekoServer = true;
         if (buf == null || !NekoMusicClient.config.enabled
                 || NekoMusicClient.config.bannedServers.contains(handler.getServerInfo() == null ? "" : handler.getServerInfo().address)) {
             return;
