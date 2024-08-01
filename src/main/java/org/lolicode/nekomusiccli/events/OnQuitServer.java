@@ -2,7 +2,6 @@ package org.lolicode.nekomusiccli.events;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import org.lolicode.nekomusiccli.NekoMusicClient;
-import org.lolicode.nekomusiccli.packet.AllMusicPacketReceiver;
 
 public class OnQuitServer {
     public static void onQuitServer() {

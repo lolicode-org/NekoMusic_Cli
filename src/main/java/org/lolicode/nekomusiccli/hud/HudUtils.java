@@ -5,7 +5,6 @@ import net.minecraft.text.Text;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.music.MusicList;
 import org.lolicode.nekomusiccli.music.MusicObj;
-import org.lolicode.nekomusiccli.packet.AllMusicPacketReceiver;
 import org.lolicode.nekomusiccli.utils.Alert;
 
 import java.io.ByteArrayInputStream;
