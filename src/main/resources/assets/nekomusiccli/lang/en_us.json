@@ -49,6 +49,8 @@
   "text.autoconfig.nekomusiccli.option.musicResponseSizeLimit.@Tooltip[2]": "§eThis should not be considered as a security feature. If your server send large data on purpose to break the client, personally I would recommend you to find a better server.",
   "text.autoconfig.nekomusiccli.option.imgResponseSizeLimit": "Cover Response Size Limit",
   "text.autoconfig.nekomusiccli.option.imgResponseSizeLimit.@Tooltip": "Same as above, but for cover image.",
+  "text.autoconfig.nekomusiccli.option.imgWidthLimit": "Cover Width Limit",
+  "text.autoconfig.nekomusiccli.option.imgWidthLimit.@Tooltip": "Cover image width limit, -1 = Unlimited. This helps prevent PNG bomb attack. Requires restart.",
   "text.autoconfig.nekomusiccli.category.default": "Basic",
   "text.autoconfig.nekomusiccli.category.advanced": "Advanced",
   "hud.nekomusic.no_title": "No Title",

@@ -9,6 +9,8 @@ import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lwjgl.BufferUtils;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import java.awt.*;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
@@ -16,6 +18,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Iterator;
 
 public class ImgRender {
     private static final TextureManager textureManager = MinecraftClient.getInstance().getTextureManager();
@@ -32,6 +35,20 @@ public class ImgRender {
     // draws a filled black circle outside the circle, and returns a textureId
     public synchronized void InitImg(ByteArrayInputStream stream) throws IOException {
         try (stream) {
+            try (ImageInputStream iis = ImageIO.createImageInputStream(stream)) {
+                Iterator<ImageReader> readers = ImageIO.getImageReaders(iis);
+                if (!readers.hasNext()) {
+                    return; // Invalid input
+                }
+                ImageReader reader = readers.next();
+                reader.setInput(iis, true, true);
+                if (reader.getWidth(0) > NekoMusicClient.config.imgWidthLimit || reader.getHeight(0) > NekoMusicClient.config.imgWidthLimit) {
+                    return; // Image too large
+                }
+            }
+
+            stream.reset();
+
             // Use ImageIO.read to create a bufferedimage from the bufferedinputstream
             BufferedImage bufferedImage = ImageIO.read(stream);
 
