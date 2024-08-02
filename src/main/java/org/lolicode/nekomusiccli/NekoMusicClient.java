@@ -14,6 +14,8 @@ import org.lolicode.nekomusiccli.hud.HudUtils;
 import org.lolicode.nekomusiccli.music.MusicManager;
 import org.lolicode.nekomusiccli.network.NetUtils;
 import org.lolicode.nekomusiccli.packet.AllMusicPacketReceiver;
+import org.lolicode.nekomusiccli.packet.ClientByeSender;
+import org.lolicode.nekomusiccli.packet.ClientHelloSender;
 import org.lolicode.nekomusiccli.packet.NekoMusicPacketReceiver;
 
 public class NekoMusicClient implements ClientModInitializer {
@@ -42,5 +44,7 @@ public class NekoMusicClient implements ClientModInitializer {
         Events.register();
         NekoMusicPacketReceiver.register();
         AllMusicPacketReceiver.register();
+        ClientHelloSender.register();
+        ClientByeSender.register();
     }
 }
