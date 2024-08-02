@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 
 public class HudUtils {
+    private final MinecraftClient client = MinecraftClient.getInstance();
     private volatile String info = null;
     private volatile String list = null;
     private volatile LyricRender lyricRender = null;
@@ -78,7 +79,7 @@ public class HudUtils {
     }
 
     public void frame(DrawContext context) {
-        if (isClosed || isStopped) return;
+        if (isClosed || isStopped || client.options.hudHidden || client.getDebugHud().shouldShowDebugHud()) return;
         var cfg = NekoMusicClient.config;
         if (!cfg.enableHud) return;
         if (cfg.enableHudImg && imgRender != null) {
