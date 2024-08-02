@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class SoundSystemMixin {
     @Inject(method = "play(Lnet/minecraft/client/sound/SoundInstance;)V", at = @At("HEAD"), cancellable = true)
     public void play(SoundInstance sound, CallbackInfo ci) {
+        if (NekoMusicClient.musicManager != null && !NekoMusicClient.musicManager.isPlaying()) return;
         switch (sound.getCategory()) {
             case RECORDS, MUSIC -> ci.cancel();
         }

@@ -128,4 +128,8 @@ public class MusicManager {
         MinecraftClient.getInstance().getSoundManager().stopSounds(null, SoundCategory.MUSIC);
         MinecraftClient.getInstance().getSoundManager().stopSounds(null, SoundCategory.RECORDS);
     }
+
+    public boolean isPlaying() {
+        return this.isPlaying;
+    }
 }
