@@ -47,8 +47,7 @@ public class ModConfig implements ConfigData {
 
     @ConfigEntry.Category("advanced")
     @ConfigEntry.Gui.Tooltip
-    @ConfigEntry.Gui.RequiresRestart
-    public long imgWidthLimit = 1024;
+    public long imgWidthLimit = 0;
 
     @ConfigEntry.Category("advanced")
     @ConfigEntry.Gui.Tooltip

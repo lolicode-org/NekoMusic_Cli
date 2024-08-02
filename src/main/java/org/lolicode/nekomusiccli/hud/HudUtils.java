@@ -1,7 +1,9 @@
 package org.lolicode.nekomusiccli.hud;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.music.MusicList;
 import org.lolicode.nekomusiccli.music.MusicObj;
@@ -30,11 +32,29 @@ public class HudUtils {
         if (music.player != null && !music.player.isBlank()) info += "\nby: " + music.player;
         if (music.album != null && music.album.picUrl != null && !music.album.picUrl.isBlank()) {
             try (var imageResponse = NekoMusicClient.netUtils.getImageResponse(music.album)) {
-                if (imageResponse == null || imageResponse.body() == null) throw new IOException("Failed to load image");
-                var imgStream = new ByteArrayInputStream(imageResponse.body().bytes());
-                imgRender = new ImgRender(imgStream, NekoMusicClient.config.enableHudImgRotate);
+                try {
+                    if (imageResponse == null || imageResponse.body() == null)
+                        throw new IOException("Failed to load image");
+                    var imgStream = new ByteArrayInputStream(imageResponse.body().bytes());
+                    imgRender = new ImgRender(imgStream, NekoMusicClient.config.enableHudImgRotate);
+                } catch (Exception e) {
+                    final var defaultCover = MinecraftClient.getInstance().getResourceManager()
+                            .getResource(Identifier.of(NekoMusicClient.MOD_ID, "texture/default_cover.png"));
+                    if (defaultCover.isPresent()) {
+                        imgRender = new ImgRender(
+                                new ByteArrayInputStream(defaultCover.get().getInputStream().readAllBytes()),
+                                NekoMusicClient.config.enableHudImgRotate, true);
+                    }
+                    throw e;
+                }
             } catch (InterruptedIOException e) {
                 throw e;
+            } catch (ImgSizeException e) {
+                NekoMusicClient.LOGGER.error("Failed to load image: " + music.album.picUrl, e);
+                Alert.warn("hud.nekomusic.image_too_large");
+            } catch (ImgFormatException e) {
+                NekoMusicClient.LOGGER.error("Failed to load image: " + music.album.picUrl, e);
+                Alert.warn("hud.nekomusic.invalid_image_format");
             } catch (IOException e) {
                 NekoMusicClient.LOGGER.error("Failed to load image: " + music.album.picUrl, e);
                 Alert.warn("hud.nekomusic.failed_to_load_image");

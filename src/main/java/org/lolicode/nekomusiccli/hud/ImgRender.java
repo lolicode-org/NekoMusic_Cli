@@ -31,30 +31,43 @@ public class ImgRender {
         InitImg(stream);
         this.shouldRotate = shouldRotate;
     }
+    public ImgRender(ByteArrayInputStream stream, boolean shouldRotate, boolean noWidthCheck) throws IOException {
+        InitImg(stream, noWidthCheck);
+        this.shouldRotate = shouldRotate;
+    }
     // A function that reads a ByteArrayInputStream, cuts the image into a circle,
     // draws a filled black circle outside the circle, and returns a textureId
     public synchronized void InitImg(ByteArrayInputStream stream) throws IOException {
+        InitImg(stream, false);
+    }
+    public synchronized void InitImg(ByteArrayInputStream stream, boolean noWidthCheck) throws IOException {
         try (stream) {
-            try (ImageInputStream iis = ImageIO.createImageInputStream(stream)) {
-                Iterator<ImageReader> readers = ImageIO.getImageReaders(iis);
-                if (!readers.hasNext()) {
-                    return; // Invalid input
+            if (!noWidthCheck) {
+                try (ImageInputStream iis = ImageIO.createImageInputStream(stream)) {
+                    Iterator<ImageReader> readers = ImageIO.getImageReaders(iis);
+                    if (!readers.hasNext()) {
+                        throw new ImgFormatException("No image reader found");
+//                    return; // Invalid input
+                    }
+                    ImageReader reader = readers.next();
+                    reader.setInput(iis, true, true);
+                    if (NekoMusicClient.config.imgWidthLimit > 0 &&
+                            (reader.getWidth(0) > NekoMusicClient.config.imgWidthLimit
+                                    || reader.getHeight(0) > NekoMusicClient.config.imgWidthLimit)) {
+//                    return; // Image too large
+                        throw new ImgSizeException("Image too large");
+                    }
                 }
-                ImageReader reader = readers.next();
-                reader.setInput(iis, true, true);
-                if (reader.getWidth(0) > NekoMusicClient.config.imgWidthLimit || reader.getHeight(0) > NekoMusicClient.config.imgWidthLimit) {
-                    return; // Image too large
-                }
+                stream.reset();
             }
-
-            stream.reset();
 
             // Use ImageIO.read to create a bufferedimage from the bufferedinputstream
             BufferedImage bufferedImage = ImageIO.read(stream);
 
             // Check if the bufferedimage is null or empty
             if (bufferedImage == null || bufferedImage.getWidth() == 0 || bufferedImage.getHeight() == 0) {
-                return; // Invalid input
+                throw new ImgFormatException("Failed to load image");
+//                return; // Invalid input
             }
 
             // Get the width and height of the bufferedimage
