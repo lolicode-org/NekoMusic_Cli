@@ -1,6 +1,7 @@
 {
   "category.nekomusic.general": "NekoMusic",
   "key.nekomusic.disable": "Enable/Disable NekoMusic",
+  "key.nekomusic.server_disable": "Enable/Disable NekoMusic for current Server",
   "nekomusic.enable": "§eNekoMusic enabled",
   "nekomusic.disable": "§eNekoMusic disabled",
   "nekomusic.server_enable": "§eNekoMusic enabled for this server",
