@@ -110,7 +110,7 @@ public class HudUtils {
             imgRender = null;
         }
         info = null;
-        list = null;
+//        list = null;
         isStopped = true;
     }
 
