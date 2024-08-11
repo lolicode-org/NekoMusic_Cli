@@ -16,7 +16,12 @@ public class SoundSystemMixin {
     public void play(SoundInstance sound, CallbackInfo ci) {
         if (NekoMusicClient.musicManager != null && !NekoMusicClient.musicManager.isPlaying()) return;
         switch (sound.getCategory()) {
-            case RECORDS, MUSIC -> ci.cancel();
+            case RECORDS -> {
+                if (NekoMusicClient.config.blockRecords) ci.cancel();
+            }
+            case MUSIC -> {
+                if (NekoMusicClient.config.blockMusic) ci.cancel();
+            }
         }
     }
 

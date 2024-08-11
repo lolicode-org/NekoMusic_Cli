@@ -125,8 +125,12 @@ public class MusicManager {
     }
 
     public static void stopVanillaMusic() {
-        MinecraftClient.getInstance().getSoundManager().stopSounds(null, SoundCategory.MUSIC);
-        MinecraftClient.getInstance().getSoundManager().stopSounds(null, SoundCategory.RECORDS);
+        if (NekoMusicClient.config.blockMusic) {
+            MinecraftClient.getInstance().getSoundManager().stopSounds(null, SoundCategory.MUSIC);
+        }
+        if (NekoMusicClient.config.blockRecords) {
+            MinecraftClient.getInstance().getSoundManager().stopSounds(null, SoundCategory.RECORDS);
+        }
     }
 
     public boolean isPlaying() {

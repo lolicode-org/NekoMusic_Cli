@@ -13,6 +13,8 @@ import java.util.ArrayList;
 @Config(name = NekoMusicClient.MOD_ID)
 public class ModConfig implements ConfigData {
     public boolean enabled = true;
+    public boolean blockMusic = true;
+    public boolean blockRecords = false;
     public boolean enableHud = true;
     public boolean enableHudInfo = true;
     public boolean enableHudList = true;

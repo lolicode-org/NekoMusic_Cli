@@ -13,6 +13,8 @@
   "soundCategory.nekomusiccli$nekomusic": "NekoMusic",
   "text.autoconfig.nekomusiccli.title": "NekoMusic Config",
   "text.autoconfig.nekomusiccli.option.enabled": "Enable NekoMusic",
+  "text.autoconfig.nekomusiccli.option.blockMusic": "Block Game BGM",
+  "text.autoconfig.nekomusiccli.option.blockRecords": "Block Jukebox",
   "text.autoconfig.nekomusiccli.option.musicCacheSize": "Music Cache Max Size",
   "text.autoconfig.nekomusiccli.option.musicCacheSize.@Tooltip": "Music Cache Max Size (MB), -1 = Unlimited, 0 = Disable. Requires restart. ",
   "text.autoconfig.nekomusiccli.option.imgCacheSize": "Cover Cache Max Size",

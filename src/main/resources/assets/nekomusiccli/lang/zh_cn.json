@@ -13,6 +13,8 @@
   "soundCategory.nekomusiccli$nekomusic": "NekoMusic 音乐播放",
   "text.autoconfig.nekomusiccli.title": "NekoMusic 配置",
   "text.autoconfig.nekomusiccli.option.enabled": "启用 NekoMusic",
+  "text.autoconfig.nekomusiccli.option.blockMusic": "屏蔽游戏背景音乐",
+  "text.autoconfig.nekomusiccli.option.blockRecords": "屏蔽唱片机音乐",
   "text.autoconfig.nekomusiccli.option.musicCacheSize": "音乐缓存大小",
   "text.autoconfig.nekomusiccli.option.musicCacheSize.@Tooltip": "音乐缓存大小 (MB), -1 为不限制, 0 为禁用缓存。重启游戏后生效。",
   "text.autoconfig.nekomusiccli.option.imgCacheSize": "封面缓存大小",
