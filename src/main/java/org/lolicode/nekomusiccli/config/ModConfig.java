@@ -15,6 +15,7 @@ public class ModConfig implements ConfigData {
     public boolean enabled = true;
     public boolean blockMusic = true;
     public boolean blockRecords = false;
+
     public boolean enableHud = true;
     public boolean enableHudInfo = true;
     public boolean enableHudList = true;
@@ -45,7 +46,7 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Category("advanced")
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.Gui.RequiresRestart
-    public long imgResponseSizeLimit = 10;
+    public long imgResponseSizeLimit = 25;
 
     @ConfigEntry.Category("advanced")
     @ConfigEntry.Gui.Tooltip
