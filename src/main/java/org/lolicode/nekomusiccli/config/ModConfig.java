@@ -12,6 +12,9 @@ import java.util.ArrayList;
 
 @Config(name = NekoMusicClient.MOD_ID)
 public class ModConfig implements ConfigData {
+    // TODO:
+    // hud size limit
+    // domain whitelist
     public boolean enabled = true;
     public boolean blockMusic = true;
     public boolean blockRecords = false;

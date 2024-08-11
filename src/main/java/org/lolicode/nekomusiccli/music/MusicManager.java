@@ -14,6 +14,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MusicManager {
+    // FIXME: if receive two metadata packets in a short time, they will be played together, and there's no way to stop the first one
     private final AtomicReference<AudioPlayer> playerRef = new AtomicReference<>();
     private volatile boolean isPlaying = false;
     public volatile MusicObj currentMusic = null;
