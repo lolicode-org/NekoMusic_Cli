@@ -14,7 +14,6 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MusicManager {
-    // FIXME: if receive two metadata packets in a short time, they will be played together, and there's no way to stop the first one
     private final AtomicReference<AudioPlayer> playerRef = new AtomicReference<>();
     private volatile boolean isPlaying = false;
     public volatile MusicObj currentMusic = null;
@@ -59,7 +58,10 @@ public class MusicManager {
                     player = AudioPlayer.getAudioPlayerNoStream(music);
                 }
                 if (player == null) throw new RuntimeException("Failed to get audio player");
-                playerRef.set(player);
+                var oldPlayer = playerRef.getAndSet(player);
+                if (oldPlayer != null) {
+                    oldPlayer.stop();
+                }
                 if (NekoMusicClient.hudUtils != null) NekoMusicClient.hudUtils.startLyric();  // sync lyric with music
                 player.play();
                 player.setGain(getVolume());
