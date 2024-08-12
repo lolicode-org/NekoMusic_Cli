@@ -25,7 +25,7 @@ public interface Decoder extends AutoCloseable {
             case "audio/mpeg" -> {
                 return getMp3Decoder(inputStream);
             }
-            case "audio/flac" -> {
+            case "audio/flac", "audio/x-flac" -> {
                 return getFlacDecoder(inputStream);
             }
             case "audio/ogg", "audio/vorbis" -> {

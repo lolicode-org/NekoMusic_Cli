@@ -26,8 +26,8 @@ public abstract class AudioPlayer implements AutoCloseable {
 
     public static AudioPlayer getAudioPlayerStream(MusicObj music) throws InterruptedIOException {
         if (music == null || music.url == null || music.url.isBlank()) throw new IllegalArgumentException("MusicObj is null or url is null or blank");
-        String url = music.url.toLowerCase();
-        if (!url.endsWith(".mp3") && !url.endsWith(".flac")) return null;
+        String urlWithoutParam = music.url.split("\\?")[0].toLowerCase();
+        if (!urlWithoutParam.endsWith(".mp3") && !urlWithoutParam.endsWith(".flac")) return null;
         Response response = null;
         try {
             // if use try-with-resource, the response will be closed when the try block is exited, before it's actually consumed
@@ -36,7 +36,7 @@ public abstract class AudioPlayer implements AutoCloseable {
                 return null;
             }
             assert response.body() != null;
-            return ResponseAudioPlayer.getMp3OrFlacAudioPlayer(response, url.endsWith(".mp3"));
+            return ResponseAudioPlayer.getMp3OrFlacAudioPlayer(response, urlWithoutParam.endsWith(".mp3"));
         } catch (InterruptedIOException e) {
             if (response != null) response.close();
             throw e;
