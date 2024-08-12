@@ -47,7 +47,7 @@
   "text.autoconfig.nekomusiccli.option.bannedServers.@Tooltip[0]": "列表中的服务器发送的音乐将被忽略。",
   "text.autoconfig.nekomusiccli.option.bannedServers.@Tooltip[1]": "§e注意：在这里编辑的名单不会立即生效，如果你需要立即生效，请使用按键绑定中设置的快捷键。",
   "text.autoconfig.nekomusiccli.option.musicResponseSizeLimit": "音乐响应大小限制",
-  "text.autoconfig.nekomusiccli.option.musicResponseSizeLimit.@Tooltip[0]": "设置媒体服务器响应大小限制 (MB), -1 为不限制, 0 为禁用限制。重启游戏后生效。",
+  "text.autoconfig.nekomusiccli.option.musicResponseSizeLimit.@Tooltip[0]": "设置媒体服务器响应大小限制 (MB), 任意非正数为不限制。重启游戏后生效。",
   "text.autoconfig.nekomusiccli.option.musicResponseSizeLimit.@Tooltip[1]": "§e这可能能在一定程度上避免错误配置的服务器（如播放了长度过长的音乐）导致客户端崩溃，但并不保证在所有情况下都能生效。",
   "text.autoconfig.nekomusiccli.option.musicResponseSizeLimit.@Tooltip[2]": "§e这不应当被视为一个可靠的安全措施。如果你所在的服务器故意这样做，个人认为离开这个服务器可能更合适。",
   "text.autoconfig.nekomusiccli.option.imgResponseSizeLimit": "封面响应大小限制",

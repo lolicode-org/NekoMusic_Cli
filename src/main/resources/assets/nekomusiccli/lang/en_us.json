@@ -47,7 +47,7 @@
   "text.autoconfig.nekomusiccli.option.bannedServers.@Tooltip[0]": "Servers in this list will not be able to send music to you.",
   "text.autoconfig.nekomusiccli.option.bannedServers.@Tooltip[1]": "§ePlease note that changing this option here will not take effect until you rejoined the server. If you want to change it immediately, please use the shortcut defined in keybindings.",
   "text.autoconfig.nekomusiccli.option.musicResponseSizeLimit": "Music Response Size Limit",
-  "text.autoconfig.nekomusiccli.option.musicResponseSizeLimit.@Tooltip[0]": "Response Size Limit (MB), -1 = Unlimited. Should be more than 10 if you set a positive value. Requires restart.",
+  "text.autoconfig.nekomusiccli.option.musicResponseSizeLimit.@Tooltip[0]": "Response Size Limit (MB), <= 0 == Unlimited. Should be more than 10 if you set a positive value. Requires restart.",
   "text.autoconfig.nekomusiccli.option.musicResponseSizeLimit.@Tooltip[1]": "§eThis might help you mitigate some wrongly configured servers (e.g. accidentally send a 1GB music) that send too much data, but not guaranteed to work in all cases.",
   "text.autoconfig.nekomusiccli.option.musicResponseSizeLimit.@Tooltip[2]": "§eThis should not be considered as a security feature. If your server send large data on purpose to break the client, personally I would recommend you to find a better server.",
   "text.autoconfig.nekomusiccli.option.imgResponseSizeLimit": "Cover Response Size Limit",

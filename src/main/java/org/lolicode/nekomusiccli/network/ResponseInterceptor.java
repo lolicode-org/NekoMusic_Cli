@@ -9,7 +9,6 @@ import java.io.IOException;
 
 public class ResponseInterceptor implements Interceptor {
     private final long MAX_SIZE;
-    private static final String GZIP = "gzip";
 
     public ResponseInterceptor(long maxSize) {
         MAX_SIZE = maxSize;
@@ -22,8 +21,7 @@ public class ResponseInterceptor implements Interceptor {
 
         if (originalBody != null) {
             long contentLength = originalBody.contentLength();
-            String contentEncoding = originalResponse.header("Content-Encoding");
-            if (contentLength > MAX_SIZE) {
+            if (MAX_SIZE > 0 && contentLength > MAX_SIZE) {
                 originalBody.close();
                 throw new IOException("Response size too large: " + contentLength + " bytes");
             }
