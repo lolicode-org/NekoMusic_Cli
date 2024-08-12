@@ -74,6 +74,13 @@ public class ImgRender {
             int width = bufferedImage.getWidth();
             int height = bufferedImage.getHeight();
 
+            // if width != height, center cut the image
+            if (width != height) {
+                int min = Math.min(width, height);
+                bufferedImage = bufferedImage.getSubimage((width - min) / 2, (height - min) / 2, min, min);
+                width = height = min;
+            }
+
             int[] pixels = new int[width * height];
 
             ByteBuffer byteBuffer = BufferUtils.createByteBuffer(width * height * 4);
