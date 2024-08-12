@@ -14,7 +14,6 @@ import java.util.ArrayList;
 public class ModConfig implements ConfigData {
     // TODO:
     // hud size limit
-    // domain whitelist
     public boolean enabled = true;
     public boolean blockMusic = true;
     public boolean blockRecords = false;
@@ -44,7 +43,7 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Category("advanced")
     @ConfigEntry.Gui.Tooltip(count = 3)
     @ConfigEntry.Gui.RequiresRestart
-    public long musicResponseSizeLimit = 200;
+    public long musicResponseSizeLimit = 0;
 
     @ConfigEntry.Category("advanced")
     @ConfigEntry.Gui.Tooltip
@@ -70,6 +69,10 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.RequiresRestart
     public String cachePath = "";
 
+    @ConfigEntry.Category("advanced")
+    @ConfigEntry.Gui.Tooltip
+    public ArrayList<String> domainWhitelist = new ArrayList<>();
+
     public void validatePostLoad() throws ValidationException {
         if (infoX < 0)
             infoX = 0;
@@ -93,9 +96,12 @@ public class ModConfig implements ConfigData {
             musicCacheSize = -1;
         if (imgRotateSpeed <= 0)
             imgRotateSpeed = 50;
-        if (musicResponseSizeLimit != -1 && musicResponseSizeLimit < 10)
+        if (musicResponseSizeLimit > 0 && musicResponseSizeLimit < 10)
             musicResponseSizeLimit = 10;
         bannedServers.removeIf(String::isBlank);
+        domainWhitelist.removeIf(String::isBlank);
+        if (!domainWhitelist.isEmpty() && !domainWhitelist.contains("music.126.net"))
+            domainWhitelist.add("music.126.net");
         try {
             CacheUtils.checkCachePath(getCachePath());
         } catch (Exception e) {

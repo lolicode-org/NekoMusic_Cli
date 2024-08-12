@@ -4,6 +4,7 @@ import okhttp3.Response;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.music.MusicManager;
 import org.lolicode.nekomusiccli.music.MusicObj;
+import org.lolicode.nekomusiccli.network.DomainNotInWhitelistException;
 import org.lolicode.nekomusiccli.utils.Alert;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL10;
@@ -37,6 +38,9 @@ public abstract class AudioPlayer implements AutoCloseable {
             }
             assert response.body() != null;
             return ResponseAudioPlayer.getMp3OrFlacAudioPlayer(response, urlWithoutParam.endsWith(".mp3"));
+        } catch (DomainNotInWhitelistException e) {
+            NekoMusicClient.LOGGER.error("Domain not in whitelist: {}", music.url, e);
+            Alert.error("player.nekomusic.domain_not_in_whitelist");
         } catch (InterruptedIOException e) {
             if (response != null) response.close();
             throw e;
