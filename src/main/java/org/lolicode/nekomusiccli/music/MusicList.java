@@ -1,5 +1,6 @@
 package org.lolicode.nekomusiccli.music;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,6 +27,24 @@ public class MusicList {
             sb.append("\n");
         });
         return sb.toString();
+    }
+
+    public ArrayList<String> toArrayList() {
+        ArrayList<String> list = new ArrayList<>();
+        Arrays.stream(this.musics).forEach(
+            music -> {
+                StringBuilder sb = new StringBuilder();
+                sb.append(music.name);
+                if (music.artist != null) {
+                    sb.append(" - ").append(music.artist);
+                }
+                if (music.album != null) {
+                    sb.append(" (").append(music.album).append(")");
+                }
+                list.add(sb.toString());
+            }
+        );
+        return list;
     }
 
     public Boolean isEmpty() {

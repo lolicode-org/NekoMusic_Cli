@@ -12,15 +12,17 @@ import org.lolicode.nekomusiccli.utils.Alert;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InterruptedIOException;
+import java.util.ArrayList;
 
 public class HudUtils {
     private final MinecraftClient client = MinecraftClient.getInstance();
     private volatile String info = null;
-    private volatile String list = null;
+    private final ArrayList<String> list = new ArrayList<>();
     private volatile LyricRender lyricRender = null;
     private volatile ImgRender imgRender = null;
     private volatile boolean isClosed = false;
     private volatile boolean isStopped = false;
+    private final long startTime = System.currentTimeMillis();
 
     public synchronized void setMusic(MusicObj music) throws InterruptedIOException {
         if (isClosed) throw new IllegalStateException("Hud is closed");
@@ -75,7 +77,8 @@ public class HudUtils {
 
     public synchronized void setList(MusicList list) {
         if (isClosed) throw new IllegalStateException("Hud is closed");
-        this.list = list.toString();
+        this.list.clear();
+        this.list.addAll(list.toArrayList());
     }
 
     public void frame(DrawContext context) {
@@ -89,7 +92,7 @@ public class HudUtils {
             InfoRender.render(context, info);
         }
         if (cfg.enableHudList) {
-            ListRender.render(context, list);
+            ListRender.render(context, list, System.currentTimeMillis() - startTime);
         }
         if (cfg.enableHudLyric && lyricRender != null) {
             lyricRender.render(context);

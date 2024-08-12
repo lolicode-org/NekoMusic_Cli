@@ -57,7 +57,7 @@ public class LyricRender {
             }
             var sentence = lyric.findContent(currentTime);
             currentSentence = sentence == null ? "" : sentence;
-        }, 0, 20, TimeUnit.MILLISECONDS);
+        }, 0, 200, TimeUnit.MILLISECONDS);
     }
 
     public void stop() {

@@ -12,8 +12,6 @@ import java.util.ArrayList;
 
 @Config(name = NekoMusicClient.MOD_ID)
 public class ModConfig implements ConfigData {
-    // TODO:
-    // hud size limit
     public boolean enabled = true;
     public boolean blockMusic = true;
     public boolean blockRecords = false;
@@ -25,6 +23,10 @@ public class ModConfig implements ConfigData {
     public boolean enableHudImg = true;
     @ConfigEntry.Gui.Tooltip
     public boolean enableHudImgRotate = true;
+
+    public int maxCharPerLineListHud = 25;
+    public int maxRowListHud = 5;
+    public boolean scrollListHud = false;
 
     public int infoX = 74;
     public int infoY = 2;
@@ -74,6 +76,8 @@ public class ModConfig implements ConfigData {
     public ArrayList<String> domainWhitelist = new ArrayList<>();
 
     public void validatePostLoad() throws ValidationException {
+        if (maxCharPerLineListHud < 10 && maxCharPerLineListHud > 0)
+            maxCharPerLineListHud = 10;
         if (infoX < 0)
             infoX = 0;
         if (infoY < 0)
