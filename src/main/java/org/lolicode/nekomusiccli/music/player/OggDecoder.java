@@ -40,6 +40,16 @@ public class OggDecoder implements Decoder {
     }
 
     @Override
+    public synchronized void seek(long pos) throws IOException {
+        if (closed) return;
+        var samplePos = (int) pos * info.sample_rate();
+        var success = STBVorbis.stb_vorbis_seek_frame(decoder, samplePos);
+        if (!success) {
+            throw new IOException("Failed to seek to position: " + pos);
+        }
+    }
+
+    @Override
     public synchronized void close() {
         if (closed) return;
         closed = true;

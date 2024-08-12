@@ -100,8 +100,8 @@ public class HudUtils {
         }
     }
 
-    public synchronized void startLyric() {
-        if (lyricRender != null) lyricRender.start();
+    public synchronized void startLyric(long pos) {
+        if (lyricRender != null) lyricRender.start(pos);
     }
 
     public synchronized void stopCurrentMusic() {

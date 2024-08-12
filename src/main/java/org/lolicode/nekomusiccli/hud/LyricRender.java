@@ -46,9 +46,9 @@ public class LyricRender {
         return lyric != null;
     }
 
-    public void start() {
+    public void start(long pos) {
         if (lyric == null) return;
-        final long startTime = System.currentTimeMillis();
+        final long startTime = System.currentTimeMillis() - pos * 1000;
         lyricExecutor.scheduleAtFixedRate(() -> {
             long currentTime = System.currentTimeMillis() - startTime;
             if (currentTime > lyric.getDuration() || currentTime < 0) {

@@ -76,5 +76,6 @@
   "player.nekomusic.play.failed": "未知的播放错误，如果你认为这是一个bug，请收集完整的日志并向开发者报告。",
   "player.nekomusic.streaming.unavailable": "无法在线播放，正在下载完整音乐，可能需要一段时间...",
   "player.nekomusic.domain_not_in_whitelist": "§c音乐资源域名不在白名单中",
+  "player.nekomusic.seek.failed": "无法跳转到服务器指定的位置，音乐播放失败",
   "volume.nekomusic.set.failed": "设置音量失败，这通常不应该发生。如果你认为这是一个bug，请收集完整的日志并向开发者报告。"
 }

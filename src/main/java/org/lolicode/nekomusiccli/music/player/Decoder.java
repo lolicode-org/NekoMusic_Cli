@@ -94,6 +94,7 @@ public interface Decoder extends AutoCloseable {
 
     int getOutputFrequency() throws IOException;
     int getOutputChannels() throws IOException;
+    void seek(long pos) throws IOException;
     void close() throws Exception;
     @Nullable ByteBuffer decodeFrame() throws Exception;
 }

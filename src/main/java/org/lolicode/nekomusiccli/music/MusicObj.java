@@ -31,4 +31,7 @@ public class MusicObj {
         else
             return this.url;  // AllMusic and custom packets
     }
+
+    @SerializedName("seek_to")
+    public long seekTo;
 }

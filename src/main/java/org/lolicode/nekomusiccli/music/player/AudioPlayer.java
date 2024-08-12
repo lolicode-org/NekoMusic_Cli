@@ -10,6 +10,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL10;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -29,6 +30,10 @@ public abstract class AudioPlayer implements AutoCloseable {
         if (music == null || music.url == null || music.url.isBlank()) throw new IllegalArgumentException("MusicObj is null or url is null or blank");
         String urlWithoutParam = music.url.split("\\?")[0].toLowerCase();
         if (!urlWithoutParam.endsWith(".mp3") && !urlWithoutParam.endsWith(".flac")) return null;
+        if (music.seekTo > 0 && urlWithoutParam.endsWith(".flac")) {
+            NekoMusicClient.LOGGER.info("Seeking is not supported while streaming flac audio");  // limitation of the flac decoder or I do something wrong? #NEEDHELP
+            return null;
+        }
         Response response = null;
         try {
             // if use try-with-resource, the response will be closed when the try block is exited, before it's actually consumed
@@ -83,6 +88,24 @@ public abstract class AudioPlayer implements AutoCloseable {
         this.decodeThread.start();
         this.playbackThread = new Thread(this::playBackLoop, NekoMusicClient.MOD_NAME + " Audio-Playback-Loop");
         this.playbackThread.start();
+    }
+
+    public synchronized void playFrom(long pos) throws IOException {
+        if (playbackRunning) {
+            return;
+        }
+        assert this.decoder != null;
+        assert pos >= 0;
+        try {
+            if (pos > 0) {
+                this.decoder.seek(pos);
+            }
+            this.play();
+        } catch (IOException e) {
+            NekoMusicClient.LOGGER.error("Failed to seek to position", e);
+            Alert.error("player.nekomusic.seek.failed");
+            throw e;
+        }
     }
 
     public synchronized void stop() {

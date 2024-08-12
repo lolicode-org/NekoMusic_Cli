@@ -15,6 +15,7 @@ public class FlacDecoder extends org.lolicode.nekomusiccli.libs.flac.decode.Flac
     private volatile boolean closed = false;
     private int sampleRate = 0;
     private int channels = 0;
+    private int maxBlockSize = 0;
     /**
      * Constructs a new FLAC decoder from the given input stream.
      * @param in the input stream to read from
@@ -43,6 +44,7 @@ public class FlacDecoder extends org.lolicode.nekomusiccli.libs.flac.decode.Flac
         metadataRead = true;
         sampleRate = super.streamInfo.sampleRate;
         channels = super.streamInfo.numChannels;
+        maxBlockSize = super.streamInfo.maxBlockSize;
     }
 
     @Override
@@ -55,6 +57,11 @@ public class FlacDecoder extends org.lolicode.nekomusiccli.libs.flac.decode.Flac
     public int getOutputChannels() throws IOException {
         if (!metadataRead) handleMetadata();
         return channels;
+    }
+
+    public int getOutputMaxBlockSize() throws IOException {
+        if (!metadataRead) handleMetadata();
+        return maxBlockSize;
     }
 
     @Override
@@ -82,6 +89,13 @@ public class FlacDecoder extends org.lolicode.nekomusiccli.libs.flac.decode.Flac
         }
         return Decoder.getByteBuffer(sampleBytes, 0, sampleBytesLen);
     }
+
+    @Override
+    public synchronized void seek(long pos) throws IOException {
+        if (closed) return;
+        super.seekAndReadAudioBlock(pos * getOutputFrequency(), new int[getOutputChannels()][getOutputMaxBlockSize()], 0);
+    }
+
 
     @Override
     public synchronized void close() throws IOException {

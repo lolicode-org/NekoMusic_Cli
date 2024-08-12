@@ -40,6 +40,11 @@ public class MusicManager {
         this.isPlaying = true;
         this.currentMusic = music;
 
+        if (music.seekTo < 0 || music.seekTo * 1000 > music.dt) {
+            music.seekTo = 0;
+            NekoMusicClient.LOGGER.warn("Invalid seekTo value, set to 0. Is the server sending wrong data?");
+        }
+
         this.futures.add(this.executor.submit(() -> {
             try {
                 if (NekoMusicClient.hudUtils == null) NekoMusicClient.hudUtils = new HudUtils();
@@ -62,8 +67,9 @@ public class MusicManager {
                 if (oldPlayer != null) {
                     oldPlayer.stop();
                 }
-                if (NekoMusicClient.hudUtils != null) NekoMusicClient.hudUtils.startLyric();  // sync lyric with music
-                player.play();
+                if (NekoMusicClient.hudUtils != null) NekoMusicClient.hudUtils.startLyric(music.seekTo);  // sync lyric with music
+
+                player.playFrom(music.seekTo);
                 player.setGain(getVolume());
 
                 if (music.dt > 0) {

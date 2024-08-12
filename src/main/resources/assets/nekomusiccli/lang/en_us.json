@@ -76,6 +76,7 @@
   "player.nekomusic.decode.failed": "Failed to decode music, perhaps the music is corrupted or unsupported.",
   "player.nekomusic.streaming.unavailable": "Streaming unavailable for this format, downloading the whole music, this may take a while...",
   "player.nekomusic.domain_not_in_whitelist": "§cMusic resource domain not in whitelist",
+  "player.nekomusic.seek.failed": "Failed to seek to position specified by server, music playback failed.",
   "volume.nekomusic.set.failed": "Failed to set volume. This should not happen, please report this to the developer with full log.",
   "cache.nekomusic.read_failed": "Failed to read cache record: %d , a new record will be created. This might be caused by a corrupted record, please check if your cache directory is valid in \"Mods -> NekoMusic Client -> Config -> Advanced -> Cache Path\"."
 }
