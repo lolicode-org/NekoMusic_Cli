@@ -40,6 +40,7 @@ public class NekoMusicClient implements ClientModInitializer {
         cacheUtils = new CacheUtils(config);
         netUtils = new NetUtils(config);
         musicManager = new MusicManager();
+        hudUtils = new HudUtils();
 
         Events.register();
         NekoMusicPacketReceiver.register();

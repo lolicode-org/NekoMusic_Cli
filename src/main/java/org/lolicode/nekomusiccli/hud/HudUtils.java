@@ -22,7 +22,7 @@ public class HudUtils {
     private volatile ImgRender imgRender = null;
     private volatile boolean isClosed = false;
     private volatile boolean isStopped = false;
-    private final long startTime = System.currentTimeMillis();
+    private volatile long startTime = System.currentTimeMillis();
 
     public synchronized void setMusic(MusicObj music) throws InterruptedIOException {
         if (isClosed) throw new IllegalStateException("Hud is closed");
@@ -77,6 +77,7 @@ public class HudUtils {
 
     public synchronized void setList(MusicList list) {
         if (isClosed) throw new IllegalStateException("Hud is closed");
+        this.startTime = System.currentTimeMillis();
         this.list.clear();
         this.list.addAll(list.toArrayList());
     }

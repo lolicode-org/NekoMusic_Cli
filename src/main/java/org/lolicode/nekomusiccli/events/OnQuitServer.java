@@ -9,8 +9,9 @@ public class OnQuitServer {
             NekoMusicClient.musicManager.stop();
         }
         if (NekoMusicClient.hudUtils != null) {
-            NekoMusicClient.hudUtils.close();
-            NekoMusicClient.hudUtils = null;
+            NekoMusicClient.hudUtils.stopCurrentMusic();
+//            NekoMusicClient.hudUtils.close();
+//            NekoMusicClient.hudUtils = null;
         }
         if (NekoMusicClient.cacheUtils != null) {
             NekoMusicClient.cacheUtils.save();
