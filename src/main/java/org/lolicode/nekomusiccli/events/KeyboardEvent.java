@@ -11,6 +11,7 @@ import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.config.ModConfig;
 import org.lolicode.nekomusiccli.packet.ClientByeSender;
 import org.lolicode.nekomusiccli.packet.ClientHelloSender;
+import org.lolicode.nekomusiccli.utils.InstanceLock;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyboardEvent {
@@ -56,6 +57,7 @@ public class KeyboardEvent {
             if (client.getCurrentServerEntry() != null) {
                 ClientByeSender.send(client);
             }
+            InstanceLock.release();
         }
         config.save();
     }
@@ -78,6 +80,7 @@ public class KeyboardEvent {
             if (client.player != null)
                 client.player.sendMessage(Text.translatable("nekomusic.server_disable"), false);
             ClientByeSender.send(client);
+            InstanceLock.release();
         }
         config.save();
     }

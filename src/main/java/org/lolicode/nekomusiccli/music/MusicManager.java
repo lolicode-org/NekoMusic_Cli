@@ -8,6 +8,7 @@ import org.lolicode.nekomusiccli.config.CustomSoundCategory;
 import org.lolicode.nekomusiccli.hud.HudUtils;
 import org.lolicode.nekomusiccli.music.player.AudioPlayer;
 import org.lolicode.nekomusiccli.utils.Alert;
+import org.lolicode.nekomusiccli.utils.InstanceLock;
 
 import java.io.InterruptedIOException;
 import java.util.concurrent.*;
@@ -34,6 +35,10 @@ public class MusicManager {
         if (music == null || music.url == null || music.url.isBlank()) {
             NekoMusicClient.LOGGER.error("Music is null");
             Alert.error("player.nekomusic.music.null");
+            return;
+        }
+        if (NekoMusicClient.config.singleInstance && !InstanceLock.checkLock()) {
+            NekoMusicClient.LOGGER.info("NekoMusic: Another instance is running, skip playing music");
             return;
         }
         stopVanillaMusic();

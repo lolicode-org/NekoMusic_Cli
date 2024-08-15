@@ -59,6 +59,8 @@
   "text.autoconfig.nekomusiccli.option.imgWidthLimit.@Tooltip": "封面图片宽度限制, 0 为不限制。这有助于防止PNG炸弹攻击。重启游戏后生效。",
   "text.autoconfig.nekomusiccli.option.domainWhitelist": "资源域名白名单",
   "text.autoconfig.nekomusiccli.option.domainWhitelist.@Tooltip": "若不为空，则只会允许从白名单中的域名加载音乐和封面。",
+  "text.autoconfig.nekomusiccli.option.singleInstance": "单实例模式",
+  "text.autoconfig.nekomusiccli.option.singleInstance.@Tooltip": "防止多个客户端实例同时播放音乐",
   "text.autoconfig.nekomusiccli.category.default": "基本",
   "text.autoconfig.nekomusiccli.category.advanced": "高级",
   "hud.nekomusic.no_title": "无标题",

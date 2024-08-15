@@ -65,6 +65,11 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.Gui.RequiresRestart
     public int imgCacheSize = 100;
+    
+    @ConfigEntry.Category("advanced")
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.Gui.RequiresRestart
+    public boolean singleInstance = true;
 
     @ConfigEntry.Category("advanced")
     @ConfigEntry.Gui.Tooltip(count = 3)

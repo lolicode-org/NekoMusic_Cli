@@ -2,6 +2,7 @@ package org.lolicode.nekomusiccli.events;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import org.lolicode.nekomusiccli.NekoMusicClient;
+import org.lolicode.nekomusiccli.utils.InstanceLock;
 
 public class OnQuitServer {
     public static void onQuitServer() {
@@ -16,6 +17,7 @@ public class OnQuitServer {
         if (NekoMusicClient.cacheUtils != null) {
             NekoMusicClient.cacheUtils.save();
         }
+        InstanceLock.release();
     }
 
     public static void register() {
