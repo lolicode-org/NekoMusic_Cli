@@ -123,6 +123,7 @@ public class MusicManager {
     }
 
     public static float getVolume() {
+        if (NekoMusicClient.pvAddon != null) return NekoMusicClient.pvAddon.getVolume();
         return MinecraftClient.getInstance().options.getSoundVolume(CustomSoundCategory.NEKOMUSIC);
     }
 

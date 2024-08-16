@@ -4,6 +4,9 @@ import com.google.gson.Gson;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.Version;
+import net.fabricmc.loader.api.VersionParsingException;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +14,8 @@ import org.lolicode.nekomusiccli.cache.CacheUtils;
 import org.lolicode.nekomusiccli.config.ModConfig;
 import org.lolicode.nekomusiccli.events.Events;
 import org.lolicode.nekomusiccli.hud.HudUtils;
+import org.lolicode.nekomusiccli.integration.plasmovoice.NekoMusicPVAddon;
+import org.lolicode.nekomusiccli.integration.plasmovoice.PVAddonLoader;
 import org.lolicode.nekomusiccli.music.MusicManager;
 import org.lolicode.nekomusiccli.network.NetUtils;
 import org.lolicode.nekomusiccli.packet.AllMusicPacketReceiver;
@@ -30,6 +35,7 @@ public class NekoMusicClient implements ClientModInitializer {
     public static CacheUtils cacheUtils = null;
     public static ModConfig config;
     public static NetUtils netUtils;
+    public static NekoMusicPVAddon pvAddon = null;
     /**
      * Runs the mod initializer.
      */
@@ -47,5 +53,20 @@ public class NekoMusicClient implements ClientModInitializer {
         AllMusicPacketReceiver.register();
         ClientHelloSender.register();
         ClientByeSender.register();
+
+        if (config.lowerVolumeWhenPlayingVoice && FabricLoader.getInstance().isModLoaded("plasmovoice")) {
+            var pvModContainer = FabricLoader.getInstance().getModContainer("plasmovoice");
+            if (pvModContainer.isPresent()) {
+                var version = pvModContainer.get().getMetadata().getVersion();
+                try {
+                    if (version.compareTo(Version.parse("2.1.0")) >= 0)
+                        PVAddonLoader.load();
+                    else
+                        LOGGER.warn("PlasmoVoice version is too low, PlasmoVoice integration will not be loaded.");
+                } catch (VersionParsingException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
     }
 }

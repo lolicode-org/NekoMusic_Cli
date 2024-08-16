@@ -2,7 +2,6 @@ package org.lolicode.nekomusiccli.music.player;
 
 import okhttp3.Response;
 import org.lolicode.nekomusiccli.NekoMusicClient;
-import org.lolicode.nekomusiccli.music.MusicManager;
 import org.lolicode.nekomusiccli.music.MusicObj;
 import org.lolicode.nekomusiccli.network.DomainNotInWhitelistException;
 import org.lolicode.nekomusiccli.utils.Alert;
@@ -149,7 +148,7 @@ public abstract class AudioPlayer implements AutoCloseable {
                 IntBuffer intBuffer = BufferUtils.createIntBuffer(1);
                 AL10.alGenBuffers(intBuffer);
                 AL10.alBufferData(intBuffer.get(0), decoder.getOutputChannels() == 1 ? AL10.AL_FORMAT_MONO16 : AL10.AL_FORMAT_STEREO16, buffer, decoder.getOutputFrequency());
-                AL10.alSourcef(source, AL10.AL_GAIN, MusicManager.getVolume());
+//                AL10.alSourcef(source, AL10.AL_GAIN, MusicManager.getVolume());
                 queue.put(intBuffer);
             }
         } catch (InterruptedException ignored) {

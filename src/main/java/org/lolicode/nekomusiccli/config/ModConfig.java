@@ -80,6 +80,19 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     public ArrayList<String> domainWhitelist = new ArrayList<>();
 
+    @ConfigEntry.Category("integration")
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.Gui.RequiresRestart
+    public boolean lowerVolumeWhenPlayingVoice = true;
+
+    @ConfigEntry.Category("integration")
+    @ConfigEntry.Gui.Tooltip
+    public boolean useAbsoluteVolume = false;
+
+    @ConfigEntry.Category("integration")
+    @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
+    public int volumeWhenPlayingVoice = 25;
+
     public void validatePostLoad() throws ValidationException {
         if (maxCharPerLineListHud < 10 && maxCharPerLineListHud > 0)
             maxCharPerLineListHud = 10;
@@ -107,6 +120,8 @@ public class ModConfig implements ConfigData {
             imgRotateSpeed = 50;
         if (musicResponseSizeLimit > 0 && musicResponseSizeLimit < 10)
             musicResponseSizeLimit = 10;
+        if (volumeWhenPlayingVoice < 0 || volumeWhenPlayingVoice > 100)
+            volumeWhenPlayingVoice = 25;
         bannedServers.removeIf(String::isBlank);
         domainWhitelist.removeIf(String::isBlank);
         if (!domainWhitelist.isEmpty() && !domainWhitelist.contains("music.126.net"))
