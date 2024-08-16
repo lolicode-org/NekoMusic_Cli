@@ -51,13 +51,7 @@ public final class NekoMusicPVAddon implements AddonInitializer {
                 new ThreadFactoryBuilder().setNameFormat(NekoMusicClient.MOD_NAME + " PlasmoVoice Integration").build()
         );
         scheduler.scheduleWithFixedDelay(() -> {
-            anyCanHear = false;
-            for (var source: this.client.getSourceManager().getSources()) {
-                if (!(source instanceof LoopbackSource) && source.canHear()) {
-                    anyCanHear = true;
-                    break;
-                }
-            }
+            anyCanHear = this.client.getSourceManager().getSources().stream().anyMatch(source -> !(source instanceof LoopbackSource) && source.canHear());
             setMusicVolume();
         }, 200, 200, TimeUnit.MILLISECONDS);
     }

@@ -64,7 +64,7 @@
   "text.autoconfig.nekomusiccli.option.lowerVolumeWhenPlayingVoice": "播放语音时降低音乐音量",
   "text.autoconfig.nekomusiccli.option.lowerVolumeWhenPlayingVoice.@Tooltip": "当有人在语音聊天时，降低音乐音量以便更好地听到对方。该功能仅支持PlasmoVoice。",
   "text.autoconfig.nekomusiccli.option.useAbsoluteVolume": "使用绝对音量",
-  "text.autoconfig.nekomusiccli.option.useAbsoluteVolume.@Tooltip": "如果启用，当有语音播放时，音乐音量会被设定为下面的值。如果禁用，音乐音量会被降低为原始音量*下面的百分比。",
+  "text.autoconfig.nekomusiccli.option.useAbsoluteVolume.@Tooltip": "如果启用，当有语音播放时，音乐音量会被设定为下面的值。如果禁用，音乐音量会被降低为原始音量x下面的百分比。",
   "text.autoconfig.nekomusiccli.option.volumeWhenPlayingVoice": "语音播放时的音量",
   "text.autoconfig.nekomusiccli.category.default": "基本",
   "text.autoconfig.nekomusiccli.category.advanced": "高级",
