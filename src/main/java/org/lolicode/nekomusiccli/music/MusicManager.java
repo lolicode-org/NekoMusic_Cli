@@ -83,7 +83,7 @@ public class MusicManager {
                         if (this.isPlaying) {
                             this.stop();
                         }
-                    }, music.dt, TimeUnit.MILLISECONDS));
+                    }, music.seekTo > 0 ? music.dt - music.seekTo * 1000 : music.dt, TimeUnit.MILLISECONDS));
                 }
             } catch (InterruptedIOException ignored) {
                 // it'll be interrupted only when stop, dont call stop again
