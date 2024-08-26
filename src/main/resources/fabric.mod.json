@@ -6,8 +6,8 @@
   "description": "NekoMusic's client-side mod.",
   "authors": ["KoishiMoe"],
   "contact": {
-    "repo": "https://github.com/KoishiMoe/NekoMusic_Cli",
-    "homepage": "https://github.com/KoishiMoe/NekoMusic_Cli",
+    "homepage": "https://modrinth.com/mod/myfmwwbW",
+    "sources": "https://github.com/KoishiMoe/NekoMusic_Cli",
     "issues": "https://github.com/KoishiMoe/NekoMusic_Cli/issues"
   },
   "license": "GPL-3.0",
