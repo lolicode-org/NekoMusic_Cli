@@ -7,9 +7,16 @@ name: build
 on:
   push:
   pull_request:
+  workflow_dispatch:
+    inputs:
+      release:
+        description: Publish a Release
+        required: false
+        default: false
+        type: boolean
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -33,3 +40,16 @@ jobs:
         with:
           name: Artifacts
           path: build/libs/
+
+      - name: Publish Release
+        if: ${{ github.event.inputs.release == 'true' }}
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          # Only include this section if you wish to publish
+          # your assets on Modrinth.
+          modrinth-id: myfmwwbW
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+
+          # Only include this section if you wish to publish
+          # your assets on GitHub.
+          github-token: ${{ secrets.GITHUB_TOKEN }}
