@@ -10,6 +10,8 @@ import org.lolicode.nekomusiccli.utils.StrEnvSubstitutor;
 
 import java.util.ArrayList;
 
+// TODO: Apply changes immediately after saving the config
+
 @Config(name = NekoMusicClient.MOD_ID)
 public class ModConfig implements ConfigData {
     public static class BannedSong {
