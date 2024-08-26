@@ -18,10 +18,9 @@ import org.lolicode.nekomusiccli.integration.plasmovoice.NekoMusicPVAddon;
 import org.lolicode.nekomusiccli.integration.plasmovoice.PVAddonLoader;
 import org.lolicode.nekomusiccli.music.MusicManager;
 import org.lolicode.nekomusiccli.network.NetUtils;
-import org.lolicode.nekomusiccli.packet.AllMusicPacketReceiver;
 import org.lolicode.nekomusiccli.packet.ClientByeSender;
 import org.lolicode.nekomusiccli.packet.ClientHelloSender;
-import org.lolicode.nekomusiccli.packet.NekoMusicPacketReceiver;
+import org.lolicode.nekomusiccli.packet.ServerPacketReceiver;
 
 public class NekoMusicClient implements ClientModInitializer {
     public static final String MOD_ID = "nekomusiccli";
@@ -49,8 +48,7 @@ public class NekoMusicClient implements ClientModInitializer {
         hudUtils = new HudUtils();
 
         Events.register();
-        NekoMusicPacketReceiver.register();
-        AllMusicPacketReceiver.register();
+        ServerPacketReceiver.register();
         ClientHelloSender.register();
         ClientByeSender.register();
 

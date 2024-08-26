@@ -9,7 +9,7 @@ import org.lolicode.nekomusiccli.music.MusicList;
 import org.lolicode.nekomusiccli.music.MusicObj;
 import org.lolicode.nekomusiccli.utils.Alert;
 
-public class NekoMusicPacketReceiver {
+public class ServerPacketReceiver {
     private static final Identifier METADATA_PACKET_ID = NekoMusicClient.MOD_BASE_IDENTIFIER.withPath("metadata");
     private static final Identifier PLAYLIST_PACKET_ID = NekoMusicClient.MOD_BASE_IDENTIFIER.withPath("list");
 
