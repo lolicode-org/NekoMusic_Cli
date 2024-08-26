@@ -2,6 +2,7 @@
   "category.nekomusic.general": "NekoMusic",
   "key.nekomusic.disable": "Enable/Disable NekoMusic",
   "key.nekomusic.server_disable": "Enable/Disable NekoMusic for current Server",
+  "key.nekomusic.ban_song": "Ban currently playing music locally",
   "nekomusic.enable": "§eNekoMusic enabled",
   "nekomusic.disable": "§eNekoMusic disabled",
   "nekomusic.server_enable": "§eNekoMusic enabled for this server",
@@ -49,6 +50,13 @@
   "text.autoconfig.nekomusiccli.option.bannedServers": "Banned Servers",
   "text.autoconfig.nekomusiccli.option.bannedServers.@Tooltip[0]": "Servers in this list will not be able to send music to you.",
   "text.autoconfig.nekomusiccli.option.bannedServers.@Tooltip[1]": "§ePlease note that changing this option here will not take effect until you rejoined the server. If you want to change it immediately, please use the shortcut defined in keybindings.",
+  "text.autoconfig.nekomusiccli.option.bannedSongs": "Banned Songs",
+  "text.autoconfig.nekomusiccli.option.bannedSongs.@Tooltip": "If the server sends these songs, the client will not play them. You can add current song with the keyboard short (default F9).",
+  "text.autoconfig.nekomusiccli.option.BannedSong": "Please fill in the ID (required) and title (optional) of the song you want to ban below.",
+  "text.autoconfig.nekomusiccli.option.BannedSong.id": "ID",
+  "text.autoconfig.nekomusiccli.option.BannedSong.id.@Tooltip": "A series of numbers in the share link of the music, located after ?id=. You can also open the share link in browser, and find it in the address bar after /song/.",
+  "text.autoconfig.nekomusiccli.option.BannedSong.name": "Title",
+  "text.autoconfig.nekomusiccli.option.BannedSong.name.@Tooltip": "The title of the music, only used to help you identify the music. It will not be used in the rule matching, can be left empty.",
   "text.autoconfig.nekomusiccli.option.musicResponseSizeLimit": "Music Response Size Limit",
   "text.autoconfig.nekomusiccli.option.musicResponseSizeLimit.@Tooltip[0]": "Response Size Limit (MB), <= 0 == Unlimited. Should be more than 10 if you set a positive value. Requires restart.",
   "text.autoconfig.nekomusiccli.option.musicResponseSizeLimit.@Tooltip[1]": "§eThis might help you mitigate some wrongly configured servers (e.g. accidentally send a 1GB music) that send too much data, but not guaranteed to work in all cases.",
@@ -79,6 +87,8 @@
   "hud.nekomusic.update.failed": "Failed to update HUD, this should not happen, please report this to the developer with full log.",
   "player.nekomusic.manager.disposed": "MusicManager called after being disposed, this should not happen, please report this to the developer with full log.",
   "player.nekomusic.music.null": "Music is null, this should not happen, please report this to the developer with full log.",
+  "player.nekomusic.not_playing": "Nothing is playing",
+  "player.nekomusic.song.banned": "This song is banned locally, skipping: %s (%s)",
   "player.nekomusic.stream.failed": "Failed to get music stream, please check your network connection.",
   "player.nekomusic.play.failed": "Failed to play music: Unknown error. If you believe this is a bug, please report this to the developer with full log.",
   "player.nekomusic.decode.failed": "Failed to decode music, perhaps the music is corrupted or unsupported.",
@@ -86,5 +96,6 @@
   "player.nekomusic.domain_not_in_whitelist": "§cMusic resource domain not in whitelist",
   "player.nekomusic.seek.failed": "Failed to seek to position specified by server, music playback failed.",
   "volume.nekomusic.set.failed": "Failed to set volume. This should not happen, please report this to the developer with full log.",
-  "cache.nekomusic.read_failed": "Failed to read cache record: %d , a new record will be created. This might be caused by a corrupted record, please check if your cache directory is valid in \"Mods -> NekoMusic Client -> Config -> Advanced -> Cache Path\"."
+  "song.nekomusic.already_banned": "The currently playing music is already banned locally, this should not happen, please report this to the developer with full log.",
+  "song.nekomusic.banned": "Successfully banned current item: %s (%s)"
 }

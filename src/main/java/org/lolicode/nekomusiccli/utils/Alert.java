@@ -22,4 +22,10 @@ public class Alert {
         Text msg = Text.literal("§b[" + NekoMusicClient.MOD_NAME + "] ").append(Text.translatable(msgKey));
         MinecraftClient.getInstance().player.sendMessage(msg, false);
     }
+
+    public static void info(String msgKey, Object... args) {
+        if (MinecraftClient.getInstance().player == null) return;
+        Text msg = Text.literal("§b[" + NekoMusicClient.MOD_NAME + "] ").append(Text.translatable(msgKey, args));
+        MinecraftClient.getInstance().player.sendMessage(msg, false);
+    }
 }

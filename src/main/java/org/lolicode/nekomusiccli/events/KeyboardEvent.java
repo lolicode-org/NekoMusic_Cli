@@ -11,6 +11,7 @@ import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.config.ModConfig;
 import org.lolicode.nekomusiccli.packet.ClientByeSender;
 import org.lolicode.nekomusiccli.packet.ClientHelloSender;
+import org.lolicode.nekomusiccli.utils.Alert;
 import org.lolicode.nekomusiccli.utils.InstanceLock;
 import org.lwjgl.glfw.GLFW;
 
@@ -30,6 +31,13 @@ public class KeyboardEvent {
             "category.nekomusic.general" // The translation key of the keybinding's category.
     ));
 
+    public static KeyBinding clientBanKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+            "key.nekomusic.ban_song", // The translation key of the keybinding's name
+            InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
+            GLFW.GLFW_KEY_F9, // The keycode of the key
+            "category.nekomusic.general" // The translation key of the keybinding's category.
+    ));
+
     public static void register() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (globalDisableKeyBinding.wasPressed()) {
@@ -39,6 +47,11 @@ public class KeyboardEvent {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (serverDisableKeyBinding.wasPressed()) {
                 onServerDisablePressed(client);
+            }
+        });
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            while (clientBanKeyBinding.wasPressed()) {
+                onClientBanPressed(client);
             }
         });
     }
@@ -83,5 +96,20 @@ public class KeyboardEvent {
             InstanceLock.release();
         }
         config.save();
+    }
+
+    private static void onClientBanPressed(MinecraftClient client) {
+        if (NekoMusicClient.musicManager.currentMusic == null) {
+            Alert.error("player.nekomusic.not_playing");
+            return;
+        }
+        if (config.bannedSongs.stream().anyMatch(bannedSong -> bannedSong.id == NekoMusicClient.musicManager.currentMusic.id)) {
+            NekoMusicClient.LOGGER.error("Song is already banned: {} ({}), something went wrong?", NekoMusicClient.musicManager.currentMusic.name, NekoMusicClient.musicManager.currentMusic.id);
+            Alert.error("song.nekomusic.already_banned");
+        } else {
+            config.bannedSongs.add(new ModConfig.BannedSong(NekoMusicClient.musicManager.currentMusic.id, NekoMusicClient.musicManager.currentMusic.name));
+            Alert.info("song.nekomusic.banned", NekoMusicClient.musicManager.currentMusic.name, NekoMusicClient.musicManager.currentMusic.id);
+        }
+        NekoMusicClient.musicManager.stop();
     }
 }

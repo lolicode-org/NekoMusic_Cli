@@ -12,6 +12,20 @@ import java.util.ArrayList;
 
 @Config(name = NekoMusicClient.MOD_ID)
 public class ModConfig implements ConfigData {
+    public static class BannedSong {
+        @ConfigEntry.Gui.Tooltip
+        public long id;
+        @ConfigEntry.Gui.Tooltip
+        public String name;
+
+        public BannedSong() {
+        }
+
+        public BannedSong(long id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+    }
     public boolean enabled = true;
     public boolean blockMusic = true;
     public boolean blockRecords = false;
@@ -41,6 +55,9 @@ public class ModConfig implements ConfigData {
 
     @ConfigEntry.Gui.Tooltip(count = 2)
     public ArrayList<String> bannedServers = new ArrayList<>();
+
+    @ConfigEntry.Gui.Tooltip()
+    public ArrayList<BannedSong> bannedSongs = new ArrayList<>();
 
     @ConfigEntry.Category("advanced")
     @ConfigEntry.Gui.Tooltip(count = 3)
@@ -123,6 +140,7 @@ public class ModConfig implements ConfigData {
         if (volumeWhenPlayingVoice < 0 || volumeWhenPlayingVoice > 100)
             volumeWhenPlayingVoice = 25;
         bannedServers.removeIf(String::isBlank);
+        bannedSongs.removeIf(bannedSong -> bannedSong.id <= 0);
         domainWhitelist.removeIf(String::isBlank);
         if (!domainWhitelist.isEmpty() && !domainWhitelist.contains("music.126.net"))
             domainWhitelist.add("music.126.net");
