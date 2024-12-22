@@ -123,9 +123,9 @@ public class ImgRender {
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
                     int pixel = pixels[y * width + x];
-                    byteBuffer.put((byte) ((pixel >> 16) & 0xFF)); // Red component
-                    byteBuffer.put((byte) ((pixel >> 8) & 0xFF)); // Green component
                     byteBuffer.put((byte) (pixel & 0xFF)); // Blue component
+                    byteBuffer.put((byte) ((pixel >> 8) & 0xFF)); // Green component
+                    byteBuffer.put((byte) ((pixel >> 16) & 0xFF)); // Red component
                     byteBuffer.put((byte) ((pixel >> 24) & 0xFF)); // Alpha component. Only for RGBA
                 }
             }
@@ -176,12 +176,13 @@ public class ImgRender {
                 for (int y = 0; y < height; y++) {
                     for (int x = 0; x < width; x++) {
                         int color = byteBuffer.getInt((y * width + x) * 4);
-                        img.setColor(x, y, color);
+                        img.setColorArgb(x, y, color);
                     }
                 }
                 texture = new NativeImageBackedTexture(img);
                 texture.setFilter(true, true);
-                textureId = textureManager.registerDynamicTexture("hud_img", texture);
+                textureId = Identifier.ofVanilla("nekomusic/hud_img");
+                textureManager.registerTexture(textureId, texture);
             }
         });
     }
