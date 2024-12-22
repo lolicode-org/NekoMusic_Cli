@@ -62,7 +62,7 @@ jobs:
           echo "VERIFIED=$VERIFIED" >> $GITHUB_ENV
 
       - name: Publish Release
-        if: ${{ github.event.inputs.release == 'true' || (env.COMMIT_AUTHOR == 'KoishiMoe' && env.VERIFIED == 'true' && contains(github.event.head_commit.message, '[release]')) }}
+        if: ${{ github.event_name != 'pull_request' && (github.event.inputs.release == 'true' || (env.COMMIT_AUTHOR == 'KoishiMoe' && env.VERIFIED == 'true' && contains(github.event.head_commit.message, '[release]'))) }}
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           # Only include this section if you wish to publish
