@@ -48,7 +48,7 @@ jobs:
       - name: Get version from gradle.properties
         id: get_version
         run: |
-          version=$(grep "^mod_version" gradle.properties | cut -d'=' -f2 | xargs)
+          version=$(grep "^\W*mod_version" gradle.properties | cut -d'=' -f2 | xargs)
           echo "version=$version" >> $GITHUB_ENV
 
       - name: Check commit author and verification
@@ -74,4 +74,4 @@ jobs:
           # your assets on GitHub.
           github-token: ${{ secrets.GITHUB_TOKEN }}
           github-tag: "v${{ env.version }}"
-          name: "NekoMusic Client Release v${{ env.version }}"
+          name: "Release v${{ env.version }}"
