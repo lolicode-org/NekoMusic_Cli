@@ -8,7 +8,7 @@ import org.lolicode.nekomusiccli.music.MusicObj;
 
 import java.io.InterruptedIOException;
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -104,7 +104,7 @@ public class NetUtils {
 
     private boolean isDomainWhitelisted(String url, Collection<String> whitelist) {
         try {
-            String host = new URL(url).getHost();
+            String host = URI.create(url).toURL().getHost();
             List<String> parentDomains = getParentDomains(host);
             for (String domain : parentDomains) {
                 if (whitelist.contains(domain)) {
