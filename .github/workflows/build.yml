@@ -45,8 +45,24 @@ jobs:
           name: Artifacts
           path: build/libs/
 
+      - name: Get version from gradle.properties
+        id: get_version
+        run: |
+          version=$(grep "^mod_version" gradle.properties | cut -d'=' -f2 | xargs)
+          echo "version=$version" >> $GITHUB_ENV
+
+      - name: Check commit author and verification
+        id: check_commit
+        run: |
+          COMMIT_SHA=$(git rev-parse HEAD)
+          COMMIT_DETAILS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }}/commits/$COMMIT_SHA)
+          COMMIT_AUTHOR=$(echo $COMMIT_DETAILS | jq -r '.commit.author.name')
+          VERIFIED=$(echo $COMMIT_DETAILS | jq -r '.commit.verification.verified')
+          echo "COMMIT_AUTHOR=$COMMIT_AUTHOR" >> $GITHUB_ENV
+          echo "VERIFIED=$VERIFIED" >> $GITHUB_ENV
+
       - name: Publish Release
-        if: ${{ github.event.inputs.release == 'true' }}
+        if: ${{ github.event.inputs.release == 'true' || (env.COMMIT_AUTHOR == 'KoishiMoe' && env.VERIFIED == 'true' && contains(github.event.head_commit.message, '[release]')) }}
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           # Only include this section if you wish to publish
@@ -57,3 +73,5 @@ jobs:
           # Only include this section if you wish to publish
           # your assets on GitHub.
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-tag: "v${{ env.version }}"
+          name: "NekoMusic Client Release v${{ env.version }}"
