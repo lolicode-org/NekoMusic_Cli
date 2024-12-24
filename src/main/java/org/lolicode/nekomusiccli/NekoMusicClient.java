@@ -8,9 +8,10 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
+import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lolicode.nekomusiccli.cache.CacheUtils;
@@ -43,12 +44,14 @@ public class NekoMusicClient {
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
     public NekoMusicClient(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::clientSetup);
+        AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
+        config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
+        ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class,
+                () -> (container, parent) -> AutoConfig.getConfigScreen(ModConfig.class, parent).get());
     }
 
     @SubscribeEvent
     private void clientSetup(final FMLClientSetupEvent event) {
-        AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
-        config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
         cacheUtils = new CacheUtils(config);
         netUtils = new NetUtils(config);
         musicManager = new MusicManager();
