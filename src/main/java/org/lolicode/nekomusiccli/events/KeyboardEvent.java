@@ -6,7 +6,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.Text;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.config.ModConfig;
 import org.lolicode.nekomusiccli.packet.ClientByeSender;
@@ -59,14 +58,14 @@ public class KeyboardEvent {
     public static void onGlobalDisablePressed(MinecraftClient client) {
         if (!config.enabled) {
             config.enabled = true;
-            client.player.sendMessage(Text.translatable("nekomusic.enable"), false);
+            Alert.info("nekomusic.enable");
             if (client.getCurrentServerEntry() != null && !config.bannedServers.contains(client.getCurrentServerEntry().address)) {
                 ClientHelloSender.send(client);
             }
         } else {
             config.enabled = false;
             if (NekoMusicClient.musicManager != null) NekoMusicClient.musicManager.stop();
-            client.player.sendMessage(Text.translatable("nekomusic.disable"), false);
+            Alert.info("nekomusic.disable");
             if (client.getCurrentServerEntry() != null) {
                 ClientByeSender.send(client);
             }
@@ -79,19 +78,19 @@ public class KeyboardEvent {
         ServerInfo info = client.getCurrentServerEntry();
         if (info == null) {
             if (client.player != null)
-                client.player.sendMessage(Text.translatable("nekomusic.not_multiplayer"), false);
+                Alert.error("nekomusic.not_multiplayer");
             return;
         }
         if (config.bannedServers.contains(info.address)) {
             config.bannedServers.remove(info.address);
             if (client.player != null)
-                client.player.sendMessage(Text.translatable("nekomusic.server_enable"), false);
+                Alert.info("nekomusic.server_enable");
             ClientHelloSender.send(client);
         } else {
             config.bannedServers.add(info.address);
             if (NekoMusicClient.musicManager != null) NekoMusicClient.musicManager.stop();
             if (client.player != null)
-                client.player.sendMessage(Text.translatable("nekomusic.server_disable"), false);
+                Alert.info("nekomusic.server_disable");
             ClientByeSender.send(client);
             InstanceLock.release();
         }
