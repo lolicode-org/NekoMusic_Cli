@@ -111,5 +111,6 @@ public class KeyboardEvent {
             Alert.info("song.nekomusic.banned", NekoMusicClient.musicManager.currentMusic.name, NekoMusicClient.musicManager.currentMusic.id);
         }
         NekoMusicClient.musicManager.stop();
+        config.save();
     }
 }
