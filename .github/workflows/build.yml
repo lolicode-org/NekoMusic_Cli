@@ -69,9 +69,10 @@ jobs:
           # your assets on Modrinth.
           modrinth-id: myfmwwbW
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          version-type: beta
 
           # Only include this section if you wish to publish
           # your assets on GitHub.
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          github-tag: "v${{ env.version }}"
-          name: "Release v${{ env.version }}"
+          github-tag: "v${{ env.version }}-neo"
+          name: "Release v${{ env.version }} for neoforge"

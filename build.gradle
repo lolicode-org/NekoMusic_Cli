@@ -46,7 +46,7 @@ repositories {
 }
 
 base {
-    archivesName = mod_id
+    archivesName = "${mod_name}-NeoForge-${minecraft_version}-Beta"
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
@@ -180,7 +180,7 @@ dependencies {
             prefer "${project.commons_text_version}"
         }
     }
-//    implementation("thedarkcolour:kotlinforforge-neoforge:${project.kotlin_for_forge_version}")
+    compileOnly "thedarkcolour:kotlinforforge-neoforge:${project.kotlin_for_forge_version}"  // if use implementation, it will crash on devrun... seems conflict with okhttp stuff. Im not familiar with gradle stuff so Idk why
     api "me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_config_version}"
     implementation "lol.bai:badpackets:neo-${badpackets_version}"
     compileOnly "su.plo.voice.api:client:${plasmovoice_version}"
@@ -205,7 +205,10 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
                              mod_license            : mod_license,
                              mod_version            : mod_version,
                              mod_authors            : mod_authors,
-                             mod_description        : mod_description]
+                             mod_description        : mod_description,
+                             badpackets_version     : badpackets_version,
+                             cloth_config_version   : cloth_config_version,
+    ]
     inputs.properties replaceProperties
     expand replaceProperties
     from "src/main/templates"
