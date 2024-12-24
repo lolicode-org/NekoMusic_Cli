@@ -3,7 +3,6 @@ plugins {
     id 'maven-publish'
     id 'idea'
     id 'net.neoforged.moddev' version '2.0.62-beta'
-    id 'com.gradleup.shadow' version '9.0.0-beta4'
     id 'org.jetbrains.kotlin.jvm' version '2.0.21'
 }
 
@@ -151,15 +150,46 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-    implementation("com.squareup.okhttp3:okhttp:${project.okhttp_version}")
-    implementation("com.squareup.okio:okio-jvm:${project.okio_version}") //okio-jvm, not okio. This cost me like 1hr of debugging
-    implementation ("com.github.umjammer:jlayer:${project.jlayer_version}")
-    implementation("org.apache.tika:tika-core:${project.tika_version}")
-    implementation("org.apache.commons:commons-text:${project.commons_text_version}")
-    implementation "thedarkcolour:kotlinforforge-neoforge:${project.kotlin_for_forge_version}"
+    jarJar(implementation("com.squareup.okhttp3:okhttp:${project.okhttp_version}")) {
+        version {
+            strictly '[4.0,)'
+            prefer "${project.okhttp_version}"
+        }
+    }
+    jarJar(implementation("com.squareup.okio:okio-jvm:${project.okio_version}")) { //okio-jvm, not okio. This cost me like 1hr of debugging
+        version {
+            strictly '[3.0,)'
+            prefer "${project.okio_version}"
+        }
+    }
+    jarJar(implementation ("com.github.umjammer:jlayer:${project.jlayer_version}")) {
+        version {
+            strictly '[1.0,)'
+            prefer "${project.jlayer_version}"
+        }
+    }
+    jarJar(implementation("org.apache.tika:tika-core:${project.tika_version}")) {
+        version {
+            strictly '[2.0,)'
+            prefer "${project.tika_version}"
+        }
+    }
+    jarJar(implementation("org.apache.commons:commons-text:${project.commons_text_version}")) {
+        version {
+            strictly '[1.0,)'
+            prefer "${project.commons_text_version}"
+        }
+    }
+//    implementation("thedarkcolour:kotlinforforge-neoforge:${project.kotlin_for_forge_version}")
     api "me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_config_version}"
-    implementation "lol.bai:badpackets:forge-${badpackets_version}"
+    implementation "lol.bai:badpackets:neo-${badpackets_version}"
     compileOnly "su.plo.voice.api:client:${plasmovoice_version}"
+
+    additionalRuntimeClasspath "com.squareup.okhttp3:okhttp:${project.okhttp_version}"
+    additionalRuntimeClasspath "com.squareup.okio:okio-jvm:${project.okio_version}"
+    additionalRuntimeClasspath "com.github.umjammer:jlayer:${project.jlayer_version}"
+    additionalRuntimeClasspath "org.apache.tika:tika-core:${project.tika_version}"
+    additionalRuntimeClasspath "org.apache.commons:commons-text:${project.commons_text_version}"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
@@ -208,10 +238,4 @@ idea {
         downloadSources = true
         downloadJavadoc = true
     }
-}
-
-tasks.named('shadowJar', com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
-    include 'com.squareup.*'
-    include 'com.github.umjammer.*'
-    include 'org.apache.*'
 }

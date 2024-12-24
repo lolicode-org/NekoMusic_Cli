@@ -1,23 +1,22 @@
 package org.lolicode.nekomusiccli.hud;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.ShaderProgramKeys;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.*;
-import net.minecraft.client.texture.NativeImageBackedTexture;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.CoreShaders;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import com.mojang.blaze3d.vertex.*;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 
 public class RenderMain {
-    private static final int fontHeight = MinecraftClient.getInstance().textRenderer.fontHeight;
-    public static void drawText(DrawContext context, String text, float x, float y) {
-        context.drawText(MinecraftClient.getInstance().textRenderer, text, (int) x, (int) y, 0xffffff, false);
+    private static final int fontHeight = Minecraft.getInstance().font.lineHeight;
+    public static void drawText(GuiGraphics context, String text, float x, float y) {
+        context.drawString(Minecraft.getInstance().font, text, (int) x, (int) y, 0xffffff, false);
     }
 
-    public static void drawMultiLineText(DrawContext context, String text, float x, float y) {
+    public static void drawMultiLineText(GuiGraphics context, String text, float x, float y) {
         if (text == null || text.isBlank()) {
             return;
         }
@@ -28,16 +27,16 @@ public class RenderMain {
         }
     }
 
-    public static void drawImg(NativeImageBackedTexture texture, boolean shouldRotate, int angle) {
+    public static void drawImg(DynamicTexture texture, boolean shouldRotate, int angle) {
         if (texture == null) return;
-        int textureId = texture.getGlId();
+        int textureId = texture.getId();
         if (textureId <= 0) return;
-        RenderSystem.setShader(ShaderProgramKeys.POSITION_TEX);
+        RenderSystem.setShader(CoreShaders.POSITION_TEX);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, textureId);
 
-        MatrixStack stack = new MatrixStack();
-        Matrix4f matrix = stack.peek().getPositionMatrix();
+        PoseStack stack = new PoseStack();
+        Matrix4f matrix = stack.last().pose();
 
         int offset = NekoMusicClient.config.imgSize / 2;
 
@@ -54,14 +53,14 @@ public class RenderMain {
         float v0 = 0;
         float v1 = 1;
 
-        RenderSystem.setShader(ShaderProgramKeys.POSITION_TEX);
-        BufferBuilder bufferBuilder = Tessellator.getInstance()
-                .begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
-        bufferBuilder.vertex(matrix, (float) -offset, (float) offset, (float) z).texture(u0, v1);
-        bufferBuilder.vertex(matrix, (float) offset, (float) offset, (float) z).texture(u1, v1);
-        bufferBuilder.vertex(matrix, (float) offset, (float) -offset, (float) z).texture(u1, v0);
-        bufferBuilder.vertex(matrix, (float) -offset, (float) -offset, (float) z).texture(u0, v0);
+        RenderSystem.setShader(CoreShaders.POSITION_TEX);
+        BufferBuilder bufferBuilder = Tesselator.getInstance()
+                .begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        bufferBuilder.addVertex(matrix, (float) -offset, (float) offset, (float) z).setUv(u0, v1);
+        bufferBuilder.addVertex(matrix, (float) offset, (float) offset, (float) z).setUv(u1, v1);
+        bufferBuilder.addVertex(matrix, (float) offset, (float) -offset, (float) z).setUv(u1, v0);
+        bufferBuilder.addVertex(matrix, (float) -offset, (float) -offset, (float) z).setUv(u0, v0);
 
-        BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
+        BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());
     }
 }

@@ -1,10 +1,9 @@
 package org.lolicode.nekomusiccli.music;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.sound.SoundCategory;
+import net.minecraft.client.Minecraft;
+import net.minecraft.sounds.SoundSource;
 import org.lolicode.nekomusiccli.NekoMusicClient;
-import org.lolicode.nekomusiccli.config.CustomSoundCategory;
 import org.lolicode.nekomusiccli.hud.HudUtils;
 import org.lolicode.nekomusiccli.music.player.AudioPlayer;
 import org.lolicode.nekomusiccli.utils.Alert;
@@ -124,7 +123,7 @@ public class MusicManager {
 
     public static float getVolume() {
         if (NekoMusicClient.pvAddon != null) return NekoMusicClient.pvAddon.getVolume();
-        return MinecraftClient.getInstance().options.getSoundVolume(CustomSoundCategory.NEKOMUSIC);
+        return Minecraft.getInstance().options.getSoundSourceVolume(SoundSource.RECORDS);
     }
 
     public void setVolume(float volume) {
@@ -141,10 +140,10 @@ public class MusicManager {
 
     public static void stopVanillaMusic() {
         if (NekoMusicClient.config.blockMusic) {
-            MinecraftClient.getInstance().getSoundManager().stopSounds(null, SoundCategory.MUSIC);
+            Minecraft.getInstance().getSoundManager().stop(null, SoundSource.MUSIC);
         }
         if (NekoMusicClient.config.blockRecords) {
-            MinecraftClient.getInstance().getSoundManager().stopSounds(null, SoundCategory.RECORDS);
+            Minecraft.getInstance().getSoundManager().stop(null, SoundSource.RECORDS);
         }
     }
 

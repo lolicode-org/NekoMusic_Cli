@@ -3,7 +3,7 @@ package org.lolicode.nekomusiccli.cache;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import okhttp3.Cache;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.config.ModConfig;
@@ -146,7 +146,7 @@ public class CacheUtils {
     }
 
     public static String getDefaultCachePath() {
-        String path = MinecraftClient.getInstance().runDirectory.toPath().resolve("cache").resolve(NekoMusicClient.MOD_ID).toString();
+        String path = Minecraft.getInstance().gameDirectory.toPath().resolve("cache").resolve(NekoMusicClient.MOD_ID).toString();
         checkCachePath(path);
         return path;
     }

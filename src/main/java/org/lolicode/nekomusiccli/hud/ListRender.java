@@ -1,6 +1,6 @@
 package org.lolicode.nekomusiccli.hud;
 
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.GuiGraphics;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 
 import java.util.ArrayList;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class ListRender {
     private static final StringBuilder sb = new StringBuilder((NekoMusicClient.config.maxCharPerLineListHud + 1) * NekoMusicClient.config.maxRowListHud);
 
-    public static void render(DrawContext context, ArrayList<String> list, long timeDelta) {
+    public static void render(GuiGraphics context, ArrayList<String> list, long timeDelta) {
         if (list == null || list.isEmpty()) {
             return;
         }

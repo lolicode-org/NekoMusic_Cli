@@ -1,115 +1,155 @@
 package org.lolicode.nekomusiccli.events;
 
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ServerInfo;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.multiplayer.ServerData;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.settings.KeyConflictContext;
+import net.neoforged.neoforge.common.util.Lazy;
+import org.lwjgl.glfw.GLFW;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.config.ModConfig;
 import org.lolicode.nekomusiccli.packet.ClientByeSender;
 import org.lolicode.nekomusiccli.packet.ClientHelloSender;
 import org.lolicode.nekomusiccli.utils.Alert;
 import org.lolicode.nekomusiccli.utils.InstanceLock;
-import org.lwjgl.glfw.GLFW;
 
+@EventBusSubscriber(modid = NekoMusicClient.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class KeyboardEvent {
-    private static final ModConfig config = NekoMusicClient.config;
-    public static KeyBinding globalDisableKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.nekomusic.disable", // The translation key of the keybinding's name
-                InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
-                GLFW.GLFW_KEY_F7, // The keycode of the key
-                "category.nekomusic.general" // The translation key of the keybinding's category.
-    ));
-
-    public static KeyBinding serverDisableKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-            "key.nekomusic.server_disable", // The translation key of the keybinding's name
-            InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
-            GLFW.GLFW_KEY_F8, // The keycode of the key
-            "category.nekomusic.general" // The translation key of the keybinding's category.
-    ));
-
-    public static KeyBinding clientBanKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-            "key.nekomusic.ban_song", // The translation key of the keybinding's name
-            InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
-            GLFW.GLFW_KEY_F9, // The keycode of the key
-            "category.nekomusic.general" // The translation key of the keybinding's category.
-    ));
-
-    public static void register() {
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            while (globalDisableKeyBinding.wasPressed()) {
-                onGlobalDisablePressed(client);
-            }
-        });
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            while (serverDisableKeyBinding.wasPressed()) {
-                onServerDisablePressed(client);
-            }
-        });
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            while (clientBanKeyBinding.wasPressed()) {
-                onClientBanPressed(client);
-            }
-        });
+    // this class is initialized before the config, so we need to get it lazily
+    private static ModConfig getConfig() {
+        return NekoMusicClient.config;
     }
 
-    public static void onGlobalDisablePressed(MinecraftClient client) {
-        if (!config.enabled) {
-            config.enabled = true;
-            client.player.sendMessage(Text.translatable("nekomusic.enable"), false);
-            if (client.getCurrentServerEntry() != null && !config.bannedServers.contains(client.getCurrentServerEntry().address)) {
+    // 1) Define your KeyMapping instances.
+    public static final Lazy<KeyMapping> GLOBAL_DISABLE_KEY = Lazy.of(() -> new KeyMapping(
+            "key.nekomusic.disable",
+            KeyConflictContext.IN_GAME,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_F7,
+            "category.nekomusic.general"
+    ));
+
+    public static final Lazy<KeyMapping> SERVER_DISABLE_KEY = Lazy.of(() -> new KeyMapping(
+            "key.nekomusic.server_disable",
+            KeyConflictContext.IN_GAME,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_F8,
+            "category.nekomusic.general"
+    ));
+
+    public static final Lazy<KeyMapping> CLIENT_BAN_KEY = Lazy.of(() -> new KeyMapping(
+            "key.nekomusic.ban_song",
+            KeyConflictContext.IN_GAME,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_F9,
+            "category.nekomusic.general"
+    ));
+
+    // 2) Register KeyMappings in RegisterKeyMappingsEvent.
+    @SubscribeEvent
+    public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
+        event.register(GLOBAL_DISABLE_KEY.get());
+        event.register(SERVER_DISABLE_KEY.get());
+        event.register(CLIENT_BAN_KEY.get());
+    }
+
+    // 3) Check for presses via ClientTickEvent (end phase).
+    @EventBusSubscriber(modid = NekoMusicClient.MOD_ID, value = Dist.CLIENT)
+    public static class ClientEvents {
+        @SubscribeEvent
+        public static void onClientTick(ClientTickEvent.Post event) {
+            // Check each key once per tick by consumeClick()
+            while (GLOBAL_DISABLE_KEY.get().consumeClick()) {
+                onGlobalDisablePressed(Minecraft.getInstance());
+            }
+            while (SERVER_DISABLE_KEY.get().consumeClick()) {
+                onServerDisablePressed(Minecraft.getInstance());
+            }
+            while (CLIENT_BAN_KEY.get().consumeClick()) {
+                onClientBanPressed(Minecraft.getInstance());
+            }
+        }
+    }
+
+    // 4) Keep the same logic for your handlers (adapt if needed).
+    private static void onGlobalDisablePressed(Minecraft client) {
+        if (client.player == null) return;
+
+        if (!getConfig().enabled) {
+            getConfig().enabled = true;
+            Alert.info("nekomusic.enable");
+            ServerData server = client.getCurrentServer();
+            if (server != null && !getConfig().bannedServers.contains(server.ip)) {
                 ClientHelloSender.send(client);
             }
         } else {
-            config.enabled = false;
-            if (NekoMusicClient.musicManager != null) NekoMusicClient.musicManager.stop();
-            client.player.sendMessage(Text.translatable("nekomusic.disable"), false);
-            if (client.getCurrentServerEntry() != null) {
+            getConfig().enabled = false;
+            if (NekoMusicClient.musicManager != null) {
+                NekoMusicClient.musicManager.stop();
+            }
+            Alert.info("nekomusic.disable");
+            ServerData server = client.getCurrentServer();
+            if (server != null) {
                 ClientByeSender.send(client);
             }
             InstanceLock.release();
         }
-        config.save();
+        getConfig().save();
     }
 
-    private static void onServerDisablePressed(MinecraftClient client) {
-        ServerInfo info = client.getCurrentServerEntry();
+    private static void onServerDisablePressed(Minecraft client) {
+        if (client.player == null) return;
+        ServerData info = client.getCurrentServer();
         if (info == null) {
-            if (client.player != null)
-                client.player.sendMessage(Text.translatable("nekomusic.not_multiplayer"), false);
+            Alert.error("nekomusic.not_multiplayer");
             return;
         }
-        if (config.bannedServers.contains(info.address)) {
-            config.bannedServers.remove(info.address);
-            if (client.player != null)
-                client.player.sendMessage(Text.translatable("nekomusic.server_enable"), false);
+
+        if (getConfig().bannedServers.contains(info.ip)) {
+            getConfig().bannedServers.remove(info.ip);
+            Alert.info("nekomusic.server_enable");
             ClientHelloSender.send(client);
         } else {
-            config.bannedServers.add(info.address);
-            if (NekoMusicClient.musicManager != null) NekoMusicClient.musicManager.stop();
-            if (client.player != null)
-                client.player.sendMessage(Text.translatable("nekomusic.server_disable"), false);
+            getConfig().bannedServers.add(info.ip);
+            if (NekoMusicClient.musicManager != null) {
+                NekoMusicClient.musicManager.stop();
+            }
+            Alert.info("nekomusic.server_disable");
             ClientByeSender.send(client);
             InstanceLock.release();
         }
-        config.save();
+        getConfig().save();
     }
 
-    private static void onClientBanPressed(MinecraftClient client) {
+    private static void onClientBanPressed(Minecraft client) {
         if (NekoMusicClient.musicManager.currentMusic == null) {
             Alert.error("player.nekomusic.not_playing");
             return;
         }
-        if (config.bannedSongs.stream().anyMatch(bannedSong -> bannedSong.id == NekoMusicClient.musicManager.currentMusic.id)) {
-            NekoMusicClient.LOGGER.error("Song is already banned: {} ({}), something went wrong?", NekoMusicClient.musicManager.currentMusic.name, NekoMusicClient.musicManager.currentMusic.id);
+
+        if (getConfig().bannedSongs.stream()
+                .anyMatch(banned -> banned.id == NekoMusicClient.musicManager.currentMusic.id)) {
+            NekoMusicClient.LOGGER.error("Song is already banned: {} ({}), something went wrong?",
+                    NekoMusicClient.musicManager.currentMusic.name,
+                    NekoMusicClient.musicManager.currentMusic.id);
             Alert.error("song.nekomusic.already_banned");
         } else {
-            config.bannedSongs.add(new ModConfig.BannedSong(NekoMusicClient.musicManager.currentMusic.id, NekoMusicClient.musicManager.currentMusic.name));
-            Alert.info("song.nekomusic.banned", NekoMusicClient.musicManager.currentMusic.name, NekoMusicClient.musicManager.currentMusic.id);
+            getConfig().bannedSongs.add(new ModConfig.BannedSong(
+                    NekoMusicClient.musicManager.currentMusic.id,
+                    NekoMusicClient.musicManager.currentMusic.name
+            ));
+            Alert.info("song.nekomusic.banned",
+                    NekoMusicClient.musicManager.currentMusic.name,
+                    NekoMusicClient.musicManager.currentMusic.id);
         }
         NekoMusicClient.musicManager.stop();
+        getConfig().save();
     }
 }

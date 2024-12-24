@@ -1,15 +1,19 @@
 package org.lolicode.nekomusiccli.events;
 
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import org.lolicode.nekomusiccli.NekoMusicClient;
 
 import static org.lolicode.nekomusiccli.NekoMusicClient.hudUtils;
 
+@EventBusSubscriber(modid = NekoMusicClient.MOD_ID, value = Dist.CLIENT)
 public class HudRender {
-    public static void register() {
-        HudRenderCallback.EVENT.register((drawContext, delta) -> {
-            if (hudUtils != null) {
-                hudUtils.frame(drawContext);
-            }
-        });
+    @SubscribeEvent
+    public static void onRenderGameOverlay(RenderGuiLayerEvent.Post event) {
+        if (hudUtils != null) {
+            hudUtils.frame(event.getGuiGraphics());
+        }
     }
 }

@@ -1,10 +1,15 @@
 package org.lolicode.nekomusiccli.events;
 
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.GameShuttingDownEvent;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 
+@EventBusSubscriber(modid = NekoMusicClient.MOD_ID, value = Dist.CLIENT)
 public class OnClientStop {
-    public static void cleanUp() {
+    @SubscribeEvent
+    public static void cleanUp(GameShuttingDownEvent event) {
         if (NekoMusicClient.musicManager != null) {
             NekoMusicClient.musicManager.dispose();
         }
@@ -16,9 +21,5 @@ public class OnClientStop {
             NekoMusicClient.cacheUtils.close();
             NekoMusicClient.cacheUtils = null;
         }
-    }
-
-    public static void register() {
-        ClientLifecycleEvents.CLIENT_STOPPING.register(client -> cleanUp());
     }
 }

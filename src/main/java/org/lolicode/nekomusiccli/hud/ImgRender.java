@@ -1,10 +1,10 @@
 package org.lolicode.nekomusiccli.hud;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.texture.NativeImageBackedTexture;
-import net.minecraft.client.texture.TextureManager;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import com.mojang.blaze3d.platform.NativeImage;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.resources.ResourceLocation;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lwjgl.BufferUtils;
 
@@ -21,9 +21,9 @@ import java.nio.ByteBuffer;
 import java.util.Iterator;
 
 public class ImgRender {
-    private static final TextureManager textureManager = MinecraftClient.getInstance().getTextureManager();
-    private volatile NativeImageBackedTexture texture = null;
-    private Identifier textureId = null;
+    private static final TextureManager textureManager = Minecraft.getInstance().getTextureManager();
+    private volatile DynamicTexture texture = null;
+    private ResourceLocation textureId = null;
     private int angle = 0;
     private final long startTime = System.currentTimeMillis();
     private final boolean shouldRotate;
@@ -144,7 +144,7 @@ public class ImgRender {
 
     private synchronized void DisposeImg() {
         if (textureId != null) {
-            textureManager.destroyTexture(textureId);
+            textureManager.release(textureId);
             textureId = null;
         }
         texture = null;
@@ -171,18 +171,18 @@ public class ImgRender {
     }
 
     private synchronized void createTexture(int width, int height, ByteBuffer byteBuffer) {
-        MinecraftClient.getInstance().execute(() -> {
+        Minecraft.getInstance().execute(() -> {
             try (var img = new NativeImage(NativeImage.Format.RGBA, width, height, true)) {
                 for (int y = 0; y < height; y++) {
                     for (int x = 0; x < width; x++) {
                         int color = byteBuffer.getInt((y * width + x) * 4);
-                        img.setColorArgb(x, y, color);
+                        img.setPixel(x, y, color);
                     }
                 }
-                texture = new NativeImageBackedTexture(img);
+                texture = new DynamicTexture(img);
                 texture.setFilter(true, true);
-                textureId = Identifier.ofVanilla("nekomusic/hud_img");
-                textureManager.registerTexture(textureId, texture);
+                textureId = ResourceLocation.withDefaultNamespace("nekomusic/hud_img");
+                textureManager.register(textureId, texture);
             }
         });
     }

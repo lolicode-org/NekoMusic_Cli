@@ -1,7 +1,7 @@
 package org.lolicode.nekomusiccli.hud;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.GuiGraphics;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.libs.lrcparser.Lyric;
 import org.lolicode.nekomusiccli.libs.lrcparser.parser.LyricParser;
@@ -38,7 +38,7 @@ public class LyricRender {
         }
     }
 
-    public void render(DrawContext context) {
+    public void render(GuiGraphics context) {
         RenderMain.drawMultiLineText(context, currentSentence, NekoMusicClient.config.lyricX, NekoMusicClient.config.lyricY);
     }
 
