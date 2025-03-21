@@ -23,16 +23,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout repository
-        uses: actions/checkout@v3
-      - name: validate gradle wrapper
-        uses: gradle/wrapper-validation-action@v1
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - name: setup jdk 21
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12
         with:
           java-version: 21
           distribution: 'zulu'
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@main
+        uses: gradle/actions/setup-gradle@94baf225fe0a508e581a564467443d0e2379123b
         with:
           dependency-graph: generate-and-submit
       - name: make gradle wrapper executable
@@ -40,7 +38,7 @@ jobs:
       - name: build
         run: ./gradlew build
       - name: capture build artifacts
-        uses: actions/upload-artifact@v3.1.0
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: Artifacts
           path: build/libs/
@@ -63,7 +61,7 @@ jobs:
 
       - name: Publish Release
         if: ${{ github.event_name != 'pull_request' && (github.event.inputs.release == 'true' || (env.COMMIT_AUTHOR == 'KoishiMoe' && env.VERIFIED == 'true' && contains(github.event.head_commit.message, '[release]'))) }}
-        uses: Kir-Antipov/mc-publish@v3.3
+        uses: Kir-Antipov/mc-publish@995edadc13559a8b28d0b7e6571229f067ec7659
         with:
           # Only include this section if you wish to publish
           # your assets on Modrinth.
@@ -73,5 +71,5 @@ jobs:
           # Only include this section if you wish to publish
           # your assets on GitHub.
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          github-tag: "v${{ env.version }}"
-          name: "Release v${{ env.version }}"
+          github-tag: "v${{ env.version }}-1.21.5"
+          name: "Release v${{ env.version }} for Minecraft 1.21.5"
