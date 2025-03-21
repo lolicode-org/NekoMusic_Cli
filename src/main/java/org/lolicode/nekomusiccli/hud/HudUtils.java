@@ -87,7 +87,7 @@ public class HudUtils {
         var cfg = NekoMusicClient.config;
         if (!cfg.enableHud) return;
         if (cfg.enableHudImg && imgRender != null) {
-            imgRender.RenderImg();
+            imgRender.RenderImg(context);
         }
         if (cfg.enableHudInfo) {
             InfoRender.render(context, info);

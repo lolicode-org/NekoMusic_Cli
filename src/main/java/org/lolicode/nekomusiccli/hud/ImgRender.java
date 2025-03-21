@@ -1,6 +1,7 @@
 package org.lolicode.nekomusiccli.hud;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.texture.TextureManager;
@@ -136,15 +137,15 @@ public class ImgRender {
     }
 
 
-    public synchronized void RenderImg() {
+    public synchronized void RenderImg(DrawContext context) {
         if (texture == null || textureId == null) return;
-        RenderMain.drawImg(this.texture, this.shouldRotate, angle);
+        RenderMain.drawImg(context, textureId, this.shouldRotate, angle);
         angle = (int) ((System.currentTimeMillis() - startTime) / NekoMusicClient.config.imgRotateSpeed) % 360;
     }
 
     private synchronized void DisposeImg() {
         if (textureId != null) {
-            textureManager.destroyTexture(textureId);
+            MinecraftClient.getInstance().execute(() -> textureManager.destroyTexture(textureId));
             textureId = null;
         }
         texture = null;
@@ -179,9 +180,9 @@ public class ImgRender {
                         img.setColorArgb(x, y, color);
                     }
                 }
-                texture = new NativeImageBackedTexture(img);
+                textureId = NekoMusicClient.MOD_BASE_IDENTIFIER.withPath("hud_img");
+                texture = new NativeImageBackedTexture(textureId::toString, img);
                 texture.setFilter(true, true);
-                textureId = Identifier.ofVanilla("nekomusic/hud_img");
                 textureManager.registerTexture(textureId, texture);
             }
         });
