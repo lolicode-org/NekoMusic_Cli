@@ -6,6 +6,10 @@
 name: build
 on:
   push:
+    paths-ignore:
+      - '**/*.md'
+    tags-ignore:
+      - '**'
   pull_request:
   workflow_dispatch:
     inputs:
