@@ -5,6 +5,7 @@ import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lwjgl.BufferUtils;
 
@@ -136,15 +137,15 @@ public class ImgRender {
     }
 
 
-    public synchronized void RenderImg() {
+    public synchronized void RenderImg(GuiGraphics context) {
         if (texture == null || textureId == null) return;
-        RenderMain.drawImg(this.texture, this.shouldRotate, angle);
+        RenderMain.drawImg(context, textureId, this.shouldRotate, angle);
         angle = (int) ((System.currentTimeMillis() - startTime) / NekoMusicClient.config.imgRotateSpeed) % 360;
     }
 
     private synchronized void DisposeImg() {
         if (textureId != null) {
-            textureManager.release(textureId);
+                Minecraft.getInstance().execute(() -> textureManager.release(textureId));
             textureId = null;
         }
         texture = null;
@@ -179,9 +180,9 @@ public class ImgRender {
                         img.setPixel(x, y, color);
                     }
                 }
-                texture = new DynamicTexture(img);
+                textureId = NekoMusicClient.MOD_BASE_IDENTIFIER.withPath("hud_img");
+                texture = new DynamicTexture(textureId::toString, img);
                 texture.setFilter(true, true);
-                textureId = ResourceLocation.withDefaultNamespace("nekomusic/hud_img");
                 textureManager.register(textureId, texture);
             }
         });

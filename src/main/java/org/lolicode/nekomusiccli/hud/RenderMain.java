@@ -1,13 +1,12 @@
 package org.lolicode.nekomusiccli.hud;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.CoreShaders;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.RenderType;
 import com.mojang.blaze3d.vertex.*;
+import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 
 public class RenderMain {
@@ -27,40 +26,23 @@ public class RenderMain {
         }
     }
 
-    public static void drawImg(DynamicTexture texture, boolean shouldRotate, int angle) {
-        if (texture == null) return;
-        int textureId = texture.getId();
-        if (textureId <= 0) return;
-        RenderSystem.setShader(CoreShaders.POSITION_TEX);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.setShaderTexture(0, textureId);
+    public static void drawImg(GuiGraphics context, ResourceLocation textureId, boolean shouldRotate, int angle) {
+        var config = NekoMusicClient.config;
+        var imgSize = config.imgSize;
+        var offset = imgSize / 2;
 
-        PoseStack stack = new PoseStack();
-        Matrix4f matrix = stack.last().pose();
-
-        int offset = NekoMusicClient.config.imgSize / 2;
+        PoseStack matrices = context.pose();
+        matrices.pushPose();
+        Matrix4f matrix = matrices.last().pose();
 
         if (shouldRotate) {
-            matrix = matrix.translationRotate(NekoMusicClient.config.imgX + offset, NekoMusicClient.config.imgY + offset, 0,
-                    new Quaternionf().fromAxisAngleDeg(0, 0, 1, angle));
+            matrix.translationRotate(config.imgX + offset, config.imgY + offset , 0, Axis.ZP.rotationDegrees(angle));
         } else {
-            matrix = matrix.translation(NekoMusicClient.config.imgX + offset, NekoMusicClient.config.imgY + offset, 0);
+            matrix.translate(config.imgX + offset, config.imgY + offset, 0);
         }
 
-        int z = 0;
-        int u0 = 0;
-        float u1 = 1;
-        float v0 = 0;
-        float v1 = 1;
+        context.blit(RenderType::guiTextured, textureId, -offset, -offset, imgSize, imgSize, imgSize, imgSize, imgSize, imgSize);
 
-        RenderSystem.setShader(CoreShaders.POSITION_TEX);
-        BufferBuilder bufferBuilder = Tesselator.getInstance()
-                .begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        bufferBuilder.addVertex(matrix, (float) -offset, (float) offset, (float) z).setUv(u0, v1);
-        bufferBuilder.addVertex(matrix, (float) offset, (float) offset, (float) z).setUv(u1, v1);
-        bufferBuilder.addVertex(matrix, (float) offset, (float) -offset, (float) z).setUv(u1, v0);
-        bufferBuilder.addVertex(matrix, (float) -offset, (float) -offset, (float) z).setUv(u0, v0);
-
-        BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());
+        matrices.popPose();
     }
 }
