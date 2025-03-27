@@ -6,6 +6,10 @@
 name: build
 on:
   push:
+    paths-ignore:
+      - '**/*.md'
+    tags-ignore:
+      - '**'
   pull_request:
   workflow_dispatch:
     inputs:
@@ -73,5 +77,5 @@ jobs:
           # Only include this section if you wish to publish
           # your assets on GitHub.
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          github-tag: "v${{ env.version }}-neo"
-          name: "Release v${{ env.version }} for neoforge"
+          github-tag: "v${{ env.version }}-neo-1.21.5"
+          name: "Release v${{ env.version }} for neoforge 1.21.5"
