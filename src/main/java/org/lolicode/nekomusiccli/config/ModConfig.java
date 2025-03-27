@@ -4,6 +4,7 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import net.minecraft.client.Minecraft;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.cache.CacheUtils;
 import org.lolicode.nekomusiccli.utils.StrEnvSubstitutor;
@@ -146,10 +147,13 @@ public class ModConfig implements ConfigData {
         domainWhitelist.removeIf(String::isBlank);
         if (!domainWhitelist.isEmpty() && !domainWhitelist.contains("music.126.net"))
             domainWhitelist.add("music.126.net");
-        try {
-            CacheUtils.checkCachePath(getCachePath());
-        } catch (Exception e) {
-            throw new ValidationException("Invalid cache path: ", e);
+        if (Minecraft.getInstance() != null) {
+            // During client init, this is null, and npe will be thrown... Idk if it's something wrong with neo or cloth config, but ignore cache check during client init will workaround this
+            try {
+                CacheUtils.checkCachePath(getCachePath());
+            } catch (Exception e) {
+                throw new ValidationException("Invalid cache path: ", e);
+            }
         }
     }
 
