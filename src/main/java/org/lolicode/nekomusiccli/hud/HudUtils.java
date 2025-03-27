@@ -83,7 +83,7 @@ public class HudUtils {
     }
 
     public void frame(DrawContext context) {
-        if (isClosed || isStopped || client.options.hudHidden || client.getDebugHud().shouldShowDebugHud()) return;
+        if (isClosed || isStopped || client.getDebugHud().shouldShowDebugHud()) return;
         var cfg = NekoMusicClient.config;
         if (!cfg.enableHud) return;
         if (cfg.enableHudImg && imgRender != null) {
