@@ -1,12 +1,10 @@
 package org.lolicode.nekomusiccli.hud;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.RotationAxis;
-import org.joml.Matrix4f;
+import org.joml.Matrix3x2fStack;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 
 public class RenderMain {
@@ -32,18 +30,16 @@ public class RenderMain {
         var imgSize = config.imgSize;
         var offset = imgSize / 2;
 
-        MatrixStack matrices = context.getMatrices();
-        matrices.push();
-        Matrix4f matrix = matrices.peek().getPositionMatrix();
+        Matrix3x2fStack matrices = context.getMatrices();
+        matrices.pushMatrix();
 
+        matrices.translate(config.imgX + offset, config.imgY + offset);
         if (shouldRotate) {
-            matrix.translationRotate(config.imgX + offset, config.imgY + offset , 0, RotationAxis.POSITIVE_Z.rotationDegrees(angle));
-        } else {
-            matrix.translate(config.imgX + offset, config.imgY + offset, 0);
+            matrices.rotate(angle);
         }
 
-        context.drawTexture(RenderLayer::getGuiTextured, textureId, -offset, -offset, imgSize, imgSize, imgSize, imgSize, imgSize, imgSize);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, textureId, -offset, -offset, imgSize, imgSize, imgSize, imgSize, imgSize, imgSize);
 
-        matrices.pop();
+        matrices.popMatrix();
     }
 }

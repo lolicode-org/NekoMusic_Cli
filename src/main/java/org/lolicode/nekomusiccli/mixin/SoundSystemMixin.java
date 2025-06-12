@@ -9,18 +9,19 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(SoundSystem.class)
 public class SoundSystemMixin {
-    @Inject(method = "play(Lnet/minecraft/client/sound/SoundInstance;)V", at = @At("HEAD"), cancellable = true)
-    public void play(SoundInstance sound, CallbackInfo ci) {
+    @Inject(method = "play(Lnet/minecraft/client/sound/SoundInstance;)Lnet/minecraft/client/sound/SoundSystem$PlayResult;", at = @At("HEAD"), cancellable = true)
+    public void play(SoundInstance sound, CallbackInfoReturnable<SoundSystem.PlayResult> cir) {
         if (NekoMusicClient.musicManager != null && !NekoMusicClient.musicManager.isPlaying()) return;
         switch (sound.getCategory()) {
             case RECORDS -> {
-                if (NekoMusicClient.config.blockRecords) ci.cancel();
+                if (NekoMusicClient.config.blockRecords) cir.setReturnValue(SoundSystem.PlayResult.NOT_STARTED);
             }
             case MUSIC -> {
-                if (NekoMusicClient.config.blockMusic) ci.cancel();
+                if (NekoMusicClient.config.blockMusic) cir.setReturnValue(SoundSystem.PlayResult.NOT_STARTED);
             }
         }
     }
