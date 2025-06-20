@@ -49,7 +49,7 @@
   "text.autoconfig.nekomusiccli.option.imgRotateSpeed": "Cover Rotate Speed",
   "text.autoconfig.nekomusiccli.option.textOpacity": "HUD Text Opacity",
   "text.autoconfig.nekomusiccli.option.textOpacity.@Tooltip[0]": "HUD text opacity, 0 = fully transparent, 255 = fully opaque.",
-  "text.autoconfig.nekomusiccli.option.textOpacity.@Tooltip[1]": "§eNote: Setting this below 50 may cause the HUD text to be almost invisible.",
+  "text.autoconfig.nekomusiccli.option.textOpacity.@Tooltip[1]": "§cThis option may not work in Neoforge.",
   "text.autoconfig.nekomusiccli.option.textColorRed": "HUD Text Color (Red)",
   "text.autoconfig.nekomusiccli.option.textColorRed.@Tooltip": "RGB color value red component, range 0-255.",
   "text.autoconfig.nekomusiccli.option.textColorGreen": "HUD Text Color (Green)",

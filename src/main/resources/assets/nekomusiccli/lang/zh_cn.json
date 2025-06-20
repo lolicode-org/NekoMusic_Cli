@@ -49,7 +49,7 @@
   "text.autoconfig.nekomusiccli.option.imgRotateSpeed": "封面HUD 旋转速度",
   "text.autoconfig.nekomusiccli.option.textOpacity": "HUD文本透明度",
   "text.autoconfig.nekomusiccli.option.textOpacity.@Tooltip[0]": "HUD文本的透明度，0为完全透明，255为完全不透明。",
-  "text.autoconfig.nekomusiccli.option.textOpacity.@Tooltip[1]": "§e注意：设为50以下可能会导致HUD文本几乎不可见。",
+  "text.autoconfig.nekomusiccli.option.textOpacity.@Tooltip[1]": "§c该选项在Neoforge中可能无效",
   "text.autoconfig.nekomusiccli.option.textColorRed": "HUD文本颜色（红色）",
   "text.autoconfig.nekomusiccli.option.textColorRed.@Tooltip": "RGB颜色值的红色分量，范围为0-255。",
   "text.autoconfig.nekomusiccli.option.textColorGreen": "HUD文本颜色（绿色）",
