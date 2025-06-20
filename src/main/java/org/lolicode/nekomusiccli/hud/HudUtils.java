@@ -4,6 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.ColorHelper;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.music.MusicList;
 import org.lolicode.nekomusiccli.music.MusicObj;
@@ -89,11 +90,9 @@ public class HudUtils {
         if (cfg.enableHudImg && imgRender != null) {
             imgRender.RenderImg(context);
         }
-        var textColor = 0;
-        textColor |= cfg.textOpacity << 24; // Alpha
-        textColor |= cfg.textColorRed << 16; // Red
-        textColor |= cfg.textColorGreen << 8; // Green
-        textColor |= cfg.textColorBlue; // Blue
+        int textColor = ColorHelper.getArgb(
+                cfg.textOpacity,
+                cfg.textColorRed, cfg.textColorGreen, cfg.textColorBlue);
         if (cfg.enableHudInfo) {
             InfoRender.render(context, info, textColor);
         }
