@@ -38,8 +38,8 @@ public class LyricRender {
         }
     }
 
-    public void render(GuiGraphics context) {
-        RenderMain.drawMultiLineText(context, currentSentence, NekoMusicClient.config.lyricX, NekoMusicClient.config.lyricY);
+    public void render(GuiGraphics context, int color) {
+        RenderMain.drawMultiLineText(context, currentSentence, NekoMusicClient.config.lyricX, NekoMusicClient.config.lyricY, color);
     }
 
     public synchronized boolean hasLyric() {

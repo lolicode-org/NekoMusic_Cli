@@ -55,6 +55,18 @@ public class ModConfig implements ConfigData {
     public int imgY = 2;
     public int imgSize = 70;
     public int imgRotateSpeed = 50;
+    @ConfigEntry.Gui.Tooltip(count = 2)
+    @ConfigEntry.BoundedDiscrete(min = 0, max = 255)
+    public int textOpacity = 255;
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.BoundedDiscrete(min = 0, max = 255)
+    public int textColorRed = 255;
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.BoundedDiscrete(min = 0, max = 255)
+    public int textColorGreen = 255;
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.BoundedDiscrete(min = 0, max = 255)
+    public int textColorBlue = 255;
 
     @ConfigEntry.Gui.Tooltip(count = 2)
     public ArrayList<String> bannedServers = new ArrayList<>();
@@ -138,6 +150,14 @@ public class ModConfig implements ConfigData {
             musicCacheSize = -1;
         if (imgRotateSpeed <= 0)
             imgRotateSpeed = 50;
+        if (textOpacity < 0 || textOpacity > 255)
+            textOpacity = 255;
+        if (textColorRed < 0 || textColorRed > 255)
+            textColorRed = 255;
+        if (textColorGreen < 0 || textColorGreen > 255)
+            textColorGreen = 255;
+        if (textColorBlue < 0 || textColorBlue > 255)
+            textColorBlue = 255;
         if (musicResponseSizeLimit > 0 && musicResponseSizeLimit < 10)
             musicResponseSizeLimit = 10;
         if (volumeWhenPlayingVoice < 0 || volumeWhenPlayingVoice > 100)
