@@ -180,7 +180,8 @@ dependencies {
             prefer "${project.commons_text_version}"
         }
     }
-    compileOnly "thedarkcolour:kotlinforforge-neoforge:${project.kotlin_for_forge_version}"  // if use implementation, it will crash on devrun... seems conflict with okhttp stuff. Im not familiar with gradle stuff so Idk why
+//    compileOnly "thedarkcolour:kotlinforforge-neoforge:${project.kotlin_for_forge_version}"  // if use implementation, it will crash on devrun... seems conflict with okhttp stuff. Im not familiar with gradle stuff so Idk why
+    // update: the above trick wont work now. Currently i'm removing it from build.gradle. However it's required in non-dev env, so Im adding a dependencyOverride in dev env as a dirty hack...
     api "me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_config_version}"
     implementation "lol.bai:badpackets:neo-${badpackets_version}"
     compileOnly "su.plo.voice.api:client:${plasmovoice_version}"
