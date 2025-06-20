@@ -10,17 +10,17 @@ import org.lolicode.nekomusiccli.NekoMusicClient;
 public class RenderMain {
     private static final int fontHeight = MinecraftClient.getInstance().textRenderer.fontHeight;
 
-    public static void drawText(DrawContext context, String text, float x, float y) {
-        context.drawText(MinecraftClient.getInstance().textRenderer, text, (int) x, (int) y, 0xffffffff, false);
+    public static void drawText(DrawContext context, String text, float x, float y, int color) {
+        context.drawText(MinecraftClient.getInstance().textRenderer, text, (int) x, (int) y, color, false);
     }
 
-    public static void drawMultiLineText(DrawContext context, String text, float x, float y) {
+    public static void drawMultiLineText(DrawContext context, String text, float x, float y, int color) {
         if (text == null || text.isBlank()) {
             return;
         }
         int offset = 0;
         for (var line : text.split("\n")) {
-            drawText(context, line, x, y + offset);
+            drawText(context, line, x, y + offset, color);
             offset += fontHeight + 2;
         }
     }

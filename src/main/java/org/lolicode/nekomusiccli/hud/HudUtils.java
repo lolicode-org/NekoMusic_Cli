@@ -89,14 +89,19 @@ public class HudUtils {
         if (cfg.enableHudImg && imgRender != null) {
             imgRender.RenderImg(context);
         }
+        var textColor = 0;
+        textColor |= cfg.textOpacity << 24; // Alpha
+        textColor |= cfg.textColorRed << 16; // Red
+        textColor |= cfg.textColorGreen << 8; // Green
+        textColor |= cfg.textColorBlue; // Blue
         if (cfg.enableHudInfo) {
-            InfoRender.render(context, info);
+            InfoRender.render(context, info, textColor);
         }
         if (cfg.enableHudList) {
-            ListRender.render(context, list, System.currentTimeMillis() - startTime);
+            ListRender.render(context, list, System.currentTimeMillis() - startTime, textColor);
         }
         if (cfg.enableHudLyric && lyricRender != null) {
-            lyricRender.render(context);
+            lyricRender.render(context, textColor);
         }
     }
 

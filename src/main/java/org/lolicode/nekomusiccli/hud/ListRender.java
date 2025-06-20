@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class ListRender {
     private static final StringBuilder sb = new StringBuilder((NekoMusicClient.config.maxCharPerLineListHud + 1) * NekoMusicClient.config.maxRowListHud);
 
-    public static void render(DrawContext context, ArrayList<String> list, long timeDelta) {
+    public static void render(DrawContext context, ArrayList<String> list, long timeDelta, int color) {
         if (list == null || list.isEmpty()) {
             return;
         }
@@ -27,6 +27,6 @@ public class ListRender {
                 break;
             }
         }
-        RenderMain.drawMultiLineText(context, sb.toString(), NekoMusicClient.config.listX, NekoMusicClient.config.listY);
+        RenderMain.drawMultiLineText(context, sb.toString(), NekoMusicClient.config.listX, NekoMusicClient.config.listY, color);
     }
 }
