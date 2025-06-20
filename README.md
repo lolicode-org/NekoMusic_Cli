@@ -1,4 +1,6 @@
-![Logo](./src/main/resources/assets/nekomusiccli/icon.png)
+<p align="center">
+    <img src="./src/main/resources/assets/nekomusiccli/icon.png" alt="Icon" width=128>
+</p>
 
 # NekoMusic Client
 
@@ -19,12 +21,12 @@
 
 ## FAQ
 * 会支持1.18-吗
-  * 不会
+  * 目前版本不会，如果我有时间去做计划中的重构，可能会顺带支持旧版本。
 * 会支持Forge吗
   * 已支持1.21.4以上版本的neoforge，请在release中查找对应条目
-  * 原版forge**不会**被支持
+  * 原版forge目前暂不被支持
 * 音量怎么调
-  * 在Minecraft的声音设置中，其中1.20+版本独立分类，1.19版本与声音设置中的`唱片机和音符盒`类别绑定
+  * 在Minecraft的声音设置中，其中Fabric 1.20+版本独立分类，Neoforge或Fabric 1.19版本与声音设置中的`唱片机和音符盒`类别绑定
 * 高级设置里都是什么
   * 域名白名单：只有白名单中的域名中的资源会被允许加载。该检查忽略端口号，且会匹配所有子域名。
   * 缓存大小：默认情况下，听过的音乐文件会被缓存下来，以节省后续加载的时间和流量。你可以根据自己的磁盘剩余空间进行调整，设为-1即无限制，设为0以禁用。参考：一首3分钟左右的320kbps的mp3文件（服务端默认配置）大约会占用10MB的空间。一首Flac大约会占用40MB左右。
