@@ -1,5 +1,5 @@
 {
-  "category.nekomusic.general": "NekoMusic",
+  "key.category.nekomusic.general": "NekoMusic",
   "key.nekomusic.disable": "Enable/Disable NekoMusic",
   "key.nekomusic.server_disable": "Enable/Disable NekoMusic for current Server",
   "key.nekomusic.ban_song": "Ban currently playing music locally",

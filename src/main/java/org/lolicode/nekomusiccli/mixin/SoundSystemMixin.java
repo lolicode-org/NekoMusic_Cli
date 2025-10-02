@@ -1,5 +1,6 @@
 package org.lolicode.nekomusiccli.mixin;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.client.sound.SoundSystem;
 import net.minecraft.sound.SoundCategory;
@@ -31,13 +32,13 @@ public class SoundSystemMixin {
         if (NekoMusicClient.musicManager != null) NekoMusicClient.musicManager.stop();
     }
 
-    @Inject(method = "updateSoundVolume(Lnet/minecraft/sound/SoundCategory;F)V", at = @At("HEAD"), cancellable = true)
-    public void updateSoundVolume(SoundCategory category, float volume, CallbackInfo ci){
+    @Inject(method = "updateSoundVolume(Lnet/minecraft/sound/SoundCategory;)V", at = @At("HEAD"), cancellable = true)
+    public void updateSoundVolume(SoundCategory category, CallbackInfo ci){
         if (category == CustomSoundCategory.NEKOMUSIC) {
             if (NekoMusicClient.pvAddon != null) {
-                NekoMusicClient.pvAddon.setVolume(volume);
+                NekoMusicClient.pvAddon.setVolume(MinecraftClient.getInstance().options.getSoundVolume(CustomSoundCategory.NEKOMUSIC));
             } else if (NekoMusicClient.musicManager != null) {
-                NekoMusicClient.musicManager.setVolume(volume);
+                NekoMusicClient.musicManager.setVolume(MinecraftClient.getInstance().options.getSoundVolume(CustomSoundCategory.NEKOMUSIC));
             }
             ci.cancel();
         }

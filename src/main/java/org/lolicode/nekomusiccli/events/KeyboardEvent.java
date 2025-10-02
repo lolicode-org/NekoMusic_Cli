@@ -6,6 +6,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.util.Identifier;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.config.ModConfig;
 import org.lolicode.nekomusiccli.packet.ClientByeSender;
@@ -16,25 +17,26 @@ import org.lwjgl.glfw.GLFW;
 
 public class KeyboardEvent {
     private static final ModConfig config = NekoMusicClient.config;
+    private static final KeyBinding.Category CATEGORY = KeyBinding.Category.create(Identifier.of(NekoMusicClient.MOD_CHANNEL, "general"));
     public static KeyBinding globalDisableKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.nekomusic.disable", // The translation key of the keybinding's name
                 InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
                 GLFW.GLFW_KEY_F7, // The keycode of the key
-                "category.nekomusic.general" // The translation key of the keybinding's category.
+                CATEGORY // The translation key of the keybinding's category.
     ));
 
     public static KeyBinding serverDisableKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
             "key.nekomusic.server_disable", // The translation key of the keybinding's name
             InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
             GLFW.GLFW_KEY_F8, // The keycode of the key
-            "category.nekomusic.general" // The translation key of the keybinding's category.
+            CATEGORY // The translation key of the keybinding's category.
     ));
 
     public static KeyBinding clientBanKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
             "key.nekomusic.ban_song", // The translation key of the keybinding's name
             InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
             GLFW.GLFW_KEY_F9, // The keycode of the key
-            "category.nekomusic.general" // The translation key of the keybinding's category.
+            CATEGORY // The translation key of the keybinding's category.
     ));
 
     public static void register() {
