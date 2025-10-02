@@ -4,7 +4,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.multiplayer.ServerData;
 import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.IModBusEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
 import net.neoforged.neoforge.common.util.Lazy;
@@ -20,8 +22,9 @@ import org.lolicode.nekomusiccli.packet.ClientHelloSender;
 import org.lolicode.nekomusiccli.utils.Alert;
 import org.lolicode.nekomusiccli.utils.InstanceLock;
 
-@EventBusSubscriber(modid = NekoMusicClient.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-public class KeyboardEvent {
+@EventBusSubscriber(modid = NekoMusicClient.MOD_ID, value = Dist.CLIENT)
+public class KeyboardEvent implements IModBusEvent {
+    private static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(ResourceLocation.fromNamespaceAndPath(NekoMusicClient.MOD_CHANNEL, "general"));
     // this class is initialized before the config, so we need to get it lazily
     private static ModConfig getConfig() {
         return NekoMusicClient.config;
@@ -33,7 +36,7 @@ public class KeyboardEvent {
             KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_F7,
-            "category.nekomusic.general"
+            CATEGORY
     ));
 
     public static final Lazy<KeyMapping> SERVER_DISABLE_KEY = Lazy.of(() -> new KeyMapping(
@@ -41,7 +44,7 @@ public class KeyboardEvent {
             KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_F8,
-            "category.nekomusic.general"
+            CATEGORY
     ));
 
     public static final Lazy<KeyMapping> CLIENT_BAN_KEY = Lazy.of(() -> new KeyMapping(
@@ -49,7 +52,7 @@ public class KeyboardEvent {
             KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_F9,
-            "category.nekomusic.general"
+            CATEGORY
     ));
 
     // 2) Register KeyMappings in RegisterKeyMappingsEvent.

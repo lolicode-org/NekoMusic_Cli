@@ -1,5 +1,5 @@
 {
-  "category.nekomusic.general": "NekoMusic",
+  "key.category.nekomusic.general": "NekoMusic",
   "key.nekomusic.disable": "启用/禁用 NekoMusic",
   "key.nekomusic.server_disable": "启用/禁用当前服务器的音乐播放",
   "key.nekomusic.ban_song": "本地屏蔽正在播放的音乐",

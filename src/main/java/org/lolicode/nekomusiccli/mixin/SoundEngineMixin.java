@@ -1,7 +1,9 @@
 package org.lolicode.nekomusiccli.mixin;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.sounds.SoundEngine;
+import net.minecraft.sounds.SoundSource;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -31,5 +33,17 @@ public class SoundEngineMixin {
     @Inject(method = "reload", at = @At("RETURN"))
     public void reload(CallbackInfo ci){
         if (NekoMusicClient.musicManager != null) NekoMusicClient.musicManager.stop();
+    }
+
+    @Inject(method = "updateCategoryVolume(Lnet/minecraft/sounds/SoundSource;)V", at = @At("HEAD"), cancellable = true)
+    public void updateCategoryVolume(SoundSource category, CallbackInfo ci) {
+        if (category == SoundSource.RECORDS) {
+            if (NekoMusicClient.pvAddon != null) {
+                NekoMusicClient.pvAddon.setVolume(Minecraft.getInstance().options.getSoundSourceVolume(SoundSource.RECORDS));
+            } else if (NekoMusicClient.musicManager != null) {
+                NekoMusicClient.musicManager.setVolume(Minecraft.getInstance().options.getSoundSourceVolume(SoundSource.RECORDS));
+            }
+            ci.cancel();
+        }
     }
 }
