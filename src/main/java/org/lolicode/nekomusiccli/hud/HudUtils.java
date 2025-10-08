@@ -30,7 +30,7 @@ public class HudUtils {
         stopCurrentMusic();
         info = music.name == null || music.name.isBlank() ? Component.translatable("hud.nekomusic.no_title").getString() : music.name;
         info += "\n";
-        info += music.ar == null || music.ar.isEmpty() ? Component.translatable("hud.nekomusic.no_artist").getString() : music.ar.get(0).name;
+        info += music.ar == null || music.ar.isEmpty() ? Component.translatable("hud.nekomusic.no_artist").getString() : music.ar.getFirst().name;
         info += "\n";
         info += music.album == null || music.album.name == null || music.album.name.isBlank() ? Component.translatable("hud.nekomusic.no_album").getString() : music.album.name;
         if (music.player != null && !music.player.isBlank()) info += "\nby: " + music.player;
@@ -84,7 +84,7 @@ public class HudUtils {
     }
 
     public void frame(GuiGraphics context) {
-        if (isClosed || isStopped || client.getDebugOverlay().showDebugScreen()) return;
+        if (isClosed || isStopped || client.debugEntries.isF3Visible()) return;
         var cfg = NekoMusicClient.config;
         if (!cfg.enableHud) return;
         if (cfg.enableHudImg && imgRender != null) {
