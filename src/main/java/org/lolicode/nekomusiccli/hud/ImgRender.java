@@ -182,7 +182,7 @@ public class ImgRender {
                 }
                 textureId = NekoMusicClient.MOD_BASE_IDENTIFIER.withPath("hud_img");
                 texture = new NativeImageBackedTexture(textureId::toString, img);
-                texture.setFilter(true, true);
+//                texture.setFilter(true, true);
                 textureManager.registerTexture(textureId, texture);
             }
         });

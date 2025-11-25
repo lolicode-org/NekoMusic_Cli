@@ -4,11 +4,13 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.client.sound.SoundSystem;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.math.MathHelper;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.config.CustomSoundCategory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -32,13 +34,14 @@ public class SoundSystemMixin {
         if (NekoMusicClient.musicManager != null) NekoMusicClient.musicManager.stop();
     }
 
-    @Inject(method = "updateSoundVolume(Lnet/minecraft/sound/SoundCategory;)V", at = @At("HEAD"), cancellable = true)
-    public void updateSoundVolume(SoundCategory category, CallbackInfo ci){
+    @Inject(method = "setVolume(Lnet/minecraft/sound/SoundCategory;F)V", at = @At("HEAD"), cancellable = true)
+    public void updateSoundVolume(SoundCategory category, float volume, CallbackInfo ci){
+        volume = MathHelper.clamp(volume, 0.0F, 1.0F);
         if (category == CustomSoundCategory.NEKOMUSIC) {
             if (NekoMusicClient.pvAddon != null) {
-                NekoMusicClient.pvAddon.setVolume(MinecraftClient.getInstance().options.getSoundVolume(CustomSoundCategory.NEKOMUSIC));
+                NekoMusicClient.pvAddon.setVolume(volume);
             } else if (NekoMusicClient.musicManager != null) {
-                NekoMusicClient.musicManager.setVolume(MinecraftClient.getInstance().options.getSoundVolume(CustomSoundCategory.NEKOMUSIC));
+                NekoMusicClient.musicManager.setVolume(volume);
             }
             ci.cancel();
         }
