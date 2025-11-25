@@ -7,7 +7,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.api.VersionParsingException;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lolicode.nekomusiccli.cache.CacheUtils;
@@ -26,7 +26,7 @@ public class NekoMusicClient implements ClientModInitializer {
     public static final String MOD_ID = "nekomusiccli";
     public static final String MOD_NAME = "NekoMusic Client";
     public static final String MOD_CHANNEL = "nekomusic";
-    public static final Identifier MOD_BASE_IDENTIFIER = Identifier.of(MOD_CHANNEL, MOD_ID);  // if not provide MODID, the namespace will be "minecraft"
+    public static final Identifier MOD_BASE_IDENTIFIER = Identifier.fromNamespaceAndPath(MOD_CHANNEL, MOD_ID);  // if not provide MODID, the namespace will be "minecraft"
     public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
     public static final Gson GSON = new Gson();
     public static MusicManager musicManager;

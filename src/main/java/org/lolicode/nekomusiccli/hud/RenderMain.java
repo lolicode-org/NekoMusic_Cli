@@ -1,20 +1,20 @@
 package org.lolicode.nekomusiccli.hud;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.resources.Identifier;
 import org.joml.Matrix3x2fStack;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 
 public class RenderMain {
-    private static final int fontHeight = MinecraftClient.getInstance().textRenderer.fontHeight;
+    private static final int fontHeight = Minecraft.getInstance().font.lineHeight;
 
-    public static void drawText(DrawContext context, String text, float x, float y, int color) {
-        context.drawText(MinecraftClient.getInstance().textRenderer, text, (int) x, (int) y, color, false);
+    public static void drawText(GuiGraphics context, String text, float x, float y, int color) {
+        context.drawString(Minecraft.getInstance().font, text, (int) x, (int) y, color, false);
     }
 
-    public static void drawMultiLineText(DrawContext context, String text, float x, float y, int color) {
+    public static void drawMultiLineText(GuiGraphics context, String text, float x, float y, int color) {
         if (text == null || text.isBlank()) {
             return;
         }
@@ -25,12 +25,12 @@ public class RenderMain {
         }
     }
 
-    public static void drawImg(DrawContext context, Identifier textureId, boolean shouldRotate, int angle) {
+    public static void drawImg(GuiGraphics context, Identifier textureId, boolean shouldRotate, int angle) {
         var config = NekoMusicClient.config;
         var imgSize = config.imgSize;
         var offset = imgSize / 2;
 
-        Matrix3x2fStack matrices = context.getMatrices();
+        Matrix3x2fStack matrices = context.pose();
         matrices.pushMatrix();
 
         matrices.translate(config.imgX + offset, config.imgY + offset);
@@ -38,7 +38,7 @@ public class RenderMain {
             matrices.rotate(angle * ((float)Math.PI / 180F));
         }
 
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, textureId, -offset, -offset, imgSize, imgSize, imgSize, imgSize, imgSize, imgSize);
+        context.blit(RenderPipelines.GUI_TEXTURED, textureId, -offset, -offset, imgSize, imgSize, imgSize, imgSize, imgSize, imgSize);
 
         matrices.popMatrix();
     }

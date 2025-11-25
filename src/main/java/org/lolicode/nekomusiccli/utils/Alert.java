@@ -1,31 +1,31 @@
 package org.lolicode.nekomusiccli.utils;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 
 public class Alert {
     public static void error(String msgKey) {
-        if (MinecraftClient.getInstance().player == null) return;
-        Text msg = Text.literal("§c[" + NekoMusicClient.MOD_NAME + "] ").append(Text.translatable(msgKey));
-        MinecraftClient.getInstance().player.sendMessage(msg, false);
+        if (Minecraft.getInstance().player == null) return;
+        Component msg = Component.literal("§c[" + NekoMusicClient.MOD_NAME + "] ").append(Component.translatable(msgKey));
+        Minecraft.getInstance().player.displayClientMessage(msg, false);
     }
 
     public static void warn(String msgKey) {
-        if (MinecraftClient.getInstance().player == null) return;
-        Text msg = Text.literal("§e[" + NekoMusicClient.MOD_NAME + "] ").append(Text.translatable(msgKey));
-        MinecraftClient.getInstance().player.sendMessage(msg, false);
+        if (Minecraft.getInstance().player == null) return;
+        Component msg = Component.literal("§e[" + NekoMusicClient.MOD_NAME + "] ").append(Component.translatable(msgKey));
+        Minecraft.getInstance().player.displayClientMessage(msg, false);
     }
 
     public static void info(String msgKey) {
-        if (MinecraftClient.getInstance().player == null) return;
-        Text msg = Text.literal("§b[" + NekoMusicClient.MOD_NAME + "] ").append(Text.translatable(msgKey));
-        MinecraftClient.getInstance().player.sendMessage(msg, false);
+        if (Minecraft.getInstance().player == null) return;
+        Component msg = Component.literal("§b[" + NekoMusicClient.MOD_NAME + "] ").append(Component.translatable(msgKey));
+        Minecraft.getInstance().player.displayClientMessage(msg, false);
     }
 
     public static void info(String msgKey, Object... args) {
-        if (MinecraftClient.getInstance().player == null) return;
-        Text msg = Text.literal("§b[" + NekoMusicClient.MOD_NAME + "] ").append(Text.translatable(msgKey, args));
-        MinecraftClient.getInstance().player.sendMessage(msg, false);
+        if (Minecraft.getInstance().player == null) return;
+        Component msg = Component.literal("§b[" + NekoMusicClient.MOD_NAME + "] ").append(Component.translatable(msgKey, args));
+        Minecraft.getInstance().player.displayClientMessage(msg, false);
     }
 }

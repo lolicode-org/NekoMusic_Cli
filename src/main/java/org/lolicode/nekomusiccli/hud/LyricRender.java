@@ -1,7 +1,6 @@
 package org.lolicode.nekomusiccli.hud;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import net.minecraft.client.gui.DrawContext;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.libs.lrcparser.Lyric;
 import org.lolicode.nekomusiccli.libs.lrcparser.parser.LyricParser;
@@ -13,6 +12,7 @@ import java.io.StringReader;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import net.minecraft.client.gui.GuiGraphics;
 
 public class LyricRender {
     private final ScheduledExecutorService lyricExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(NekoMusicClient.MOD_NAME + "-lyric-%d").build());
@@ -38,7 +38,7 @@ public class LyricRender {
         }
     }
 
-    public void render(DrawContext context, int color) {
+    public void render(GuiGraphics context, int color) {
         RenderMain.drawMultiLineText(context, currentSentence, NekoMusicClient.config.lyricX, NekoMusicClient.config.lyricY, color);
     }
 

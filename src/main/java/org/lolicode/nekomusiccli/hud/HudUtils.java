@@ -1,10 +1,5 @@
 package org.lolicode.nekomusiccli.hud;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.ColorHelper;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.music.MusicList;
 import org.lolicode.nekomusiccli.music.MusicObj;
@@ -14,9 +9,14 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.util.ArrayList;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
 
 public class HudUtils {
-    private final MinecraftClient client = MinecraftClient.getInstance();
+    private final Minecraft client = Minecraft.getInstance();
     private volatile String info = null;
     private final ArrayList<String> list = new ArrayList<>();
     private volatile LyricRender lyricRender = null;
@@ -28,11 +28,11 @@ public class HudUtils {
     public synchronized void setMusic(MusicObj music) throws InterruptedIOException {
         if (isClosed) throw new IllegalStateException("Hud is closed");
         stopCurrentMusic();
-        info = music.name == null || music.name.isBlank() ? Text.translatable("hud.nekomusic.no_title").getString() : music.name;
+        info = music.name == null || music.name.isBlank() ? Component.translatable("hud.nekomusic.no_title").getString() : music.name;
         info += "\n";
-        info += music.ar == null || music.ar.isEmpty() ? Text.translatable("hud.nekomusic.no_artist").getString() : music.ar.getFirst().name;
+        info += music.ar == null || music.ar.isEmpty() ? Component.translatable("hud.nekomusic.no_artist").getString() : music.ar.getFirst().name;
         info += "\n";
-        info += music.album == null || music.album.name == null || music.album.name.isBlank() ? Text.translatable("hud.nekomusic.no_album").getString() : music.album.name;
+        info += music.album == null || music.album.name == null || music.album.name.isBlank() ? Component.translatable("hud.nekomusic.no_album").getString() : music.album.name;
         if (music.player != null && !music.player.isBlank()) info += "\nby: " + music.player;
         if (music.album != null && music.album.picUrl != null && !music.album.picUrl.isBlank()) {
             try (var imageResponse = NekoMusicClient.netUtils.getImageResponse(music.album)) {
@@ -42,11 +42,11 @@ public class HudUtils {
                     var imgStream = new ByteArrayInputStream(imageResponse.body().bytes());
                     imgRender = new ImgRender(imgStream, NekoMusicClient.config.enableHudImgRotate);
                 } catch (Exception e) {
-                    final var defaultCover = MinecraftClient.getInstance().getResourceManager()
-                            .getResource(Identifier.of(NekoMusicClient.MOD_ID, "texture/default_cover.png"));
+                    final var defaultCover = Minecraft.getInstance().getResourceManager()
+                            .getResource(Identifier.fromNamespaceAndPath(NekoMusicClient.MOD_ID, "texture/default_cover.png"));
                     if (defaultCover.isPresent()) {
                         imgRender = new ImgRender(
-                                new ByteArrayInputStream(defaultCover.get().getInputStream().readAllBytes()),
+                                new ByteArrayInputStream(defaultCover.get().open().readAllBytes()),
                                 NekoMusicClient.config.enableHudImgRotate, true);
                     }
                     throw e;
@@ -83,14 +83,14 @@ public class HudUtils {
         this.list.addAll(list.toArrayList());
     }
 
-    public void frame(DrawContext context) {
-        if (isClosed || isStopped || client.debugHudEntryList.isF3Enabled()) return;
+    public void frame(GuiGraphics context) {
+        if (isClosed || isStopped || client.debugEntries.isOverlayVisible()) return;
         var cfg = NekoMusicClient.config;
         if (!cfg.enableHud) return;
         if (cfg.enableHudImg && imgRender != null) {
             imgRender.RenderImg(context);
         }
-        int textColor = ColorHelper.getArgb(
+        int textColor = ARGB.color(
                 cfg.textOpacity,
                 cfg.textColorRed, cfg.textColorGreen, cfg.textColorBlue);
         if (cfg.enableHudInfo) {

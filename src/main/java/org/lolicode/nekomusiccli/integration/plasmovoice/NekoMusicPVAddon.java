@@ -2,7 +2,7 @@ package org.lolicode.nekomusiccli.integration.plasmovoice;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.Getter;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import su.plo.voice.api.addon.AddonInitializer;
 import su.plo.voice.api.addon.AddonLoaderScope;
@@ -45,8 +45,8 @@ public final class NekoMusicPVAddon implements AddonInitializer {
         }
     }
 
-    void onJoinWorld(MinecraftClient client) {
-        if (client.isInSingleplayer()) return;
+    void onJoinWorld(Minecraft client) {
+        if (client.isLocalServer()) return;
         scheduler = Executors.newSingleThreadScheduledExecutor(
                 new ThreadFactoryBuilder().setNameFormat(NekoMusicClient.MOD_NAME + " PlasmoVoice Integration").build()
         );

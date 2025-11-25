@@ -3,8 +3,8 @@ package org.lolicode.nekomusiccli.packet;
 import lol.bai.badpackets.api.PacketSender;
 import lol.bai.badpackets.api.play.PlayPackets;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.Identifier;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 
 public class ClientByeSender {
@@ -14,7 +14,7 @@ public class ClientByeSender {
         PlayPackets.registerServerChannel(CLIENT_BYE_PACKET_ID);
     }
 
-    public static void send(MinecraftClient client) {
+    public static void send(Minecraft client) {
         if (client == null) {
             return;
         }

@@ -3,7 +3,6 @@ package org.lolicode.nekomusiccli.cache;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.client.MinecraftClient;
 import okhttp3.Cache;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.config.ModConfig;
@@ -15,6 +14,7 @@ import java.nio.channels.FileLock;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import net.minecraft.client.Minecraft;
 
 public class CacheUtils {
     private static final String IMG_CACHE_FILE = "image.json";
@@ -146,7 +146,7 @@ public class CacheUtils {
     }
 
     public static String getDefaultCachePath() {
-        String path = MinecraftClient.getInstance().runDirectory.toPath().resolve("cache").resolve(NekoMusicClient.MOD_ID).toString();
+        String path = Minecraft.getInstance().gameDirectory.toPath().resolve("cache").resolve(NekoMusicClient.MOD_ID).toString();
         checkCachePath(path);
         return path;
     }

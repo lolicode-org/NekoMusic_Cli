@@ -1,9 +1,9 @@
 package org.lolicode.nekomusiccli.packet;
 
 import lol.bai.badpackets.api.play.PlayPackets;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.Identifier;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.music.MusicList;
 import org.lolicode.nekomusiccli.music.MusicObj;
@@ -13,14 +13,14 @@ public class ServerPacketReceiver {
     private static final Identifier METADATA_PACKET_ID = NekoMusicClient.MOD_BASE_IDENTIFIER.withPath("metadata");
     private static final Identifier PLAYLIST_PACKET_ID = NekoMusicClient.MOD_BASE_IDENTIFIER.withPath("list");
 
-    private static void onReceiveMetadata(PacketByteBuf buf, ClientPlayNetworkHandler handler) {
+    private static void onReceiveMetadata(FriendlyByteBuf buf, ClientPacketListener handler) {
         if (buf == null || !NekoMusicClient.config.enabled
-                || NekoMusicClient.config.bannedServers.contains(handler.getServerInfo() == null ? "" : handler.getServerInfo().address)) {
+                || NekoMusicClient.config.bannedServers.contains(handler.getServerData() == null ? "" : handler.getServerData().ip)) {
             NekoMusicClient.musicManager.stop();
             return;
         }
 
-        MusicObj musicObj = NekoMusicClient.GSON.fromJson(buf.readString(), MusicObj.class);
+        MusicObj musicObj = NekoMusicClient.GSON.fromJson(buf.readUtf(), MusicObj.class);
         if (musicObj == null || musicObj.url == null || musicObj.url.isEmpty()) {
             NekoMusicClient.musicManager.stop();
             return;
@@ -34,13 +34,13 @@ public class ServerPacketReceiver {
         NekoMusicClient.musicManager.play(musicObj);
     }
 
-    private static void onReceivePlaylist(PacketByteBuf buf, ClientPlayNetworkHandler handler) {
+    private static void onReceivePlaylist(FriendlyByteBuf buf, ClientPacketListener handler) {
         if (buf == null || !NekoMusicClient.config.enabled
-                || NekoMusicClient.config.bannedServers.contains(handler.getServerInfo() == null ? "" : handler.getServerInfo().address)
+                || NekoMusicClient.config.bannedServers.contains(handler.getServerData() == null ? "" : handler.getServerData().ip)
                 || NekoMusicClient.hudUtils == null) {
             return;
         }
-        MusicList musicList = NekoMusicClient.GSON.fromJson(buf.readString(), MusicList.class);
+        MusicList musicList = NekoMusicClient.GSON.fromJson(buf.readUtf(), MusicList.class);
         // playlist can be empty
         if (musicList == null) {
             musicList = new MusicList();

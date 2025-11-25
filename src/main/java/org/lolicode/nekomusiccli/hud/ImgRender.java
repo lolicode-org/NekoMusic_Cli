@@ -1,17 +1,17 @@
 package org.lolicode.nekomusiccli.hud;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.texture.NativeImageBackedTexture;
-import net.minecraft.client.texture.TextureManager;
-import net.minecraft.util.Identifier;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lwjgl.BufferUtils;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.resources.Identifier;
+import com.mojang.blaze3d.platform.NativeImage;
 import java.awt.*;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
@@ -22,8 +22,8 @@ import java.nio.ByteBuffer;
 import java.util.Iterator;
 
 public class ImgRender {
-    private static final TextureManager textureManager = MinecraftClient.getInstance().getTextureManager();
-    private volatile NativeImageBackedTexture texture = null;
+    private static final TextureManager textureManager = Minecraft.getInstance().getTextureManager();
+    private volatile DynamicTexture texture = null;
     private Identifier textureId = null;
     private int angle = 0;
     private final long startTime = System.currentTimeMillis();
@@ -137,7 +137,7 @@ public class ImgRender {
     }
 
 
-    public synchronized void RenderImg(DrawContext context) {
+    public synchronized void RenderImg(GuiGraphics context) {
         if (texture == null || textureId == null) return;
         RenderMain.drawImg(context, textureId, this.shouldRotate, angle);
         angle = (int) ((System.currentTimeMillis() - startTime) / NekoMusicClient.config.imgRotateSpeed) % 360;
@@ -145,7 +145,7 @@ public class ImgRender {
 
     private synchronized void DisposeImg() {
         if (textureId != null) {
-            MinecraftClient.getInstance().execute(() -> textureManager.destroyTexture(textureId));
+            Minecraft.getInstance().execute(() -> textureManager.release(textureId));
             textureId = null;
         }
         texture = null;
@@ -172,18 +172,18 @@ public class ImgRender {
     }
 
     private synchronized void createTexture(int width, int height, ByteBuffer byteBuffer) {
-        MinecraftClient.getInstance().execute(() -> {
+        Minecraft.getInstance().execute(() -> {
             try (var img = new NativeImage(NativeImage.Format.RGBA, width, height, true)) {
                 for (int y = 0; y < height; y++) {
                     for (int x = 0; x < width; x++) {
                         int color = byteBuffer.getInt((y * width + x) * 4);
-                        img.setColorArgb(x, y, color);
+                        img.setPixel(x, y, color);
                     }
                 }
                 textureId = NekoMusicClient.MOD_BASE_IDENTIFIER.withPath("hud_img");
-                texture = new NativeImageBackedTexture(textureId::toString, img);
+                texture = new DynamicTexture(textureId::toString, img);
 //                texture.setFilter(true, true);
-                textureManager.registerTexture(textureId, texture);
+                textureManager.register(textureId, texture);
             }
         });
     }
