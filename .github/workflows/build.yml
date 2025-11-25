@@ -77,5 +77,5 @@ jobs:
           # Only include this section if you wish to publish
           # your assets on GitHub.
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          github-tag: "v${{ env.version }}-1.21.10"
-          name: "Release v${{ env.version }} for Minecraft 1.21.10"
+          github-tag: "v${{ env.version }}-1.21.11"
+          name: "Release v${{ env.version }} for Minecraft 1.21.11"
