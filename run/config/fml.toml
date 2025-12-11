@@ -18,12 +18,10 @@ earlyWindowProvider = "fmlearlywindow"
 earlyWindowWidth = 854
 #Early window height
 earlyWindowHeight = 480
-#Early window framebuffer scale
-earlyWindowFBScale = 1
 #Early window starts maximized
 earlyWindowMaximized = false
-#Squir?
-earlyWindowSquir = false
+#Force a given theme-id to be used for the early loading screen
+earlyLoadingScreenTheme = ""
 
 #Define dependency overrides below
 #Dependency overrides can be used to forcibly remove a dependency constraint from a mod or to force a mod to load AFTER another mod

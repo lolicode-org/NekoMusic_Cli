@@ -2,8 +2,8 @@ plugins {
     id 'java-library'
     id 'maven-publish'
     id 'idea'
-    id 'net.neoforged.moddev' version '2.0.110'
-    id 'org.jetbrains.kotlin.jvm' version '2.1.20'
+    id 'net.neoforged.moddev' version '2.0.123'
+    id 'org.jetbrains.kotlin.jvm' version '2.2.20'
 }
 
 version = mod_version
@@ -180,17 +180,24 @@ dependencies {
             prefer "${project.commons_text_version}"
         }
     }
+
+    jarJar(implementation("org.apache.commons:commons-lang3:${project.commons_lang_version}")) {
+        version {
+            strictly '[1.0,)'
+            prefer "${project.commons_lang_version}"
+        }
+    }
 //    compileOnly "thedarkcolour:kotlinforforge-neoforge:${project.kotlin_for_forge_version}"  // if use implementation, it will crash on devrun... seems conflict with okhttp stuff. Im not familiar with gradle stuff so Idk why
     // update: the above trick wont work now. Currently i'm removing it from build.gradle. However it's required in non-dev env, so Im adding a dependencyOverride in dev env as a dirty hack...
     api "me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_config_version}"
     implementation "lol.bai:badpackets:neo-${badpackets_version}"
     compileOnly "su.plo.voice.api:client:${plasmovoice_version}"
 
-    additionalRuntimeClasspath "com.squareup.okhttp3:okhttp:${project.okhttp_version}"
-    additionalRuntimeClasspath "com.squareup.okio:okio-jvm:${project.okio_version}"
-    additionalRuntimeClasspath "com.github.umjammer:jlayer:${project.jlayer_version}"
-    additionalRuntimeClasspath "org.apache.tika:tika-core:${project.tika_version}"
-    additionalRuntimeClasspath "org.apache.commons:commons-text:${project.commons_text_version}"
+    implementation "com.squareup.okhttp3:okhttp:${project.okhttp_version}"
+    implementation "com.squareup.okio:okio-jvm:${project.okio_version}"
+    implementation "com.github.umjammer:jlayer:${project.jlayer_version}"
+    implementation "org.apache.tika:tika-core:${project.tika_version}"
+    implementation "org.apache.commons:commons-text:${project.commons_text_version}"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

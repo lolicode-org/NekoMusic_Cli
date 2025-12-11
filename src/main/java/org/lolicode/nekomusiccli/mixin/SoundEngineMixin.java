@@ -35,8 +35,8 @@ public class SoundEngineMixin {
         if (NekoMusicClient.musicManager != null) NekoMusicClient.musicManager.stop();
     }
 
-    @Inject(method = "updateCategoryVolume(Lnet/minecraft/sounds/SoundSource;)V", at = @At("HEAD"), cancellable = true)
-    public void updateCategoryVolume(SoundSource category, CallbackInfo ci) {
+    @Inject(method = "refreshCategoryVolume(Lnet/minecraft/sounds/SoundSource;)V", at = @At("HEAD"), cancellable = true)
+    public void refreshCategoryVolume(SoundSource category, CallbackInfo ci) {
         if (category == SoundSource.RECORDS) {
             if (NekoMusicClient.pvAddon != null) {
                 NekoMusicClient.pvAddon.setVolume(Minecraft.getInstance().options.getSoundSourceVolume(SoundSource.RECORDS));

@@ -5,12 +5,12 @@ import lol.bai.badpackets.api.PacketSender;
 import lol.bai.badpackets.api.play.PlayPackets;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 
 public class ClientHelloSender {
     // TODO: register channel
-    private static final ResourceLocation CLIENT_HELLO_PACKET_ID = NekoMusicClient.MOD_BASE_IDENTIFIER.withPath("client_hello");
+    private static final Identifier CLIENT_HELLO_PACKET_ID = NekoMusicClient.MOD_BASE_IDENTIFIER.withPath("client_hello");
 
     public static void register() {
         PlayPackets.registerServerChannel(CLIENT_HELLO_PACKET_ID);

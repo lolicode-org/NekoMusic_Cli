@@ -3,7 +3,7 @@ package org.lolicode.nekomusiccli;
 import com.google.gson.Gson;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -30,7 +30,7 @@ public class NekoMusicClient {
     public static final String MOD_ID = "nekomusiccli";
     public static final String MOD_NAME = "NekoMusic Client";
     public static final String MOD_CHANNEL = "nekomusic";
-    public static final ResourceLocation MOD_BASE_IDENTIFIER = ResourceLocation.fromNamespaceAndPath(MOD_CHANNEL, MOD_ID);
+    public static final Identifier MOD_BASE_IDENTIFIER = Identifier.fromNamespaceAndPath(MOD_CHANNEL, MOD_ID);
     public static final Logger LOGGER = LogManager.getLogger();
     public static final Gson GSON = new Gson();
     public static MusicManager musicManager;

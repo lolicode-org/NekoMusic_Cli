@@ -3,7 +3,7 @@ package org.lolicode.nekomusiccli.hud;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.joml.Matrix3x2fStack;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 
@@ -25,7 +25,7 @@ public class RenderMain {
         }
     }
 
-    public static void drawImg(GuiGraphics context, ResourceLocation textureId, boolean shouldRotate, int angle) {
+    public static void drawImg(GuiGraphics context, Identifier textureId, boolean shouldRotate, int angle) {
         var config = NekoMusicClient.config;
         var imgSize = config.imgSize;
         var offset = imgSize / 2;

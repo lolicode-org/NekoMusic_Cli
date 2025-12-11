@@ -3,15 +3,15 @@ package org.lolicode.nekomusiccli.packet;
 import lol.bai.badpackets.api.play.PlayPackets;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.music.MusicList;
 import org.lolicode.nekomusiccli.music.MusicObj;
 import org.lolicode.nekomusiccli.utils.Alert;
 
 public class ServerPacketReceiver {
-    private static final ResourceLocation METADATA_PACKET_ID = NekoMusicClient.MOD_BASE_IDENTIFIER.withPath("metadata");
-    private static final ResourceLocation PLAYLIST_PACKET_ID = NekoMusicClient.MOD_BASE_IDENTIFIER.withPath("list");
+    private static final Identifier METADATA_PACKET_ID = NekoMusicClient.MOD_BASE_IDENTIFIER.withPath("metadata");
+    private static final Identifier PLAYLIST_PACKET_ID = NekoMusicClient.MOD_BASE_IDENTIFIER.withPath("list");
 
     private static void onReceiveMetadata(FriendlyByteBuf buf, ClientPacketListener handler) {
         if (buf == null || !NekoMusicClient.config.enabled

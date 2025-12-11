@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.client.gui.GuiGraphics;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lwjgl.BufferUtils;
@@ -24,7 +24,7 @@ import java.util.Iterator;
 public class ImgRender {
     private static final TextureManager textureManager = Minecraft.getInstance().getTextureManager();
     private volatile DynamicTexture texture = null;
-    private ResourceLocation textureId = null;
+    private Identifier textureId = null;
     private int angle = 0;
     private final long startTime = System.currentTimeMillis();
     private final boolean shouldRotate;
@@ -182,7 +182,7 @@ public class ImgRender {
                 }
                 textureId = NekoMusicClient.MOD_BASE_IDENTIFIER.withPath("hud_img");
                 texture = new DynamicTexture(textureId::toString, img);
-                texture.setFilter(true, true);
+//                texture.setFilter(true, true);
                 textureManager.register(textureId, texture);
             }
         });

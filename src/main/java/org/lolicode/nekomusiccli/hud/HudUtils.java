@@ -3,7 +3,7 @@ package org.lolicode.nekomusiccli.hud;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lolicode.nekomusiccli.music.MusicList;
@@ -43,7 +43,7 @@ public class HudUtils {
                     imgRender = new ImgRender(imgStream, NekoMusicClient.config.enableHudImgRotate);
                 } catch (Exception e) {
                     final var defaultCover = Minecraft.getInstance().getResourceManager()
-                            .getResource(ResourceLocation.fromNamespaceAndPath(NekoMusicClient.MOD_ID, "texture/default_cover.png"));
+                            .getResource(Identifier.fromNamespaceAndPath(NekoMusicClient.MOD_ID, "texture/default_cover.png"));
                     if (defaultCover.isPresent()) {
                         imgRender = new ImgRender(
                                 new ByteArrayInputStream(defaultCover.get().open().readAllBytes()),
@@ -84,7 +84,7 @@ public class HudUtils {
     }
 
     public void frame(GuiGraphics context) {
-        if (isClosed || isStopped || client.debugEntries.isF3Visible()) return;
+        if (isClosed || isStopped || client.debugEntries.isOverlayVisible()) return;
         var cfg = NekoMusicClient.config;
         if (!cfg.enableHud) return;
         if (cfg.enableHudImg && imgRender != null) {

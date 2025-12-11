@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.multiplayer.ServerData;
 import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.IModBusEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
@@ -24,7 +24,7 @@ import org.lolicode.nekomusiccli.utils.InstanceLock;
 
 @EventBusSubscriber(modid = NekoMusicClient.MOD_ID, value = Dist.CLIENT)
 public class KeyboardEvent implements IModBusEvent {
-    private static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(ResourceLocation.fromNamespaceAndPath(NekoMusicClient.MOD_CHANNEL, "general"));
+    private static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(NekoMusicClient.MOD_CHANNEL, "general"));
     // this class is initialized before the config, so we need to get it lazily
     private static ModConfig getConfig() {
         return NekoMusicClient.config;
