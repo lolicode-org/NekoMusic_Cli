@@ -31,7 +31,7 @@
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
     "minecraft": ">=${minecraft_version}",
-    "badpackets": ">=0.11.0",
+    "badpackets": ">=0.11.1",
     "fabric-language-kotlin": "*",
     "cloth-config": ">20.0.149"
   },
