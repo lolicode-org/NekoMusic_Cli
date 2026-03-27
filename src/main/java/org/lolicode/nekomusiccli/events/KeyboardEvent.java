@@ -2,7 +2,7 @@ package org.lolicode.nekomusiccli.events;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
@@ -18,21 +18,21 @@ import org.lwjgl.glfw.GLFW;
 public class KeyboardEvent {
     private static final ModConfig config = NekoMusicClient.config;
     private static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(NekoMusicClient.MOD_CHANNEL, "general"));
-    public static KeyMapping globalDisableKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+    public static KeyMapping globalDisableKeyBinding = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.nekomusic.disable", // The translation key of the keybinding's name
                 InputConstants.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
                 GLFW.GLFW_KEY_F7, // The keycode of the key
                 CATEGORY // The translation key of the keybinding's category.
     ));
 
-    public static KeyMapping serverDisableKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+    public static KeyMapping serverDisableKeyBinding = KeyMappingHelper.registerKeyMapping(new KeyMapping(
             "key.nekomusic.server_disable", // The translation key of the keybinding's name
             InputConstants.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
             GLFW.GLFW_KEY_F8, // The keycode of the key
             CATEGORY // The translation key of the keybinding's category.
     ));
 
-    public static KeyMapping clientBanKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+    public static KeyMapping clientBanKeyBinding = KeyMappingHelper.registerKeyMapping(new KeyMapping(
             "key.nekomusic.ban_song", // The translation key of the keybinding's name
             InputConstants.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
             GLFW.GLFW_KEY_F9, // The keycode of the key
@@ -50,9 +50,9 @@ public class KeyboardEvent {
                 onServerDisablePressed(client);
             }
         });
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+        ClientTickEvents.END_CLIENT_TICK.register(_ -> {
             while (clientBanKeyBinding.consumeClick()) {
-                onClientBanPressed(client);
+                onClientBanPressed();
             }
         });
     }
@@ -99,7 +99,7 @@ public class KeyboardEvent {
         config.save();
     }
 
-    private static void onClientBanPressed(Minecraft client) {
+    private static void onClientBanPressed() {
         if (NekoMusicClient.musicManager.currentMusic == null) {
             Alert.error("player.nekomusic.not_playing");
             return;

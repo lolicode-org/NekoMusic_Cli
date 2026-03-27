@@ -1,7 +1,7 @@
 package org.lolicode.nekomusiccli.hud;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import org.joml.Matrix3x2fStack;
@@ -10,11 +10,11 @@ import org.lolicode.nekomusiccli.NekoMusicClient;
 public class RenderMain {
     private static final int fontHeight = Minecraft.getInstance().font.lineHeight;
 
-    public static void drawText(GuiGraphics context, String text, float x, float y, int color) {
-        context.drawString(Minecraft.getInstance().font, text, (int) x, (int) y, color, false);
+    public static void drawText(GuiGraphicsExtractor context, String text, float x, float y, int color) {
+        context.text(Minecraft.getInstance().font, text, (int) x, (int) y, color, false);
     }
 
-    public static void drawMultiLineText(GuiGraphics context, String text, float x, float y, int color) {
+    public static void drawMultiLineText(GuiGraphicsExtractor context, String text, float x, float y, int color) {
         if (text == null || text.isBlank()) {
             return;
         }
@@ -25,7 +25,7 @@ public class RenderMain {
         }
     }
 
-    public static void drawImg(GuiGraphics context, Identifier textureId, boolean shouldRotate, int angle) {
+    public static void drawImg(GuiGraphicsExtractor context, Identifier textureId, boolean shouldRotate, int angle) {
         var config = NekoMusicClient.config;
         var imgSize = config.imgSize;
         var offset = imgSize / 2;

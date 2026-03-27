@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version "${loom_version}"
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
     id 'maven-publish'
 }
 
@@ -72,28 +72,26 @@ repositories {
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-//    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    mappings loom.officialMojangMappings()
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     include implementation("com.squareup.okhttp3:okhttp:${project.okhttp_version}")
     include implementation("com.squareup.okio:okio-jvm:${project.okio_version}") //okio-jvm, not okio. This cost me like 1hr of debugging
     include implementation ("com.github.umjammer:jlayer:${project.jlayer_version}")
     include implementation("org.apache.tika:tika-core:${project.tika_version}")
     include implementation("org.apache.commons:commons-text:${project.commons_text_version}")
-    modLocalRuntime("net.fabricmc:fabric-language-kotlin:${project.fabric_language_kotlin_version}") { // includes kotlin for squareup libs
+    localRuntime("net.fabricmc:fabric-language-kotlin:${project.fabric_language_kotlin_version}") { // includes kotlin for squareup libs
         exclude module: "fabric-loader"
     }
-    modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
+    api("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
         exclude(module: "fabric-api")
     }
-    modApi "com.terraformersmc:modmenu:${project.modmenu_version}"
-    modImplementation "lol.bai:badpackets:fabric-${badpackets_version}"
-//    include modImplementation("dev.stashy:sound-categories:${project.soundcategories_version}")
-    include modImplementation(name: "soundcategories-${project.soundcategories_version}")  // sound-categories, 1.21 port's maven seems to be configured wrongly...
+    api "com.terraformersmc:modmenu:${project.modmenu_version}"
+    implementation "lol.bai:badpackets:fabric-${badpackets_version}"
+//    include implementation("dev.stashy:sound-categories:${project.soundcategories_version}")
+//    include implementation(name: "soundcategories-${project.soundcategories_version}")  // sound-categories, 1.21 port's maven seems to be configured wrongly...
     compileOnly "su.plo.voice.api:client:${plasmovoice_version}"
 }
 
@@ -110,7 +108,7 @@ processResources {
     }
 }
 
-def targetJavaVersion = 21
+def targetJavaVersion = 25
 tasks.withType(JavaCompile).configureEach {
     // ensure that the encoding is set to UTF-8, no matter what the system default is
     // this fixes some edge cases with special characters not displaying correctly
