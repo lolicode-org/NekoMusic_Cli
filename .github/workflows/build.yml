@@ -43,12 +43,28 @@ jobs:
         run: chmod +x ./gradlew
       - name: build
         run: ./gradlew build
-      - name: capture build artifacts
+
+      - name: Get jar names
+        id: get_jars
+        run: |
+          JAR_NAME=$(ls build/libs/*.jar | grep -v sources)
+          SOURCES_JAR_NAME=$(ls build/libs/*.jar | grep sources)
+          echo "JAR_NAME=$JAR_NAME" >> $GITHUB_ENV
+          echo "SOURCES_JAR_NAME=$SOURCES_JAR_NAME" >> $GITHUB_ENV
+
+      - name: Upload jar
         uses: actions/upload-artifact@v7
         with:
-          name: Artifacts
+          name: ${{ env.JAR_NAME }}
           archive: false
-          path: build/libs/
+          path: build/libs/${{ env.JAR_NAME }}
+
+      - name: Upload sources jar
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ env.SOURCES_JAR_NAME }}
+          archive: false
+          path: build/libs/${{ env.SOURCES_JAR_NAME }}
 
       - name: Get version from gradle.properties
         id: get_version
