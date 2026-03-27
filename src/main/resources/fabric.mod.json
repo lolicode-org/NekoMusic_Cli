@@ -19,9 +19,6 @@
     ],
     "modmenu": [
       "org.lolicode.nekomusiccli.config.ModMenuIntegration"
-    ],
-    "sound-categories": [
-      "org.lolicode.nekomusiccli.config.CustomSoundCategory"
     ]
   },
   "mixins": [
@@ -29,13 +26,13 @@
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",
-    "fabric": "*",
+    "fabric-api": "*",
     "minecraft": ">=${minecraft_version}",
-    "badpackets": ">=0.11.1",
+    "badpackets": ">=0.12.1",
     "fabric-language-kotlin": "*",
-    "cloth-config": ">20.0.149"
+    "cloth-config": ">=26.1.154"
   },
   "recommends": {
-    "modmenu": ">16.99.9"
+    "modmenu": ">17.99.9"
   }
 }

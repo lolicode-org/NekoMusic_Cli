@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.Identifier;
@@ -137,7 +137,7 @@ public class ImgRender {
     }
 
 
-    public synchronized void RenderImg(GuiGraphics context) {
+    public synchronized void RenderImg(GuiGraphicsExtractor context) {
         if (texture == null || textureId == null) return;
         RenderMain.drawImg(context, textureId, this.shouldRotate, angle);
         angle = (int) ((System.currentTimeMillis() - startTime) / NekoMusicClient.config.imgRotateSpeed) % 360;

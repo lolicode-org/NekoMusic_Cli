@@ -2,7 +2,7 @@ package org.lolicode.nekomusiccli.packet;
 
 import lol.bai.badpackets.api.PacketSender;
 import lol.bai.badpackets.api.play.PlayPackets;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.FriendlyByteBufs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import org.lolicode.nekomusiccli.NekoMusicClient;
@@ -18,6 +18,6 @@ public class ClientByeSender {
         if (client == null) {
             return;
         }
-        PacketSender.c2s().send(CLIENT_BYE_PACKET_ID, PacketByteBufs.empty());
+        PacketSender.c2s().send(CLIENT_BYE_PACKET_ID, FriendlyByteBufs.empty());
     }
 }
