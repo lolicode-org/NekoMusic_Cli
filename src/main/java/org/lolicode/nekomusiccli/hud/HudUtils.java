@@ -1,7 +1,7 @@
 package org.lolicode.nekomusiccli.hud;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
@@ -83,7 +83,7 @@ public class HudUtils {
         this.list.addAll(list.toArrayList());
     }
 
-    public void frame(GuiGraphics context) {
+    public void frame(GuiGraphicsExtractor context) {
         if (isClosed || isStopped || client.debugEntries.isOverlayVisible()) return;
         var cfg = NekoMusicClient.config;
         if (!cfg.enableHud) return;

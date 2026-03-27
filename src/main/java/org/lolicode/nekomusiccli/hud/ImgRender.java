@@ -5,7 +5,7 @@ import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.Identifier;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import org.lolicode.nekomusiccli.NekoMusicClient;
 import org.lwjgl.BufferUtils;
 
@@ -137,7 +137,7 @@ public class ImgRender {
     }
 
 
-    public synchronized void RenderImg(GuiGraphics context) {
+    public synchronized void RenderImg(GuiGraphicsExtractor context) {
         if (texture == null || textureId == null) return;
         RenderMain.drawImg(context, textureId, this.shouldRotate, angle);
         angle = (int) ((System.currentTimeMillis() - startTime) / NekoMusicClient.config.imgRotateSpeed) % 360;

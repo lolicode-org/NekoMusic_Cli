@@ -2,6 +2,7 @@ package org.lolicode.nekomusiccli;
 
 import com.google.gson.Gson;
 import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.AutoConfigClient;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
@@ -47,7 +48,7 @@ public class NekoMusicClient {
         AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
         config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
         ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class,
-                () -> (container, parent) -> AutoConfig.getConfigScreen(ModConfig.class, parent).get());
+                () -> (container, parent) -> AutoConfigClient.getConfigScreen(ModConfig.class, parent).get());
     }
 
     @SubscribeEvent
