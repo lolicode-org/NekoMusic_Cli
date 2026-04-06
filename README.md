@@ -10,6 +10,9 @@
 
 服务端：[NekoMusic_Server](https://github.com/lolicode-org/NekoMusic_Server)
 
+> [!WARNING]  
+> 本项目**是且仅是**一个适用于Minecraft **（国际JAVA版）** 的[模组](https://zh.wikipedia.org/wiki/index.php?curid=161167)，与任何同名或相似名称的项目与/或服务及其开发与/或运营方没有任何关联。也请不要在本项目下提出任何其他不相关项目的问题，谢谢。
+
 ----------------------------------
 
 ## 功能
