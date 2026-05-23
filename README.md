@@ -9,7 +9,7 @@
 > [!CAUTION]
 > 本模组已停止开发。如果有严重的 bug，你仍可在 issues 里提出，我可能会修复它们。但本模组将不会再接收到任何功能更新，也不会被移植到任何新的 Minecraft 版本。
 >
-> 这并不代表我们放弃了本模组的用户。相反，我们编写了一个全新的模组，它在包含本模组几乎全部功能的基础上，额外加入了对单人模式的支持、简洁完善的 GUI、由插件驱动的多音源支持，以及，仍然 100% 开源。请访问 [MoeMusic](https://modrinth.com/mod/moemusic) 来获取新的核心模组，以及访问 [MoeMusic NCM Lite Source](https://github.com/lolicode-org/MoeMusic-NCM-Lite-Source) 来获取某云音乐音源（非必需）。
+> 这并不代表我们放弃了本模组的用户。相反，我们编写了一个全新的模组，它在包含本模组几乎全部功能的基础上，额外加入了对单人模式的支持、简洁完善的 GUI、由插件驱动的多音源支持，以及，仍然 100% 开源。请访问 [MoeMusic](https://modrinth.com/mod/moemusic) 来获取新的核心模组，访问 [MoeMusic NCM Lite Source](https://github.com/lolicode-org/MoeMusic-NCM-Lite-Source) 来获取某云音乐音源（非必需），以及访问 [MoeMusic Plasmo Voice Ducking](https://github.com/lolicode-org/moemusic-plasmo-voice-ducking) 来获取对 Plasmo Voice 语音聊天模组的集成（用于在有人说话时自动降低音乐音量）。
 >
 > 如果你是服务器管理员，我们推荐将你的服务器也升级到 MoeMusic。无需担心为玩家带来困扰：我们提供了 [MoeMusic NekoCompat](https://github.com/lolicode-org/MoeMusic-NekoCompat) 用于与 NekoMusic Client 保持兼容。
 
